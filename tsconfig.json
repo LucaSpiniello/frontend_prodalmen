@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"useDefineForClassFields": true,
+		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"module": "ESNext",
+		"skipLibCheck": true,
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"jsx": "react-jsx",
+		// "tsx": "react-tsx",
+		"strict": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+		// "typeRoots": ["node_modules/@types", "src/types"]
+	},
+	"include": ["src", "./src/declaration.d.ts", "src/pages/programa reproceso/Detalle Produccion/CardMetricaRecepcion.tsx"],
+	"references": [{ "path": "./tsconfig.node.json" }]
+}
