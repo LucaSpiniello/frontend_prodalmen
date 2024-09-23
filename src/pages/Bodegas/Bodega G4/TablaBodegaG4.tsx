@@ -28,6 +28,7 @@ import { FaFileExcel, FaFilePdf } from "react-icons/fa";
 import * as XLSX from 'xlsx'
 import { useDispatch } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
+import { set } from "lodash";
 
 interface IBodegaG4Props {
 	data: TBinBodega[] | []
@@ -39,7 +40,13 @@ const columnHelper = createColumnHelper<TBinBodega>();
 
 const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [globalFilter, setGlobalFilter] = useState<string>('')
+	const [globalFilter, setGlobalFilter] = useState<any>({
+		productor: '',
+		variedad: '',
+		calibre: '',
+		calidad: '',
+		calle: ''
+	})
 
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 	const token = useAppSelector((state: RootState) => state.auth.authTokens)
@@ -112,6 +119,16 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 			cell: (info) => (
 				// <Tooltip text={info.row.original.tipo_bodega} className="bg-black text-white text-xl">
 					<div className='font-bold '>
+						{`${info.row.original.programa_produccion}`}
+						</div>
+				// </Tooltip>
+			),
+			header: 'Resultante del Proceso',
+		}),
+		columnHelper.accessor('programa', {
+			cell: (info) => (
+				// <Tooltip text={info.row.original.tipo_bodega} className="bg-black text-white text-xl">
+					<div className='font-bold '>
 						{`${info.row.original.programa}`}
 						</div>
 				// </Tooltip>
@@ -155,26 +172,27 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 			),
 			header: 'Variedad',
 		}),
-		columnHelper.display({
-			id: 'calibre',
-			cell: (info) => (
-				<div className='font-bold text-center'>
-					{`${info.row.original.calibre}`}
-				</div>
-
+		columnHelper.accessor(
+			'calibre',
+			{
+				cell: (info) => (
+					<div className='font-bold'>
+						{`${info.row.original.calibre}`}
+					</div>
+				),
+				header: 'Calibre',
+			}
 			),
-			header: 'Calibre',
-		}),
-		columnHelper.display({
-			id: 'calidad',
+		columnHelper.accessor('calidad', {
 			cell: (info) => (
-				<div className='font-bold text-center'>
+				<div className='font-bold'>
 					{`${info.row.original.calidad}`}
 				</div>
 
 			),
 			header: 'Calidad',
-		}),
+		}
+		),
 		columnHelper.accessor('tipo_producto', {
 			cell: (info) => (
 				<div className='font-bold'>
@@ -197,7 +215,6 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 							setOpen={setCalleModal}
 							width="w-full"
 							textButton={optionCalleBodega.find(calle => calle?.label === info.row.original.calle)?.label}
-
 							>
 							<div className="w-full flex flex-col items-center">
 								<Label htmlFor="calle">Calle Bodega: </Label>
@@ -237,28 +254,34 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 // 		// { id: 'controles', header: '',className: 'md:w-28 lg:w-40'},
 //   ]
 
-	
+const table = useReactTable({
+  data,
+  columns,
+  state: {
+    globalFilter,
+  },
+  onGlobalFilterChange: setGlobalFilter,
+  getCoreRowModel: getCoreRowModel(),
+  getFilteredRowModel: getFilteredRowModel(),
+  getSortedRowModel: getSortedRowModel(),
+  getPaginationRowModel: getPaginationRowModel(),
+  initialState: {
+    pagination: { pageSize: 5 },
+  },
+  globalFilterFn: (row, columnIds, filterValue) => {
+    // Desestructuramos los filtros de globalFilter
+    const { productor, variedad, calibre, calidad, calle } = filterValue;
 
+    // Aplicamos los filtros solo si tienen valor
+    return (
+      (!calle || row.original.calle === calle) &&
+      (!variedad || row.original.variedad === variedad) &&
+      (!calibre || row.original.calibre === calibre) &&
+      (!calidad || row.original.calidad === calidad) 
+    );
+  },
+});
 
-
-	const table = useReactTable({
-		data,
-		columns,
-		state: {
-			sorting,
-			globalFilter,
-		},
-		onSortingChange: setSorting,
-		enableGlobalFilter: true,
-		onGlobalFilterChange: setGlobalFilter,
-		getCoreRowModel: getCoreRowModel(),
-		getFilteredRowModel: getFilteredRowModel(),
-		getSortedRowModel: getSortedRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		initialState: {
-			pagination: { pageSize: 5 },
-		},
-	});
 
 	const kilos_totales_bodega = (table.getFilteredRowModel().rows.reduce((acc, bodega) => bodega.original.kilos_bin + acc, 0) ?? 0).toLocaleString()
 
@@ -274,7 +297,7 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 	return (
 		<PageWrapper name='Lista Bodega G4' isProtectedRoute={true}>
 			<Subheader>
-				<SubheaderLeft>
+				{/* <SubheaderLeft>
 					<FieldWrap
 						firstSuffix={<Icon className='mx-2' icon='HeroMagnifyingGlass' />}
 						lastSuffix={
@@ -294,10 +317,12 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 							name='search'
 							placeholder='Busca al productor...'
 							value={globalFilter ?? ''}
-							onChange={(e) => setGlobalFilter(e.target.value)}
+							onChange={(e) => setGlobalFilter((prev : any) => {
+								return { ...prev, productor: e.target.value }
+							})}
 						/>
 					</FieldWrap>
-				</SubheaderLeft>
+				</SubheaderLeft> */}
 				<SubheaderRight>
 					<div className="w-full flex items-center justify-around bg-emerald-700 py-2 gap-10 rounded-md px-10">
 						<span className="text-xl text-white">Kilos Disponibles: </span>
@@ -320,11 +345,12 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
                       name='productor'
                       className='w-full h-14 py-2'
                       onChange={(selectedOption: any) => {
-                        if (selectedOption && selectedOption.value === '') {
-                          setGlobalFilter('')
-                        } else {
-                          setGlobalFilter(selectedOption.label);
-                        }
+                        setGlobalFilter((prev : any) => (
+							{
+								...prev,
+								variedad: selectedOption?.label != "Selecciona una variedad" ? selectedOption?.label : ''
+							}
+						))
                       }}
                     />
                 </div>
@@ -333,16 +359,18 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
                   <Label htmlFor="calle">Calibre: </Label>
                   <SelectReact
                     options={[{ value: '', label: 'Selecciona un calibre' }, ...optionsCalibres]}
-                    id='variedad'
+                    id='calibre'
                     placeholder='Calibre'
-                    name='Variedad'
+                    name='calibre'
                     className='w-full h-14 py-2'
                     onChange={(selectedOption: any) => {
-                      if (selectedOption && selectedOption.value === '') {
-                        setGlobalFilter('')
-                      } else {
-                        setGlobalFilter(selectedOption.label);
-                      }
+						setGlobalFilter((prev : any) => (
+							{
+								...prev,
+								calibre: selectedOption?.label != "Selecciona un calibre" ? selectedOption?.label : ''
+							}
+						)
+						)
                     }}
                   />
                 </div>
@@ -356,16 +384,18 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
                     name='Variedad'
                     className='w-full h-14 py-2'
                     onChange={(selectedOption: any) => {
-                      if (selectedOption && selectedOption.value === '') {
-                        setGlobalFilter('')
-                      } else {
-                        setGlobalFilter(selectedOption.label);
-                      }
+						setGlobalFilter((prev : any) => (
+							{
+								...prev,
+								calidad: selectedOption?.label != "Selecciona una calidad" ? selectedOption?.label : ''
+							}
+						)
+						)
                     }}
                   />
                 </div>
 
-								<div className="w-full flex-col">
+				<div className="w-full flex-col">
                   <Label htmlFor="calle">Calle Bodega: </Label>
                   <SelectReact
                     options={[{ value: '', label: 'Selecciona una calle' }, ...optionCalleBodega.slice(0,14)]}
@@ -374,11 +404,13 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
                     name='Variedad'
                     className='w-full h-14 py-2'
                     onChange={(selectedOption: any) => {
-                      if (selectedOption && selectedOption.value === '') {
-                        setGlobalFilter('')
-                      } else {
-                        setGlobalFilter(selectedOption.label);
-                      }
+                     setGlobalFilter((prev : any) => (
+							{
+								...prev,
+								calle: selectedOption?.label != "Selecciona una calle" ? selectedOption?.label : ''
+							}
+						)
+						)
                     }}
                   />
 							</div>

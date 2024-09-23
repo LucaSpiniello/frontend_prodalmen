@@ -26,6 +26,7 @@ export type TSeleccion = {
   }
   numero_programa: number
   pepa_para_seleccion_length: number
+  produccion: number 
 }
 
 
@@ -182,6 +183,8 @@ export type TBinBodega = {
   agrupado: boolean
   procesado_por: null | number
   tipo_producto: string
+  programa_produccion?: string
+  productor?: string
 }
 
 
@@ -285,6 +288,7 @@ export type TPDFInformeOperarioResumido = {
   operario: string
   kilos: number
   neto: number
+  detalle?: string
 }
 
 export type TPDFEntradaSeleccion = {

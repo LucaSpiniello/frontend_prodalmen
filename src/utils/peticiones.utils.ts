@@ -34,6 +34,18 @@ export async function fetchWithTokenPostWithFormData(url: string, data: any, tok
   return response;
 }
 
+export async function fetchWithTokenPostWithBody(url: string, data: any, token?: string): Promise<Response> {
+  const response = await fetch(`${base_url}/${url}`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  });
+  return response;
+}
+
 
 export async function fetchWithToken(url: string, token: string): Promise<Response> {
   const response = await fetch(`${base_url}/${url}`, {

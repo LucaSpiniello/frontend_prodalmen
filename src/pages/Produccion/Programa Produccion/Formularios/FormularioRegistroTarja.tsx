@@ -73,7 +73,7 @@ const FormularioRegistroTarja: FC<IFormularioRegistroTarjaProps> = ({ setOpen })
       if (!token_verificado)throw new Error('Token no verificado')
       const response = await fetchWithTokenPost(`api/produccion/${id}/asignar_dias_kilos/`, {}, token_verificado)
       if (response.ok) {
-        toast.success('Dias Asignados')
+        toast.success('Trabajo asignado a operarios')
       } else {
         toast.error('Error' + `${await response.json()}`)
       }

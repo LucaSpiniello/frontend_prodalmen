@@ -1,3 +1,5 @@
+import comercializadores from "../redux/slices/comercializadores";
+
 export const examplePages = {
 	examplesPage: {
 		id: 'examplesPage',
@@ -751,9 +753,28 @@ export const appPages = {
 					}
 				}
 			}
-
 		}
-	}
+	},
+	comercializadores: {
+		id: 'comercializadores',
+		text: 'Comercializadores',
+		icon: 'DuoBox2',
+		to: '/comercializadores',
+		subPages: {
+			proyeccion: {
+				id: 'proyeccion',
+				text: 'Proyección',
+				to: '/comercializadores/proyeccion',
+				icon: 'DuoChartPie',
+			},
+			resultados: {
+				id: 'resultados',
+				text: 'Resultados',
+				to: '/comercializadores/resultados',
+				icon: 'DuoUnion',
+			}
+		}
+	},	
 
 }
 

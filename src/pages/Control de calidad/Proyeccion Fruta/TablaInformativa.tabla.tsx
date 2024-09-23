@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { TControlCalidad } from '../../../types/TypesControlCalidad.type';
 import PageWrapper from '../../../components/layouts/PageWrapper/PageWrapper';
 import Container from '../../../components/layouts/Container/Container';
@@ -14,16 +14,36 @@ import { IoWarning } from 'react-icons/io5';
 
 const columnHelper = createColumnHelper<TControlCalidad>();
 
-const TablaInformativa = ({ filtro } : { filtro: string }) => {  
+const TablaInformativa = ({ filtroVariedad, filtroProductor }: { filtroVariedad: string, filtroProductor: string }) => {  
   const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
   const control_calidad = useAppSelector((state: RootState) => state.control_calidad.controles_calidad_visto_bueno)
+  const userGroup = useAppSelector((state: RootState) => state.auth.grupos)
+	const [dataControles, setDataControles] = useState<TControlCalidad[]>([])
+
+  const hasComercializador = (groups: any) => userGroup?.groups && groups.some((group: any) => group in userGroup.groups);
 
 	useEffect(() => {
-		if (filtro){
-			setGlobalFilter(filtro)
-		}
-	}, [filtro])
+			setGlobalFilter(filtroVariedad || filtroProductor);
+
+			if (hasComercializador(['comercializador']) && !hasComercializador(['dnandres'])) {
+				setDataControles(filterByComercializador('Pacific Nut'))
+			} else{
+				setDataControles(filterByComercializador('Prodalmen'))
+			}
+		}, [filtroVariedad, filtroProductor])
+
+	const dataControlesFiltrados = useMemo(() => {
+		return dataControles.filter(control => {
+			const coincideVariedad = filtroVariedad ? control.variedad.includes(filtroVariedad) : true;
+			const coincideProductor = filtroProductor ? control.productor.includes(filtroProductor) : true;
+			return coincideVariedad && coincideProductor;
+		});
+	}, [dataControles, filtroVariedad, filtroProductor]);
+
+	const filterByComercializador= (name : string ) => {
+		return control_calidad.filter((control: any) => control.comercializador.toLowerCase() === name.toLowerCase());
+	}
 
   const columns = [
 		columnHelper.display({
@@ -52,6 +72,14 @@ const TablaInformativa = ({ filtro } : { filtro: string }) => {
 				</div>
 			),
 			header: 'Variedad',
+		}),
+	columnHelper.accessor('productor',	{
+			  id: 'productor',	
+			cell: (info) => (
+				<div className='font-bold text-center'>
+					{info.row.original.productor}
+				</div>
+			),
 		}),
     columnHelper.display({
       id: 'rendimientos',
@@ -104,7 +132,7 @@ const TablaInformativa = ({ filtro } : { filtro: string }) => {
   ]
 
   const table = useReactTable({
-		data: control_calidad,
+		data: dataControlesFiltrados,
 		columns,
 		state: {
 			sorting,

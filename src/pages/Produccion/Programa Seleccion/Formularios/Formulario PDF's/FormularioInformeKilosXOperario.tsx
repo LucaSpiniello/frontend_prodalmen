@@ -36,7 +36,7 @@ const FormularioInformeKilosXOperario: FC<IInformeProduccion> = ({ setOpen }) =>
   const { verificarToken } = useAuth()
 
   useEffect(() => {
-    dispatch(fetchOperariosFiltro({token, verificar_token: verificarToken, skill: '?skill=seleccion' }))
+    dispatch(fetchOperariosFiltro({token, verificar_token: verificarToken, skill: '?skill=seleccion,sub_prod' }))
   }, []) 
 
   const formik = useFormik({
@@ -50,6 +50,7 @@ const FormularioInformeKilosXOperario: FC<IInformeProduccion> = ({ setOpen }) =>
       try {
         const token_verificado = await verificarToken(token!)
         if (!token_verificado) throw new Error('Token no verificado')
+        values.hasta = dayjs(values.hasta).hour(19).minute(59).second(0).millisecond(0).toDate();
         const res = await fetchWithTokenPost(`api/seleccion/pdf_kilos_por_operario/`,
           {
             ...values,

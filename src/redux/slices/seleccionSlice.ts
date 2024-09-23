@@ -87,6 +87,28 @@ async (payload: FetchOptions, thunkAPI) => {
   }
 })
 
+
+export const fetchBinsPepaCalibradaPerProgram = createAsyncThunk('seleccion/fetch_bins_calibrados_per_program', 
+  async (payload: FetchOptions, thunkAPI) => {
+    const { token, verificar_token } = payload
+    
+    try {
+      const token_verificado = await verificar_token(token)
+    
+      if (!token_verificado) throw new Error('Token no verificado')
+      const response = await fetchWithToken(`api/seleccion/get_all_info`, token_verificado)
+      console.log('response', response)
+      if(response.ok){
+        const data = await response.json()
+        return data
+      } else if (response.status === 400){
+        return thunkAPI.rejectWithValue(`No se pudo hacer la petición`)
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue(`No se pudo hacer la petición`)
+    }
+  })
+
 export const fetchSubProductosOperarios = createAsyncThunk('seleccion/fetch_subproductos', 
   async (payload: FetchOptions, thunkAPI) => {
   const { id, token, verificar_token } = payload
@@ -454,6 +476,7 @@ const initialState = {
   tarjas_seleccionadas: [] as TTarjaSeleccionada[],
   tarja_seleccionada_individual: null as TTarjaSeleccionada | null,
   bins_pepas_calibradas: [] as TPepaParaSeleccion[],
+  bins_pepas_calibradas_per_program: [] as any,
   bin_pepa_calibrada_individual: null as TPepaParaSeleccion | null,
   sub_productos_operarios: [] as TSubproducto[],
   sub_producto_operario_individual: null as TSubproducto | null,
@@ -546,6 +569,9 @@ export const SeleccionSlice = createSlice({
       .addCase(fetchBinsPepaCalibrada.fulfilled, (state, action) => {
         state.bins_pepas_calibradas = action.payload
       })
+      .addCase(fetchBinsPepaCalibradaPerProgram.fulfilled, (state, action) => {
+        state.bins_pepas_calibradas_per_program = action.payload
+      })
       .addCase(fetchSubProductosOperarios.fulfilled, (state, action) => {
         state.sub_productos_operarios = action.payload
       })
@@ -606,7 +632,6 @@ export const SeleccionSlice = createSlice({
         state.error = action.payload
         state.loading = false
       })
-      
       
     
   }

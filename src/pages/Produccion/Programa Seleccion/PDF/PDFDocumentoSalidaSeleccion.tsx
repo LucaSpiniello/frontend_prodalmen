@@ -13,7 +13,7 @@ import { useEffect } from 'react';
 import { useAuth } from '../../../../context/authContext';
 import { fetchBinsEnReproceso } from '../../../../redux/slices/reprocesoSlice';
 import { fetchPDFEntradaSeleccion, fetchPDFSalidaSeleccion } from '../../../../redux/slices/seleccionSlice';
-import { Bines, TPDFEntradaSeleccion, TPDFSalidaSeleccion } from '../../../../types/TypesSeleccion.type';
+import { Bines, Productos, TPDFEntradaSeleccion, TPDFSalidaSeleccion } from '../../../../types/TypesSeleccion.type';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 
@@ -349,64 +349,64 @@ const PDFDocumentoSalida = () => {
                   }}>
 
                   <View style={styles.header_info_box_superior}>
-                    <Text style={{ fontSize: 9}}>{entrada.codigo_tarja}</Text>
+                    <Text style={{ fontSize: 9}}>{entrada?.codigo_tarja}</Text>
                   </View>
       
                   <View style={styles.header_info_box_superior}>
-                    <Text style={{ fontSize: 9}}>{entrada.variedad}</Text>
+                    <Text style={{ fontSize: 9}}>{entrada?.variedad}</Text>
                   </View>
       
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.calibre}</Text>
+                   <Text style={{ fontSize: 9}}>{entrada?.calibre}</Text>
                   </View>
 
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.trozo}%</Text>
+                   <Text style={{ fontSize: 9}}>{entrada?.trozo}%</Text>
                   </View>
 
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.picada}%</Text>
+                   <Text style={{ fontSize: 9}}>{entrada?.picada}%</Text>
                   </View>
 
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.hongo}%</Text>
+                   <Text style={{ fontSize: 9}}>{entrada?.hongo}%</Text>
                   </View>
 
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.insecto}%</Text>
+                   <Text style={{ fontSize: 9}}>{entrada?.insecto}%</Text>
                   </View>
 
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.dobles}%</Text>
+                   <Text style={{ fontSize: 9}}>{entrada?.dobles}%</Text>
                   </View>
 
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.p_goma}%</Text>
+                   <Text style={{ fontSize: 9}}>{entrada?.p_goma}%</Text>
                   </View>
 
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.basura}%</Text>
+                   <Text style={{ fontSize: 9}}>{entrada?.basura}%</Text>
                   </View>
                   
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.mezcla}%</Text>
+                   <Text style={{ fontSize: 9}}>{entrada?.mezcla}%</Text>
                   </View>
 
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.color}%</Text>
+                   <Text style={{ fontSize: 9}}>{entrada?.color}%</Text>
                   </View>
       
 
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.goma}%</Text>
+                   <Text style={{ fontSize: 9}}>{entrada?.goma}%</Text>
                   </View>
 
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.pepa}%</Text>
+                   <Text style={{ fontSize: 9}}>{entrada?.pepa}%</Text>
                   </View>
 
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.kilos} </Text>
+                   <Text style={{ fontSize: 9}}>{entrada?.kilos} </Text>
                   </View>
       
                 </View>
@@ -436,13 +436,13 @@ const PDFDocumentoSalida = () => {
             </View>
 
             <View style={styles.header_info_box_superior}>
-             <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Calibre</Text>
+             <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Peso</Text>
             </View>
 
           </View>
 
           {
-            pdf_salida?.bines.map((entrada: Bines) => {
+            pdf_salida?.subproductos.map((producto: Productos) => {
               return (
                 <View style={{ 
                   width: '100%',
@@ -453,15 +453,15 @@ const PDFDocumentoSalida = () => {
                   }}>
 
                   <View style={styles.header_info_box_superior}>
-                    <Text style={{ fontSize: 9}}>{entrada.codigo_tarja}</Text>
+                    <Text style={{ fontSize: 9}}>{producto.operario}</Text>
                   </View>
       
                   <View style={styles.header_info_box_superior}>
-                    <Text style={{ fontSize: 9}}>{entrada.variedad}</Text>
+                    <Text style={{ fontSize: 9}}>{producto.tipo_producto}</Text>
                   </View>
       
                   <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.calibre}</Text>
+                   <Text style={{ fontSize: 9}}>{producto.peso}</Text>
                   </View>
 
                 

@@ -55,6 +55,7 @@ const FormularioRegistroTarjaSeleccion: FC<IFormularioRegistroTarjaSeleccionProp
         const data = await res.json()
         //@ts-ignore
         dispatch(fetchTarjasSeleccionadas({ id, token, verificar_token: verificarToken }))
+        asignar_dias_kilos()
         setOpen(false)
         toast.success("Tarja registrada exitosamente")
         setDisabled(false)
@@ -64,6 +65,21 @@ const FormularioRegistroTarjaSeleccion: FC<IFormularioRegistroTarjaSeleccionProp
       }
     }
   });
+
+  const asignar_dias_kilos = async () => {
+    try {
+      const token_verificado = await verificarToken(token!)
+      if (!token_verificado) throw new Error('Token no verificado')
+      const response = await fetchWithTokenPost(`api/seleccion/${id}/asignar_dias_kilos/`, {}, token_verificado)
+      if (response.ok) {
+        toast.success('Trabajo asignado a operarios')
+      } else {
+        toast.error('Error' + `${await response.json()}`)
+      }
+    } catch {
+      console.log('Error dias asignados')
+    }
+  }
 
   return (
     <div>

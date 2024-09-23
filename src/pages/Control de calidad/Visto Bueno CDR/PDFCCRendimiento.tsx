@@ -11,6 +11,7 @@ import { useAuth } from "../../../context/authContext"
 import { fetchControlCalidad, fetchRendimientoLotes } from "../../../redux/slices/controlcalidadSlice"
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
+import { size } from "lodash"
 
 const styles = StyleSheet.create({
   page: {
@@ -140,7 +141,8 @@ const styles = StyleSheet.create({
   },
   boxes_table_row: {
     margin: 'auto',
-    width: '100%'
+    width: '100%',
+    textAlign: 'center',
   }
 })
 
@@ -229,7 +231,7 @@ const CCRendimiento = () => {
             position: 'top',
             labels: {
               font: {
-                size: 14,
+                size: 20,
                 family: 'Arial',
                 style: 'italic',
                 weight: 'bold',
@@ -241,7 +243,7 @@ const CCRendimiento = () => {
             display: true,
             text: 'My Pie Chart',
             font: {
-              size: 24,
+              size: 30,
               family: 'Arial',
               style: 'italic',
               weight: 'bold',
@@ -256,12 +258,12 @@ const CCRendimiento = () => {
             enabled: true,
             backgroundColor: 'rgba(0,0,0,0.7)', // Color de fondo del tooltip
             titleFont: {
-              size: 16,
+              size: 20,
               weight: 'bold',
               family: 'Arial',
             },
             bodyFont: {
-              size: 14,
+              size: 18,
               family: 'Arial',
             },
             borderColor: 'darkgreen',
@@ -328,6 +330,11 @@ const CCRendimiento = () => {
               <View style={styles.header_info_box_superior}>
                 <Text style={{ fontSize: 10 }}>Datos Guia Recepcion Materia Prima </Text>
                 <View style={styles.header_info_inferior}>
+                  <View style={styles.header_date_info_box}>
+                    <Text style={styles.header_date_info_text}>Productor: </Text>
+
+                    <Text style={styles.header_date_info_text}>{guia?.nombre_productor}</Text>
+                  </View>
 
                   <View style={styles.header_date_info_box}>
                     <Text style={styles.header_date_info_text}>N° Lote: </Text>
@@ -340,11 +347,6 @@ const CCRendimiento = () => {
                     <Text style={styles.header_date_info_text}>{control_calidad?.variedad}</Text>
                   </View>
 
-                  <View style={styles.header_date_info_box}>
-                    <Text style={styles.header_date_info_text}>Productor: </Text>
-
-                    <Text style={styles.header_date_info_text}>{guia?.nombre_productor}</Text>
-                  </View>
 
                   <View style={styles.header_date_info_box}>
                     <Text style={styles.header_date_info_text}>Comercializador: </Text>
@@ -439,9 +441,8 @@ const CCRendimiento = () => {
                 top: -20
               }}>
                 <Text style={{ fontSize: 8 }}>Control Rendimiento</Text>
-                <View style={{ width: '100%', height: 170, padding: 20 }} >
-                  <Image source={`${imageSrc}`} style={{ height: 150 }} />
-
+                <View style={{ width: '100%', height: 180, padding: 10 }} >
+                  <Image source={`${imageSrc}`} style={{ height: 170 }} />
                 </View>
               </View>
               <View style={{
@@ -455,7 +456,7 @@ const CCRendimiento = () => {
 
 
                     <View style={styles.body_table_header}>
-                      <View style={{ width: '100%' }}>
+                      <View style={{ width: '100%' , textAlign: 'center'}}>
                         <Text style={styles.header_date_info_text}>MM</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
@@ -571,7 +572,7 @@ const CCRendimiento = () => {
 
                       <View style={styles.body_table_rows}>
                         <View style={styles.boxes_table_row}>
-                          <Text style={styles.body_table_info_text}>10</Text>
+                          <Text style={styles.body_table_info_text}>9</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={styles.body_table_info_text}>32/34</Text>
@@ -587,7 +588,7 @@ const CCRendimiento = () => {
 
                       <View style={styles.body_table_rows}>
                         <View style={styles.boxes_table_row}>
-                          <Text style={styles.body_table_info_text}>-10</Text>
+                          <Text style={styles.body_table_info_text}>8</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={styles.body_table_info_text}>34/36</Text>
@@ -603,7 +604,7 @@ const CCRendimiento = () => {
 
                       <View style={styles.body_table_rows}>
                         <View style={styles.boxes_table_row}>
-                          <Text style={styles.body_table_info_text}>-10</Text>
+                          <Text style={styles.body_table_info_text}>&lt;8</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={styles.body_table_info_text}>36/40</Text>
@@ -619,7 +620,7 @@ const CCRendimiento = () => {
                       0
                       <View style={styles.body_table_rows}>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ width: '100%', borderRight: '1px solid green', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, color: 'white', fontSize: 8 }}>a</Text>
+                          <Text style={styles.body_table_info_text}>&lt;8</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={styles.body_table_info_text}>40/+</Text>
@@ -635,7 +636,7 @@ const CCRendimiento = () => {
                       0
                       <View style={styles.body_table_rows}>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ width: '100%', textAlign: 'center', borderRight: '1px solid green', paddingVertical: 4, paddingRight: 2, color: 'white', fontSize: 8 }}>a</Text>
+                          <Text style={styles.body_table_info_text}>&lt;8</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={{ width: '100%', textAlign: 'center', borderRight: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8 }}>Pre calibre</Text>
@@ -647,8 +648,6 @@ const CCRendimiento = () => {
                           <Text style={{ width: '100%', textAlign: 'center', paddingVertical: 4, paddingRight: 2, fontSize: 8 }}>{rendimientos?.cc_pepa_calibre[0].precalibre}%</Text>
                         </View>
                       </View>
-
-
                     </View>
                   </View>
                 </View>

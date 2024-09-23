@@ -22,7 +22,7 @@ import { useDispatch } from 'react-redux';
 import Checkbox from '../../../../../components/form/Checkbox';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import Button from '../../../../../components/ui/Button';
-
+import Select from 'react-select'
 
 
 const TablaEnvasesPrograma = () => {
@@ -131,7 +131,6 @@ const TablaEnvasesPrograma = () => {
       />
     );
   }
-
 
   useEffect(() => {
     if (id) {
@@ -309,6 +308,38 @@ const TablaEnvasesPrograma = () => {
     }
   }
 
+  const [selectedLote, setSelectedLote] = useState('');
+
+
+  const lotesUnicos = Array.from(new Set(envases_programa.map(envase => envase.numero_lote)));
+
+  const optionsLotes = [
+    { value: '', label: 'Selecciona un lote' }, // Opción para deseleccionar
+    ...lotesUnicos.map(lote => ({
+      value: String(lote), // Convertimos el número de lote a string si es necesario
+      label: `Lote ${lote}`,
+    })),
+  ];
+
+  const handleLoteChange = (selectedOption : any) => {
+    const loteSeleccionado = selectedOption?.value || '';
+    setSelectedLote(loteSeleccionado);
+  
+    // Si se selecciona la opción "Selecciona un lote", limpiamos la selección de filas
+    if (loteSeleccionado === '') {
+      setRowSelection({}); // Deselecciona todas las filas
+      return;
+    }
+  
+    // Si se selecciona un lote, selecciona las filas correspondientes
+    const nuevaSeleccion : any = {};
+    envases_programa.forEach((envase : any, index : any) => {
+      if (String(envase.numero_lote) === loteSeleccionado) {
+        nuevaSeleccion[index] = true; // Selecciona la fila correspondiente
+      }
+    });
+    setRowSelection(nuevaSeleccion); // Actualiza la selección de filas en la tabla
+  };
 
   return (
     <Container className='w-full !p-0'>
@@ -335,8 +366,7 @@ const TablaEnvasesPrograma = () => {
               value={globalFilter ?? ''}
               onChange={(e) => setGlobalFilter(e.target.value)}
             />
-          </FieldWrap>
-
+            </FieldWrap>
           {
                 !envases_programa.every(bin => bin.bin_procesado === true) && lotesParaMasivo.length > 1
                   ? (
@@ -349,6 +379,20 @@ const TablaEnvasesPrograma = () => {
                     )
                   : null
               }
+            <Select
+              options={optionsLotes}
+              id="select_lote"
+              placeholder="Selecciona un lote"
+              name="select_lote"
+              className="h-12"
+              value={optionsLotes.find(option => option.value === String(selectedLote)) || ''}
+              onChange={handleLoteChange}
+              noOptionsMessage={(obj) => (
+                <div className="font-bold">
+                  No hay Coincidencias con {obj.inputValue}
+                </div>
+              )}
+            />
         </CardHeader>
         <CardBody className='overflow-x-auto'>
           <TableTemplate className='table-fixed max-md:min-w-[70rem]' table={table} columnas={columnas}/>

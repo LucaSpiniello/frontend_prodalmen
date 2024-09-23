@@ -27,20 +27,23 @@ const DefaultAsideTemplate = () => {
 			<AsideBody>
 				<Nav>
 					<NavTitle>Accesos</NavTitle>
-					<NavCollapse
-						text={appPages.registroAppPages.text}
-						to={appPages.registroAppPages.to}
-						icon={appPages.registroAppPages.icon}
-					>
-						<NavItem {...appPages.registroAppPages.subPages.clientes} />
-						<NavItem {...appPages.registroAppPages.subPages.productores} />
-						<NavItem {...appPages.registroAppPages.subPages.camiones} />
-						<NavItem {...appPages.registroAppPages.subPages.conductores} />
-						<NavItem {...appPages.registroAppPages.subPages.comercializadores} />
-						<NavItem {...appPages.registroAppPages.subPages.operarios} />
-					</NavCollapse>
+					{ !hasGroup(['comercializador']) || hasGroup(['dnandres']) && (
+							<NavCollapse
+							text={appPages.registroAppPages.text}
+							to={appPages.registroAppPages.to}
+							icon={appPages.registroAppPages.icon}
+						>
+							<NavItem {...appPages.registroAppPages.subPages.clientes} />
+							<NavItem {...appPages.registroAppPages.subPages.productores} />
+							<NavItem {...appPages.registroAppPages.subPages.camiones} />
+							<NavItem {...appPages.registroAppPages.subPages.conductores} />
+							<NavItem {...appPages.registroAppPages.subPages.comercializadores} />
+							<NavItem {...appPages.registroAppPages.subPages.operarios} />
+						</NavCollapse>
+					)
+				}
 
-					{hasGroup(['controlcalidad', 'bodega', 'recepcion-mp', 'dnandres', 'jefe-planta']) && (
+					{(hasGroup(['controlcalidad', 'bodega', 'recepcion-mp', 'jefe-planta']) && !hasGroup(['comercializador']) || hasGroup(['dnandres'])) && (
 						<NavCollapse
 							text={appPages.recepcionAppPages.text}
 							to={appPages.recepcionAppPages.to}
@@ -51,7 +54,7 @@ const DefaultAsideTemplate = () => {
 						</NavCollapse>
 					)}
 
-					{hasGroup(['controlcalidad', 'bodega', 'jefe-planta', 'dnandres']) && (
+					{(hasGroup(['controlcalidad', 'bodega', 'jefe-planta']) && !hasGroup(['comercializador']) || hasGroup(['dnandres'])) && (
 						<NavCollapse
 							text={appPages.controles_calidad.text}
 							to={appPages.controles_calidad.to}
@@ -197,6 +200,18 @@ const DefaultAsideTemplate = () => {
 						: null
 					}
 
+					{hasGroup(['comercializador'])
+					? (
+						<NavCollapse
+							text={appPages.comercializadores.text}
+							to={appPages.comercializadores.to}
+							icon={appPages.comercializadores.icon}
+							>
+							<NavItem {...appPages.comercializadores.subPages.proyeccion} />
+							<NavItem {...appPages.comercializadores.subPages.resultados} />
+							</NavCollapse> )
+							: null
+					}
 				</Nav>
 			</AsideBody>
 			<AsideFooter>

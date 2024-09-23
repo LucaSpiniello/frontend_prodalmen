@@ -249,7 +249,7 @@ const PDFInformeKilosXOperario = () => {
           </View>
           
 
-          <Text style={{ textAlign: 'center', fontSize: 10, fontWeight: 'bold', marginTop: 10 }}>Lista de Subproducto Registrado</Text>
+          <Text style={{ textAlign: 'center', fontSize: 10, fontWeight: 'bold', marginTop: 10 }}>Lista de Productos Seleccion</Text>
 
           <View style={{ 
             width: '100%',
@@ -264,7 +264,7 @@ const PDFInformeKilosXOperario = () => {
             }}>
 
             <View style={styles.header_info_box_superior}>
-             <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Sub Producto</Text>
+             <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Producto</Text>
             </View>
 
             <View style={styles.header_info_box_superior}>

@@ -20,9 +20,10 @@ import { useDispatch } from 'react-redux';
 import Label from '../../../components/form/Label';
 import SelectReact from '../../../components/form/SelectReact';
 import { optionsVariedad, variedadFilter } from '../../../utils/options.constantes';
-import { set } from 'lodash';
+import { has, set } from 'lodash';
 import { TRendimiento } from "../../../types/TypesControlCalidad.type"
 import PDFProyeccion from './PDFProyeccion';
+import User from '../../../components/layouts/User/User';
 
 interface InfoControlesCalidad {
   [key: number]: { 
@@ -45,15 +46,18 @@ const DetalleProyeccion = () => {
   const todos_los_rendimientos = useAppSelector((state: RootState) => state.control_calidad.todos_los_rendimientos);
   const [filtroVariedadLabel, setFiltroVariedadLabel] = useState<string>('')
   const [selectedProductor, setSelectedProductor] = useState<string>('');
-  const [showPDF, setShowPDF] = useState(false);
+  const perfil = useAppSelector((state: RootState) => state.auth.dataUser)
 
+  const userGroup = useAppSelector((state: RootState) => state.auth.grupos)
+
+  const hasGroup = (groups: any) => userGroup?.groups && groups.some((group: any) => group in userGroup.groups);
   const newInfo: InfoControlesCalidad = {};
   
   const [datosAgrupadosPorProductor, setDatosAgrupadosPorProductor] = useState<any>({});
   const [infoControlesCalidad, setInfoControlesCalidad] = useState<InfoControlesCalidad>({});
   const [productores, setProductores] = useState<string[]>([]);
-
   const [rendimientosCombinados, setRendimientosCombinados] = useState<TRendimiento | null>(null);
+  const [selectedNumeroGuia, setSelectedNumeroGuia] = useState<string>(''); 
 
   useEffect(() => {
     setFiltroVariedad('NN')
@@ -64,8 +68,14 @@ const DetalleProyeccion = () => {
   }, [])
 
   useEffect(() => {
-    if (control_calidad && filtroVariedad) {
-      const ids = control_calidad.map((lote: any) => lote.id)
+
+    if (control_calidad && filtroVariedad && hasGroup(['dnandres'])) {
+      const ids = filterByComercializador("Prodalmen").map((lote: any) => lote.id)
+      ids.forEach((id : any) => {
+        dispatch(fetchRendimientoLotes({ id,  params: { variedad: filtroVariedad }, token, verificar_token: verificarToken }));
+      });
+    } else if (control_calidad && filtroVariedad && hasGroup(['comercializador'])) {
+      const ids = filterByComercializador("Pacific Nut").map((lote: any) => lote.id)
       ids.forEach((id : any) => {
         dispatch(fetchRendimientoLotes({ id,  params: { variedad: filtroVariedad }, token, verificar_token: verificarToken }));
       });
@@ -132,6 +142,14 @@ const DetalleProyeccion = () => {
       });
     }
 
+    if (selectedNumeroGuia) {
+      Object.keys(filteredData).forEach(productor => {
+        filteredData[productor] = filteredData[productor].filter((control : any) => 
+          String(control.numero_lote) === String(selectedNumeroGuia)
+        );
+      });
+    }
+
     const combinedControls : any= Object.values(filteredData).flat();
     if (combinedControls.length > 0) {
       const combinedData = combinarControles(combinedControls);
@@ -139,7 +157,31 @@ const DetalleProyeccion = () => {
     } else {
       setRendimientosCombinados(null);
     } 
-  }, [datosAgrupadosPorProductor, selectedProductor, filtroVariedad]);
+  }, [datosAgrupadosPorProductor, selectedProductor, filtroVariedad, selectedNumeroGuia]);
+
+  // const filterByComercializador = () => {
+  //   return control_calidad.filter((control: any) => checkComercializadorIsInControl(control.comercializador, perfil));
+  // }
+
+  // const checkComercializadorIsInControl = (controlCom : string, user : any) => {
+  //   const lastName = user.last_name.toLowerCase();
+  //   const firstName = user.first_name.toLowerCase();
+  //   const fullName = firstName + " " + lastName;
+  //   if (controlCom.toLowerCase() === fullName) {
+  //     return true;
+  //   }
+  //   if (controlCom.toLowerCase() === lastName) {
+  //     return true;
+  //   }
+  //   if (controlCom.toLowerCase() === firstName) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
+  const filterByComercializador= (name : string ) => {
+    return control_calidad.filter((control: any) => control.comercializador.toLowerCase() === name.toLowerCase());
+  }
 
 	return (
 		<>
@@ -195,9 +237,39 @@ const DetalleProyeccion = () => {
               placeholder='Todos los Productores'
               name='productor'
               className='w-full py-2'
-              onChange={(value: any) => setSelectedProductor(value.value)}
+              onChange={(value: any) => {
+                setSelectedProductor(value.value)
+                if (value.label=="Todos los Productores"){
+                  setSelectedProductor('')
+                } else {
+                  setSelectedProductor(value.label)
+              }
+            }
+              }
             />
 
+          </div>
+
+          <div className="w-auto lg:w-3/12 flex-col">
+            <Label htmlFor="numero_guia">Número de Guía: </Label>
+            <SelectReact
+              options={[{ value: '', label: 'Todos los Números de Guía' }, 
+                ...Array.from(new Set(control_calidad.map((programa: any) => programa.guia_recepcion)))
+                  .map((numeroGuia: any) => ({ value: String(numeroGuia), label: String(numeroGuia) }))
+              ]}
+              id='numero_guia'
+              placeholder='Todos los Números de Guía'
+              name='numero_guia'
+              className='w-full py-2'
+              onChange={(value: any) => {
+                setSelectedNumeroGuia(value.value);
+                if (value.label === "Todos los Números de Guía") {
+                  setSelectedNumeroGuia('');
+                } else {
+                  setSelectedNumeroGuia(value.value);
+                }
+              }}
+            />
           </div>
         </Subheader>
 				<Container breakpoint={null} className='w-full h-full'>
@@ -211,7 +283,7 @@ const DetalleProyeccion = () => {
                     : activeTab.text === 'Calibres Pepa'
                       ? <CardFrutaCalibrada activeTab={activeTab} rendimiento={rendimientosCombinados!}/>
                       : activeTab.text === 'Tabla Informativa'
-                        ? <CardTablaInformativa activeTab={activeTab} filtro={filtroVariedadLabel}/>
+                        ? <CardTablaInformativa activeTab={activeTab} filtroVariedad={filtroVariedadLabel} filtroProductor={selectedProductor} />
                         : null
               }
 					</div>

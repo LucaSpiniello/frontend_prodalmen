@@ -50,22 +50,25 @@ const styles = StyleSheet.create({
   },
   header_info_inferior: {
     width: '50%',
-    height: 50,
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column',  // Las filas estarán en columnas
     gap: 5,
     marginBottom: 2,
     border: '1px solid green',
     borderRadius: 5,
     padding: 5,
-    paddingLeft: 5
-  },
-  header_date_info_box: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    gap: 5,
-  },
+    paddingLeft: 5,
+    overflow: 'hidden',  // Evitar desbordamiento
+},
+header_date_info_box: {
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'row',  // Mantener las filas
+  alignItems: 'center',  // Alinea los textos verticalmente en el centro
+  justifyContent: 'flex-start',  // Mantener los textos alineados a la izquierda
+  gap: 5,
+  flexWrap: 'nowrap',  // No permitir que el texto pase a la siguiente línea
+},
   header_date_info: {
     width: 190,
     height: '100%',
@@ -75,7 +78,11 @@ const styles = StyleSheet.create({
   },
   header_date_info_text: {
     fontSize: 8,
-  },
+    whiteSpace: 'nowrap',  // Evita que el texto haga saltos de línea
+    overflow: 'hidden',  // Evita que el texto desborde su contenedor
+    textOverflow: 'ellipsis',  // Mostrar puntos suspensivos si el texto es muy largo
+    flexGrow: 1,  // El texto ocupará el espacio disponible pero no más de lo necesario
+},
   body: {
     width: '100%',
     display: 'flex',
@@ -210,7 +217,7 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
 
                 <View style={styles.header_date_info_box}>
                   <Text style={styles.header_date_info_text}>Kilos Totales: </Text>
-                  <Text style={styles.header_date_info_text}>{controlCombinado.cc_calculo_final.kilos_netos} kgs</Text>
+                  <Text style={styles.header_date_info_text}>{new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(controlCombinado.cc_calculo_final.kilos_netos)} kgs</Text>
                 </View>
 
                 <View style={styles.header_date_info_box}>
@@ -220,8 +227,6 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
 
               </View>
             </View>
-
-
 
           </View>
         </View>
@@ -276,8 +281,13 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                         <Text style={styles.body_table_info_text}>18/20</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
-                        <Text style={styles.body_table_info_text}>{(controlCombinado.cc_pepa_calibre[0].calibre_18_20! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text>
+                        <Text style={styles.body_table_info_text}>
+                          {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                            Math.round((controlCombinado.cc_pepa_calibre[0].calibre_18_20! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100) * 10) / 10
+                          )} kgs
+                        </Text>
                       </View>
+
                       <View style={styles.boxes_table_row}>
                         <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{controlCombinado.cc_pepa_calibre[0].calibre_18_20.toFixed(1)}%</Text>
                       </View>
@@ -293,7 +303,11 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                         <Text style={styles.body_table_info_text}>20/22</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
-                        <Text style={styles.body_table_info_text}>{(controlCombinado.cc_pepa_calibre[0].calibre_20_22! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text>
+                        <Text style={styles.body_table_info_text}>
+                          {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                            Math.round((controlCombinado.cc_pepa_calibre[0].calibre_20_22! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100) * 10) / 10
+                          )} kgs
+                        </Text>
                       </View>
                       <View style={styles.boxes_table_row}>
                         <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{controlCombinado.cc_pepa_calibre[0].calibre_20_22.toFixed(1)}%</Text>
@@ -309,7 +323,11 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                         <Text style={styles.body_table_info_text}>23/25</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
-                        <Text style={styles.body_table_info_text}>{(controlCombinado.cc_pepa_calibre[0].calibre_23_25! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text>
+                        <Text style={styles.body_table_info_text}>
+                          {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                            Math.round((controlCombinado.cc_pepa_calibre[0].calibre_23_25! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100) * 10) / 10
+                          )} kgs
+                        </Text>
                       </View>
                       <View style={styles.boxes_table_row}>
                         <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{controlCombinado.cc_pepa_calibre[0].calibre_23_25.toFixed(1)}%</Text>
@@ -325,7 +343,11 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                         <Text style={styles.body_table_info_text}>25/27</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
-                        <Text style={styles.body_table_info_text}>{(controlCombinado.cc_pepa_calibre[0].calibre_25_27! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text>
+                        <Text style={styles.body_table_info_text}>
+                          {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                            Math.round((controlCombinado.cc_pepa_calibre[0].calibre_25_27! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100) * 10) / 10
+                          )} kgs
+                        </Text>
                       </View>
                       <View style={styles.boxes_table_row}>
                         <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{controlCombinado.cc_pepa_calibre[0].calibre_25_27.toFixed(1)}%</Text>
@@ -341,7 +363,11 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                         <Text style={styles.body_table_info_text}>27/30</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
-                        <Text style={styles.body_table_info_text}>{(controlCombinado.cc_pepa_calibre[0].calibre_27_30! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text>
+                        <Text style={styles.body_table_info_text}>
+                          {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                            Math.round((controlCombinado.cc_pepa_calibre[0].calibre_27_30! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100) * 10) / 10
+                          )} kgs
+                        </Text>
                       </View>
                       <View style={styles.boxes_table_row}>
                         <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{controlCombinado.cc_pepa_calibre[0].calibre_27_30.toFixed(1)}%</Text>
@@ -351,13 +377,17 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
 
                     <View style={styles.body_table_rows}>
                       <View style={styles.boxes_table_row}>
-                        <Text style={styles.body_table_info_text}>10</Text>
+                        <Text style={styles.body_table_info_text}>11</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
                         <Text style={styles.body_table_info_text}>30/32</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
-                        <Text style={styles.body_table_info_text}>{(controlCombinado.cc_pepa_calibre[0].calibre_30_32! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text>
+                        <Text style={styles.body_table_info_text}>
+                          {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                            Math.round((controlCombinado.cc_pepa_calibre[0].calibre_30_32! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100) * 10) / 10
+                          )} kgs
+                        </Text>
                       </View>
                       <View style={styles.boxes_table_row}>
                         <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{controlCombinado.cc_pepa_calibre[0].calibre_30_32.toFixed(1)}%</Text>
@@ -373,7 +403,11 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                         <Text style={styles.body_table_info_text}>32/34</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
-                        <Text style={styles.body_table_info_text}>{(controlCombinado.cc_pepa_calibre[0].calibre_32_34! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text>
+                        <Text style={styles.body_table_info_text}>
+                          {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                            Math.round((controlCombinado.cc_pepa_calibre[0].calibre_32_34! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100) * 10) / 10
+                          )} kgs
+                        </Text>
                       </View>
                       <View style={styles.boxes_table_row}>
                         <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{controlCombinado.cc_pepa_calibre[0].calibre_32_34.toFixed(1)}%</Text>
@@ -383,13 +417,17 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
 
                     <View style={styles.body_table_rows}>
                       <View style={styles.boxes_table_row}>
-                        <Text style={styles.body_table_info_text}>-10</Text>
+                        <Text style={styles.body_table_info_text}>9</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
                         <Text style={styles.body_table_info_text}>34/36</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
-                        <Text style={styles.body_table_info_text}>{(controlCombinado.cc_pepa_calibre[0].calibre_34_36! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text>
+                        <Text style={styles.body_table_info_text}>
+                          {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                            Math.round((controlCombinado.cc_pepa_calibre[0].calibre_34_36! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100) * 10) / 10
+                          )} kgs
+                        </Text>
                       </View>
                       <View style={styles.boxes_table_row}>
                         <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{controlCombinado.cc_pepa_calibre[0].calibre_34_36.toFixed(1)}%</Text>
@@ -399,13 +437,17 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
 
                     <View style={styles.body_table_rows}>
                       <View style={styles.boxes_table_row}>
-                        <Text style={styles.body_table_info_text}>-10</Text>
+                        <Text style={styles.body_table_info_text}>8</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
                         <Text style={styles.body_table_info_text}>36/40</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
-                        <Text style={styles.body_table_info_text}>{(controlCombinado.cc_pepa_calibre[0].calibre_36_40! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text>
+                        <Text style={styles.body_table_info_text}>
+                          {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                            Math.round((controlCombinado.cc_pepa_calibre[0].calibre_36_40! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100) * 10) / 10
+                          )} kgs
+                        </Text>
                       </View>
                       <View style={styles.boxes_table_row}>
                         <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{controlCombinado.cc_pepa_calibre[0].calibre_36_40.toFixed(1)}%</Text>
@@ -414,14 +456,18 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
 
                     0
                     <View style={styles.body_table_rows}>
-                      <View style={styles.boxes_table_row}>
-                        <Text style={{ width: '100%', borderRight: '1px solid green', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, color: 'white', fontSize: 8 }}>a</Text>
+                    <View style={styles.boxes_table_row}>
+                        <Text style={styles.body_table_info_text}>&lt;8</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
                         <Text style={styles.body_table_info_text}>40/+</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
-                        <Text style={styles.body_table_info_text}>{(controlCombinado.cc_pepa_calibre[0].calibre_40_mas! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text>
+                        <Text style={styles.body_table_info_text}>
+                          {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                            Math.round((controlCombinado.cc_pepa_calibre[0].calibre_40_mas! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100) * 10) / 10
+                          )} kgs
+                        </Text>
                       </View>
                       <View style={styles.boxes_table_row}>
                         <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{controlCombinado.cc_pepa_calibre[0].calibre_40_mas.toFixed(1)}%</Text>
@@ -430,14 +476,18 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
 
                     0
                     <View style={styles.body_table_rows}>
-                      <View style={styles.boxes_table_row}>
-                        <Text style={{ width: '100%', textAlign: 'center', borderRight: '1px solid green', paddingVertical: 4, paddingRight: 2, color: 'white', fontSize: 8 }}>a</Text>
+                    <View style={styles.boxes_table_row}>
+                        <Text style={styles.body_table_info_text}>&lt;8</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
                         <Text style={{ width: '100%', textAlign: 'center', borderRight: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8 }}>Pre calibre</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
-                        <Text style={{ width: '100%', textAlign: 'center', borderRight: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8 }}>{(controlCombinado.cc_pepa_calibre[0].precalibre! * controlCombinado.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text>
+                        <Text style={styles.body_table_info_text}>
+                          {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                            Math.round((controlCombinado.cc_pepa_calibre[0].precalibre * controlCombinado.cc_kilos_des_merma[0].exportable! / 100) * 10) / 10
+                          )} kgs
+                        </Text>
                       </View>
                       <View style={styles.boxes_table_row}>
                         <Text style={{ width: '100%', textAlign: 'center', paddingVertical: 4, paddingRight: 2, fontSize: 8 }}>{controlCombinado.cc_pepa_calibre[0].precalibre.toFixed(1)}%</Text>
@@ -481,8 +531,12 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.basura}%</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{(controlCombinado.cc_promedio_porcentaje_muestras.basura * controlCombinado.cc_calculo_final.kilos_netos / 100).toFixed(1)} kgs</Text>
-                        </View>
+                            <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
+                              {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                                controlCombinado.cc_promedio_porcentaje_muestras.basura * controlCombinado.cc_calculo_final.kilos_netos / 100
+                              )} kgs
+                            </Text>
+                          </View>
                       </View>
 
 
@@ -494,8 +548,12 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.cascara}%</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{(controlCombinado.cc_promedio_porcentaje_muestras.cascara * controlCombinado.cc_calculo_final.kilos_netos / 100).toFixed(1)} kgs</Text>
-                        </View>
+                        <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
+                          {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                            controlCombinado.cc_promedio_porcentaje_muestras.cascara * controlCombinado.cc_calculo_final.kilos_netos / 100
+                          )} kgs
+                        </Text>
+                      </View>
                       </View>
 
 
@@ -507,8 +565,12 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.ciega}%</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{(controlCombinado.cc_promedio_porcentaje_muestras.ciega * controlCombinado.cc_calculo_final.kilos_netos / 100).toFixed(1)} kgs</Text>
-                        </View>
+                        <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
+                          {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                            controlCombinado.cc_promedio_porcentaje_muestras.ciega * controlCombinado.cc_calculo_final.kilos_netos / 100
+                          )} kgs
+                        </Text>
+                      </View>
                       </View>
 
 
@@ -520,7 +582,11 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.pelon}%</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{(controlCombinado.cc_promedio_porcentaje_muestras.pelon * controlCombinado.cc_calculo_final.kilos_netos / 100).toFixed(1)} kgs</Text>
+                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
+                            {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                              controlCombinado.cc_promedio_porcentaje_muestras.pelon * controlCombinado.cc_calculo_final.kilos_netos / 100
+                            )} kgs
+                          </Text>
                         </View>
                       </View>
 
@@ -533,7 +599,11 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.pepa_huerto}%</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{(controlCombinado.cc_promedio_porcentaje_muestras.pepa_huerto * controlCombinado.cc_calculo_final.kilos_netos / 100).toFixed(1)} kgs</Text>
+                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
+                            {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                              controlCombinado.cc_promedio_porcentaje_muestras.pepa_huerto * controlCombinado.cc_calculo_final.kilos_netos / 100
+                            )} kgs
+                          </Text>
                         </View>
                       </View>
 
@@ -545,7 +615,11 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.pepa_bruta}%</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{(controlCombinado.cc_promedio_porcentaje_muestras.pepa_bruta * controlCombinado.cc_calculo_final.kilos_netos / 100).toFixed(1)} kgs</Text>
+                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
+                            {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                              controlCombinado.cc_promedio_porcentaje_muestras.pepa_bruta * controlCombinado.cc_calculo_final.kilos_netos / 100
+                            )} kgs
+                          </Text>
                         </View>
                       </View>
 
@@ -565,11 +639,11 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
               width: '100%',
               height: '100%',
               position: 'relative',
-              top: 0
+              top: 10
             }}>
 
               <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: '10px' }}>Desechos</Text>
-              <View style={{ width: '100%', height: 145 }}>
+              <View style={{ width: '100%', height: 143 }}>
                 <View style={styles.body_table}>
 
                   <View style={styles.body_table_header}>
@@ -580,71 +654,91 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                       <Text style={{ fontSize: 8, textAlign: 'center', paddingVertical: 2 }}>Kilos Desc.</Text>
                     </View>
                   </View>
-
-
-
                   <View style={styles.body_table_info}>
-                    <View style={styles.body_table_rows}>
-                      <View style={{ width: '350px' }}>
-                        <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Daño insecto</Text>
-                      </View>
-
-                      <View style={{ width: '350px' }}>
-                        <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{(controlCombinado.cc_descuentos[0].insecto).toFixed(1)} Kgs</Text>
-                      </View>
+                  <View style={styles.body_table_rows}>
+                    <View style={{ width: '350px' }}>
+                      <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Daño insecto</Text>
                     </View>
 
-                    <View style={styles.body_table_rows}>
-                      <View style={styles.boxes_table_row}>
-                        <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Presencia de Hongo</Text>
-                      </View>
-
-                      <View style={styles.boxes_table_row}>
-                        <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{(controlCombinado.cc_descuentos[0].hongo).toFixed(2)} Kgs</Text>
-                      </View>
-                    </View>
-
-                    <View style={styles.body_table_rows}>
-                      <View style={styles.boxes_table_row}>
-                        <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Vana Deshidratada</Text>
-                      </View>
-
-                      <View style={styles.boxes_table_row}>
-                        <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{(controlCombinado.cc_descuentos[0].vana).toFixed(2)} Kgs</Text>
-                      </View>
-                    </View>
-
-                    <View style={styles.body_table_rows}>
-                      <View style={styles.boxes_table_row}>
-                        <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Punto de Goma</Text>
-                      </View>
-
-                      <View style={styles.boxes_table_row}>
-                        <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{(controlCombinado.cc_descuentos[0].pgoma).toFixed(2)} Kgs</Text>
-                      </View>
-                    </View>
-
-                    <View style={styles.body_table_rows}>
-                      <View style={styles.boxes_table_row}>
-                        <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Goma</Text>
-                      </View>
-
-                      <View style={styles.boxes_table_row}>
-                        <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{(controlCombinado.cc_descuentos[0].goma).toFixed(2)} Kgs</Text>
-                      </View>
-                    </View>
-
-                    <View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <View style={styles.boxes_table_row}>
-                        <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Total Deshecho</Text>
-                      </View>
-
-                      <View style={styles.boxes_table_row}>
-                        <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>{(controlCombinado.cc_descuentos[0].desechos)?.toFixed(1)} Kgs</Text>
-                      </View>
+                    <View style={{ width: '350px' }}>
+                      <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
+                        {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                          controlCombinado.cc_descuentos[0].insecto
+                        )} Kgs
+                      </Text>
                     </View>
                   </View>
 
+                  <View style={styles.body_table_rows}>
+                    <View style={styles.boxes_table_row}>
+                      <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Presencia de Hongo</Text>
+                    </View>
+
+                    <View style={styles.boxes_table_row}>
+                      <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
+                        {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+                          controlCombinado.cc_descuentos[0].hongo
+                        )} Kgs
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.body_table_rows}>
+                    <View style={styles.boxes_table_row}>
+                      <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Vana Deshidratada</Text>
+                    </View>
+
+                    <View style={styles.boxes_table_row}>
+                      <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
+                        {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+                          controlCombinado.cc_descuentos[0].vana
+                        )} Kgs
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.body_table_rows}>
+                    <View style={styles.boxes_table_row}>
+                      <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Punto de Goma</Text>
+                    </View>
+
+                    <View style={styles.boxes_table_row}>
+                      <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
+                        {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+                          controlCombinado.cc_descuentos[0].pgoma
+                        )} Kgs
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.body_table_rows}>
+                    <View style={styles.boxes_table_row}>
+                      <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Goma</Text>
+                    </View>
+
+                    <View style={styles.boxes_table_row}>
+                      <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
+                        {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+                          controlCombinado.cc_descuentos[0].goma
+                        )} Kgs
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <View style={styles.boxes_table_row}>
+                      <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Total Deshecho</Text>
+                    </View>
+
+                    <View style={styles.boxes_table_row}>
+                      <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>
+                        {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                          controlCombinado.cc_descuentos[0].desechos
+                        )} Kgs
+                      </Text>
+                    </View>
+                  </View>
+                </View>
                 </View>
               </View>
 
@@ -668,7 +762,7 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                       <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Totales Recepcionados: </Text>
                     </View>
                     <View style={{ width: '50%' }}>
-                      <Text style={styles.header_date_info_text}>{(controlCombinado.cc_calculo_final.kilos_netos).toFixed(1)} kgs</Text>
+                      <Text style={styles.header_date_info_text}>{new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format((controlCombinado.cc_calculo_final.kilos_netos))} kgs</Text>
                     </View>
                   </View>
 
@@ -677,7 +771,11 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                       <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Pepa Bruta: </Text>
                     </View>
                     <View style={{ width: '50%' }}>
-                      <Text style={styles.header_date_info_text}>{controlCombinado.cc_calculo_final.kilos_brutos.toFixed(1)} kgs</Text>
+                      <Text style={styles.header_date_info_text}>
+                        {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                          controlCombinado.cc_calculo_final.kilos_brutos
+                        )} kgs
+                      </Text>
                     </View>
                   </View>
 
@@ -686,7 +784,7 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                       <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Porcentaje Pepa Bruta: </Text>
                     </View>
                     <View style={{ width: '50%' }}>
-                      <Text style={styles.header_date_info_text}>{controlCombinado.cc_calculo_final.por_brutos.toFixed(1)} %</Text>
+                      <Text style={styles.header_date_info_text}>{(controlCombinado.cc_calculo_final.kilos_brutos * 100 / controlCombinado.cc_calculo_final.kilos_netos ).toFixed(1) } %</Text>
                     </View>
                   </View>
 
@@ -696,9 +794,12 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                       <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Pepa Exportable: </Text>
                     </View>
                     <View style={{ width: '50%' }}>
-                      <Text style={styles.header_date_info_text}>{(controlCombinado.cc_kilos_des_merma[0].exportable).toFixed(1)} kgs</Text>
-                    </View>
-
+                    <Text style={styles.header_date_info_text}>
+                      {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                        controlCombinado.cc_kilos_des_merma[0].exportable
+                      )} kgs
+                    </Text>
+                  </View>
                   </View>
 
                   <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
@@ -764,13 +865,20 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                         </View>
 
                         <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 40 }}>
-                          <Text style={{ fontSize: 8 }}>{controlCombinado.cc_calculo_final.merma_exp.toFixed(1)} kgs</Text>
+                          <Text style={{ fontSize: 8 }}>
+                            {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                              controlCombinado.cc_calculo_final.merma_exp
+                            )} kgs
+                          </Text>
                         </View>
 
                         <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
-                          <Text style={{ fontSize: 8 }}>{controlCombinado.cc_calculo_final.final_exp.toFixed(1)} kgs</Text>
+                          <Text style={{ fontSize: 8 }}>
+                            {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                              controlCombinado.cc_calculo_final.final_exp
+                            )} kgs
+                          </Text>
                         </View>
-
                       </View>
                     </View>
 
@@ -791,13 +899,20 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                           <Text style={{ fontSize: 8 }}>CAT 2</Text>
                         </View>
                         <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 40 }}>
-                          <Text style={{ fontSize: 8 }}>{controlCombinado.cc_calculo_final.merma_cat2.toFixed(1)}</Text>
+                          <Text style={{ fontSize: 8 }}>
+                            {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                              controlCombinado.cc_calculo_final.merma_cat2
+                            )}
+                          </Text>
                         </View>
 
                         <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
-                          <Text style={{ fontSize: 8 }}>{controlCombinado.cc_calculo_final.final_cat2.toFixed(1)}</Text>
+                          <Text style={{ fontSize: 8 }}>
+                            {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                              controlCombinado.cc_calculo_final.final_cat2
+                            )}
+                          </Text>
                         </View>
-
                       </View>
                     </View>
 
@@ -818,11 +933,19 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                           <Text style={{ fontSize: 8 }}>Desechos</Text>
                         </View>
                         <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 40 }}>
-                          <Text style={{ fontSize: 8, fontWeight: 'bold' }}>{controlCombinado.cc_calculo_final.merma_des.toFixed(1)} kgs</Text>
+                          <Text style={{ fontSize: 8, fontWeight: 'bold' }}>
+                            {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                              controlCombinado.cc_calculo_final.merma_des
+                            )} kgs
+                          </Text>
                         </View>
 
                         <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
-                          <Text style={{ fontSize: 8 }}>{controlCombinado.cc_calculo_final.final_des.toFixed(1)} kgs</Text>
+                          <Text style={{ fontSize: 8 }}>
+                            {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                              controlCombinado.cc_calculo_final.final_des
+                            )} kgs
+                          </Text>
                         </View>
 
                       </View>

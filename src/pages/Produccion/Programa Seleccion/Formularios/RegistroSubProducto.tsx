@@ -113,6 +113,8 @@ const FormularioRegistroSubProducto: FC<IFormularioRegistroSubProductoProps> = (
               dispatch(fetchSubProductosOperarios({ id: parseInt(id!), token, verificar_token: verificarToken }));
               dispatch(fetchProgramaSeleccion({ id: parseInt(id!), token, verificar_token: verificarToken }));
               setOpen(false);
+              toast.success('SubProducto Registrado');
+              asignar_dias_kilos();
           } else if (res_v.status === 400) {
             const restante = await res_v.json()
             toast.error(`Supera por ${restante['restante']} kilos el máximo para este Bin`)
@@ -126,6 +128,21 @@ const FormularioRegistroSubProducto: FC<IFormularioRegistroSubProductoProps> = (
       }
     }
   });
+
+  const asignar_dias_kilos = async () => {
+    try {
+      const token_verificado = await verificarToken(token!)
+      if (!token_verificado) throw new Error('Token no verificado')
+      const response = await fetchWithTokenPost(`api/seleccion/${id}/asignar_dias_kilos/`, {}, token_verificado)
+      if (response.ok) {
+        toast.success('Dias Asignados')
+      } else {
+        toast.error('Error' + `${await response.json()}`)
+      }
+    } catch {
+      console.log('Error dias asignados')
+    }
+  }
 
 
 

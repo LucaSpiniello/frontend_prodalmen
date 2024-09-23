@@ -20,7 +20,7 @@ export type TControlCalidad = {
   control_rendimiento: TRendimientoMuestra[]
   esta_contramuestra: string
   kilos_totales_recepcion: number
-  variedad: number
+  variedad: string
   registrado_por_label: string
   fotos_cc: [],
   email_registrador: string

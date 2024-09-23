@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { TCCPepaSerializer, TControlCalidad, TControlCalidadTarja, TFotosCC, TMuestraSerializer, TPepaMuestra, TRendimiento, TRendimientoMuestra } from "../../types/TypesControlCalidad.type";
 import { FetchOptions } from "../../types/fetchTypes.types";
-import { fetchWithToken, fetchWithTokenPostAction } from "../../utils/peticiones.utils";
+import { fetchWithToken, fetchWithTokenPostAction, fetchWithTokenPostWithBody } from "../../utils/peticiones.utils";
 import { TTarjaSeleccionadaCalibracion } from "../../types/TypesSeleccion.type";
 import { TTarjaResultanteReproceso } from "../../types/TypesReproceso.types";
 import { TRendimientoActual } from "../../types/TypesProduccion.types";
+import { add } from "lodash";
 
 
 export const fetchControlesDeCalidad = createAsyncThunk('control-calidad/fetch_controles', 
@@ -250,6 +251,34 @@ export const fetchRendimientoLotes = createAsyncThunk('control-calidad/fetch_ren
   }
 )
 
+export const fetchRendimientosLotesPorIds = createAsyncThunk(
+  'control-calidad/fetch_rendimiento_lotes_por_ids',
+  async (payload: FetchOptions, ThunkAPI) => {
+    const { ids, token, verificar_token } = payload;
+
+    try {
+      const token_verificado = await verificar_token(token);
+      if (!token_verificado) throw new Error('Token no verificado');
+      const idsArray  = ids?.split(',').map((id : any) => parseInt(id.trim()));
+
+      const response = await fetchWithTokenPostWithBody(
+        `api/control-calidad/recepcionmp/calculo_final_lotes/`,
+        { ids: idsArray },
+        token_verificado,
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else if (response.status === 400) {
+        return ThunkAPI.rejectWithValue('No se hizo bien la petición');
+      }
+    } catch (error) {
+      return ThunkAPI.rejectWithValue('No se hizo bien la petición');
+    }
+  }
+);
+
 export const fetchRendimientoLotesTarjas = createAsyncThunk('control-calidad/fetch_rendimiento_tarjas', 
   async (payload: FetchOptions, ThunkAPI) => {
     const { id, token, verificar_token } = payload
@@ -359,10 +388,6 @@ export const fetchCalibracionTarjaReprocesoIndividual = createAsyncThunk('contro
 )
 
 
-
-
-
-
 const initialState = {
   controles_calidad: [] as TControlCalidad[],
   control_calidad: null as TControlCalidad | null,
@@ -370,6 +395,7 @@ const initialState = {
   fotos_cc: [] as TFotosCC[],
   cc_muestras: [] as TRendimientoMuestra[],
   rendimientos_lotes: null as TRendimiento | null,
+  rendimientos_lotes_por_ids: [] as any,
   rendimiento_tarjas_actual: null as TRendimientoActual | null,
   cc_muestra_individual: null as TRendimientoMuestra | null,
   cc_calibracion_muestras: [] as TRendimientoMuestra[],
@@ -456,6 +482,9 @@ export const ControlCalidad = createSlice({
       .addCase(fetchCalibracionTarjaReprocesoIndividual.fulfilled, (state, action) => {
         state.cc_calibracion_tarja_reproceso_individual = action.payload
       })
+      .addCase(fetchRendimientosLotesPorIds.fulfilled, (state, action) => {
+        state.rendimientos_lotes_por_ids = action.payload
+      })
       .addCase(fetchRendimientoLotes.fulfilled, (state, action) => {
         state.rendimientos_lotes = action.payload
         if (state.rendimientos_lotes ){
@@ -463,7 +492,6 @@ export const ControlCalidad = createSlice({
           information.id = action.meta.arg.id
           state.todos_los_rendimientos.push(action.payload)
         }
-
       })
       .addCase(fetchRendimientoLotesTarjas.fulfilled, (state, action) => {
         state.rendimiento_tarjas_actual = action.payload

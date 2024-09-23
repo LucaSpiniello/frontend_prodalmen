@@ -233,6 +233,10 @@ const PDFInformeKilosXOperario = () => {
              <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Neto</Text>
             </View>
 
+            <View style={styles.header_info_box_superior}>
+             <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Detalle</Text>
+            </View>
+
           </View>
 
           {
@@ -256,6 +260,10 @@ const PDFInformeKilosXOperario = () => {
 
                   <View style={styles.header_info_box_superior}>
                     <Text style={{ fontSize: 9, position: 'relative', top: -5, left: 0}}>$ {(programa.neto ?? 0).toLocaleString()}</Text>
+                  </View> 
+
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10, position: 'relative', top: -5, left: 0}}> {programa.detalle}</Text>
                   </View> 
 
                 </View>

@@ -260,7 +260,7 @@ const PDFResumidoOperarios = () => {
                   </View>
       
                   <View style={styles.header_info_box_superior}>
-                    <Text style={{ fontSize: 10}}>{operario.kilos_programa} Kgs</Text>
+                    <Text style={{ fontSize: 10}}>{Math.round(operario.kilos_programa)} Kgs</Text>
                   </View>
 
                   <View style={styles.header_info_box_superior}>

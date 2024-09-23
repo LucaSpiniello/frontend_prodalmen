@@ -296,9 +296,6 @@ const TablaProgramaEmbalaje = () => {
 					</FieldWrap>
 				</SubheaderLeft>
 
-				{
-					programa_embalaje?.length <= 1 || programa_embalaje?.slice(2).every((bin) => bin.estado_embalaje === '5')
-						? (
 							<SubheaderRight>
 								<ModalForm
 									title='Registro Programa Embalaje'
@@ -311,9 +308,8 @@ const TablaProgramaEmbalaje = () => {
 										<FormularioRegistroProgramaEmbalaje />
 								</ModalForm>
 							</SubheaderRight>
-							)	
-						: null 
-				}
+								
+
 			</Subheader>
 			<Container breakpoint={null} className='w-full overflow-auto'>
 				<Card className='h-full w-full'>

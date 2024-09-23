@@ -55,7 +55,7 @@ const DetalleOperarioSeleccion: FC<ITablaOperariosProduccionProps> = ({ loading 
               </ModalForm>
             )
           }
-          {
+          {/* {
             operarios.length >= 1 && programa_seleccion && programa_seleccion.estado_programa === '4' &&  (
               <Button variant="solid" color="amber" className="w-full md:w-auto lg:w-auto hover:scale-105" onClick={ async () => {
                 try {
@@ -72,7 +72,7 @@ const DetalleOperarioSeleccion: FC<ITablaOperariosProduccionProps> = ({ loading 
                 }
               }}>Asignar Dias</Button>
             )
-          }
+          } */}
         </CardHeader>
         <CardBody>
           <article className={`row-start-4 row-span-4 col-span-3 w-full h-full dark:bg-zinc-900 bg-zinc-50 flex flex-col lg:flex-col  justify-between pb-10`}>

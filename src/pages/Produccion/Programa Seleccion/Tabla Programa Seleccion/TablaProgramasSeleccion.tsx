@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import {
 	createColumnHelper,
 	getCoreRowModel,
@@ -48,7 +48,7 @@ import { HiOutlineTrendingDown, HiOutlineTrendingUp } from "react-icons/hi";
 import { TbEqual } from "react-icons/tb";
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from '@reduxjs/toolkit';
-
+import { fetchProgramasProduccion } from '../../../../redux/slices/produccionSlice';
 
 
 interface IProduccionProps {
@@ -67,11 +67,16 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 	const [informeResOp, setInformeinformeResOp] = useState<boolean>(false)
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
 	const { verificarToken } = useAuth()
-
+	const programas_produccion = useAppSelector((state: RootState) => state.programa_produccion.programas_produccion)
 	const token = useAppSelector((state: RootState) => state.auth.authTokens)
 	const perfil = useAppSelector((state: RootState) => state.auth.dataUser)
 	const [disabled, setDisabled] = useState<boolean>(false)
 
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [selectedProgramaProduccion, setSelectedProgramaProduccion] = useState<string | null>(null);
+	const [disabledModal, setDisabledModal] = useState(false);
+
+	const[programaProduccion, setProgramaProduccion] = useState<string | null>(null)
 
 	const actualizarEstadoProduccion = async (id: number, estado: string) => {
 
@@ -102,10 +107,10 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 			if (!token_verificado){
 				throw new Error('Token no verificado')
 			}
-
 			const response = await fetchWithTokenPost(`api/seleccion/`, { 
 				registrado_por: perfil?.id,
-				estado_programa: '1'
+				estado_programa: '1',
+				produccion: selectedProgramaProduccion
 			}, token_verificado)
 			if (response.ok) {
 				const data: TSeleccion = await response.json()
@@ -128,7 +133,7 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 			id: 'numero_programa',
 			cell: (info) => (
 				<div className='font-bold text-center'>
-					{`${info.row.original.numero_programa}`}
+					{`${info.row.original.id}`}
 				</div>
 			),
 			header: 'N° Programa',
@@ -142,6 +147,15 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 			),
 			header: 'Estado Programa',
 		}),
+		columnHelper.accessor('produccion', {
+			id: 'produccion',
+			cell: (info) => (
+				<div className='font-bold '>
+					{`${info.row.original.produccion}`}
+				</div>
+			),
+			header: 'N° Produccion',
+		}),
 		columnHelper.display({
 			id: 'bins_sin_procesar',
 			cell: (info) => (
@@ -149,7 +163,7 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 					{`${info.row.original.kilos_porcentaje.bins_sin_procesar} % Sin Procesar`}
 				</div>
 			),
-			header: 'Estado Programa',
+			header: 'Sin Procesar',
 		}),
 		columnHelper.display({
 			id: 'bins_procesados',
@@ -158,7 +172,7 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 					{`${info.row.original.kilos_porcentaje.bins_procesados} % Procesados`}
 				</div>
 			),
-			header: 'Estado Programa',
+			header: 'Procesado',
 		}),
 		columnHelper.accessor('registrado_por', {
 			id: 'registrado_por',
@@ -357,8 +371,13 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 		{id: 'rendimientos', className: 'w-52'},
 		{id: 'acciones', className: 'lg:w-96 '},
 		
-
 	]
+
+	useEffect(() => {
+		if (programas_produccion.length === 0){
+			dispatch(fetchProgramasProduccion({ token, verificar_token: verificarToken }))
+		}
+	})
 
 	return (
 		<PageWrapper name='Lista Programas Selección'>
@@ -388,23 +407,66 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 					</FieldWrap>
 				</SubheaderLeft>
 
-				{
-					data?.length <= 1 || data?.slice(2).every((lote) => lote.estado_programa === '5')
-						? (
-							<SubheaderRight>
-									<Button
-										variant='solid'
-										color='blue'
-										colorIntensity='700'
-										isDisable={disabled}
-										onClick={() => {setDisabled(true); registroProgramaSeleccion()}}
-										className='hover:scale-105'>
-										<span className='text-lg text-white'>Registrar Programa de Selección</span>
-									</Button>
-							</SubheaderRight>
-							)	
-						: null 
-				}
+						<ModalForm
+						open={isModalOpen}
+						setOpen={setIsModalOpen}
+						title="Selecciona el programa de producción"
+						variant="solid"
+						color="blue"
+						colorIntensity="700"
+						icon={<span className="text-lg text-white">Registrar Programa de Selección</span>}
+						size={400}
+						width="w-1/4"
+						>
+						<div className="p-4">
+							<label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="programa">
+							Programa de Producción
+							</label>
+							<select
+							value={selectedProgramaProduccion || ''}
+							onChange={(e) => setSelectedProgramaProduccion(e.target.value)}
+							className="w-full p-2 border border-gray-300 rounded-md"
+							>
+							<option value="">Selecciona un programa</option>
+							{programas_produccion
+								.map((programa) => (
+								<option key={programa.id} value={programa.id}>
+									{`Programa N°${programa.id} - Lotes: ${programa.lotes_length} - Fecha Término: ${programa.fecha_termino_proceso}`}
+								</option>
+								))}
+							</select>
+
+							<div className="flex justify-end mt-4">
+							<Button
+								variant="solid"
+								color="green"
+								onClick={() => {
+								if (selectedProgramaProduccion) {
+									setIsModalOpen(false); 
+									setDisabledModal(true);
+									setProgramaProduccion(selectedProgramaProduccion)
+									registroProgramaSeleccion(); 
+								} else {
+									toast.error("Por favor selecciona un programa de producción");
+								}
+								}}
+							>
+								Confirmar
+							</Button>
+
+							<Button
+								variant="solid"
+								color="red"
+								onClick={() => setIsModalOpen(false)}
+								className="ml-2"
+							>
+								Cancelar
+							</Button>
+							</div>
+						</div>
+						</ModalForm>
+
+
 			</Subheader>
 			<Container breakpoint={null} className='w-full overflow-auto'>
 				<Card className='h-full w-full'>
@@ -451,7 +513,7 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 										icon={
 										<div className='flex items-center gap-1.5'>
 											<FaFilePdf style={{ fontSize: 20, color: 'white'}}/>
-											<span className='text-md font-semibold'>Generar Informe de Kilos por Operario de SubProducto</span>
+											<span className='text-md font-semibold'>Generar Informe de Kilos por Operario</span>
 										</div>
 										}
 										width={`w-10/12 hover:scale-105`}
@@ -489,6 +551,7 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 				</Card>
 			</Container>
 		</PageWrapper>
+		
 	);
 };
 

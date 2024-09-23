@@ -295,7 +295,7 @@ const PDFPreLimpia = () => {
                     </View>
 
                     <View style={styles.header_info_box_superior}>
-                      <Text style={{ fontSize: 10, position: 'relative', top: -5, left: 0}}>{(programa.kilos_fruta ?? 0).toLocaleString()}</Text>
+                      <Text style={{ fontSize: 10, position: 'relative', top: -5, left: 0}}>{(Math.round(programa.kilos_fruta) ?? 0).toLocaleString()}</Text>
                     </View>
 
                   </View>

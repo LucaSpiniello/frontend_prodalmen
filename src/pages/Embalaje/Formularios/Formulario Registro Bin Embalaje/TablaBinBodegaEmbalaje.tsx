@@ -97,8 +97,9 @@ const TablaBinBodegaEmbalaje = ({refresh} : {refresh:boolean}) => {
     const lista: TBinBodega[] = []
     if (bin_bodega && bin_bodega.length > 0) {
       bin_bodega.forEach((element) => {
-        if (nuevos_bin_para_embalar.find(bin => bin.id === element.id)) {
-        } else {
+        if (!nuevos_bin_para_embalar.find(bin => bin.id === element.id) && 
+            element.estado_binbodega !== "Procesado En Embalaje" && 
+            element.estado_binbodega !== "Ingresado En Embalaje") {
           lista.push(element)
         }
       })
@@ -106,7 +107,7 @@ const TablaBinBodegaEmbalaje = ({refresh} : {refresh:boolean}) => {
     } else if (bin_bodega && bin_bodega.length === 0) {
       setListaBins([])
     }
-  }, [bin_bodega])
+  }, [bin_bodega, nuevos_bin_para_embalar])
 
   useEffect(() => {
     dispatch(VACIAR_BINS_EMBALAJE())
@@ -268,7 +269,7 @@ const TablaBinBodegaEmbalaje = ({refresh} : {refresh:boolean}) => {
               <div className="w-full flex-col">
                 <Label htmlFor="bodega">Bodegas: </Label>
                 <SelectReact
-                    options={[{ value: '', label: 'Selecciona un calibre' }, ...optionsBodegasB]}
+                    options={[{ value: '', label: 'Selecciona una bodega' }, ...optionsBodegasB]}
                     id='bodega'
                     placeholder='Seleccione una bodega'
                     name='bodega'

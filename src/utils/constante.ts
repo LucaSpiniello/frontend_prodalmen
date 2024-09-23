@@ -14,6 +14,7 @@ export const TIPOS_OPERARIO = [
   { values: "bodega", label: "Operario Bodega" },
   { values: "pesaje", label: "Operario Pesaje" },
   { values: "p_harina", label: "Operario Planta Harina" },
+  { values: "sub_prod", label: "Operario Sub Producto" },
 ];
 
 export const TIPO_ACOPLADO = [

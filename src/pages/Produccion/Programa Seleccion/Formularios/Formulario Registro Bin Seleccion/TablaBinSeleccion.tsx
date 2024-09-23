@@ -85,7 +85,7 @@ const TablaBinSeleccion = ({refresh, setRefresh}: {refresh: boolean, setRefresh:
       columnHelper.accessor('programa', {
         cell: (info) => (
           <div className='font-bold text-center'>
-            {`Programa N° ${info.row.original.programa}`}
+            {`${info.row.original.programa}`}
           </div>
         ),
         header: 'Programa',

@@ -172,7 +172,7 @@ const FormularioRegistroOperarioPrograma: FC<IFormCamiones> = ({ setOpen }) => {
   return (
     <Container className="w-full h-full">
       <Card>
-        <CardBody className='overflow-x-auto w-full'>
+        <CardBody className='overflow-x-auto w-full' style={{ height: '400px' }}>
           <div className="grid-cols-12 gap-4 w-full flex">
             <div className="col-span-3">
               <Label htmlFor={"skill"}>Skill</Label>

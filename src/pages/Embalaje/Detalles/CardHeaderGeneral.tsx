@@ -122,7 +122,7 @@ const CardHeaderGeneral = () => {
                 <span className="text-center mx-auto">Fruta en producción: {(totales_kilos_en_programa)?.toFixed(2)} kgs</span>
               </div>
               <div className='w-full py-3 dark:bg-zinc-700 bg-zinc-300	rounded-md flex items-center '>
-                <span className="text-center mx-auto">Fruta Procesada: {(kilos_totales_ingresados)?.toFixed(2)} kgs.</span>
+                <span className="text-center mx-auto">Fruta Procesada: {(programa_embalaje?.kilos_resultantes)?.toFixed(2)} kgs.</span>
               </div>
               <div className='w-full py-3 dark:bg-zinc-700 bg-zinc-300	rounded-md flex items-center '>
                 <span className="text-center mx-auto">Total de envases a procesar: {bins_en_embalaje?.filter(bin => bin.procesado !== true).length} </span>

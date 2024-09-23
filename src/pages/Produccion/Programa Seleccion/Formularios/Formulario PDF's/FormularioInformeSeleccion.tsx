@@ -45,9 +45,9 @@ const FormularioInformeSeleccion: FC<IInformeProduccion> = ({ setOpen }) => {
     onSubmit: async (values: any) => {
       try {
         const token_verificado = await verificarToken(token!)
-      
+        
         if (!token_verificado) throw new Error('Token no verificado')
-
+        state[0].endDate = dayjs(state[0].endDate).hour(19).minute(59).second(0).millisecond(0).toDate();
         const res = await fetchWithTokenPost(`api/seleccion/pdf_informe_seleccion/`,
           {
             ...values,

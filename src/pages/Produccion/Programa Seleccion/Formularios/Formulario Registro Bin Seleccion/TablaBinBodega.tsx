@@ -39,29 +39,38 @@ const TablaBinBodegaSeleccion = ({refresh} : {refresh:boolean}) => {
   const { verificarToken } = useAuth()
   const token = useAppSelector((state: RootState) => state.auth.authTokens)
   const [listaBins, setListaBins] = useState<TBinBodega[]>([])
-
+  const programa_seleccion = useAppSelector((state: RootState) => state.seleccion.programa_seleccion_individual)
   const [filtroBodega, setFiltroBodega] = useState<string>('')
 
   
   useEffect(() => {
     // dispatch(fetchBinBodega({ params: { search: !filtroBodega ? 'g1,g2,g3,g4,g5,g6' : filtroBodega }, token, verificar_token: verificarToken }));
-    dispatch(listaBinBodegaFiltroThunk({token: token, verificar_token: verificarToken, filtro: !filtroBodega ? 'g1,g2,g3,g4,g5,g6' : filtroBodega}))
+    dispatch(listaBinBodegaFiltroThunk({token: token, verificar_token: verificarToken, filtro: !filtroBodega ? 'g2' : filtroBodega}))
   }, [filtroBodega, refresh])
 
   useEffect(() => {
-    const lista: TBinBodega[] = []
+    const lista: TBinBodega[] = [];
+  
     if (bin_bodega && bin_bodega.length > 0) {
       bin_bodega.forEach((element) => {
-        if (nuevos_bin_seleccion.find(bin => bin.id === element.id)) {
-        } else {
-          lista.push(element)
+        // Extraer el número del programa de producción del atributo "programa"
+        const match = element.programa.match(/N°\s*(\d+)/);
+        const numeroProgramaProduccion = match ? parseInt(match[1], 10) : null;
+  
+        // Comparar con el número del programa en programa_seleccion
+        if (
+          numeroProgramaProduccion === programa_seleccion?.produccion &&
+          !nuevos_bin_seleccion.find((bin) => bin.id === element.id)
+        ) {
+          lista.push(element);
         }
-      })
-      setListaBins(lista)
+      });
+  
+      setListaBins(lista);
     } else if (bin_bodega && bin_bodega.length === 0) {
-      setListaBins([])
+      setListaBins([]);
     }
-  }, [bin_bodega])
+  }, [bin_bodega, programa_seleccion]);
 
   const handleCheckboxChange = (id: string, checked: boolean) => {
     setCheckboxSeleccionados(prevState => {

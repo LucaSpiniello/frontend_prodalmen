@@ -18,6 +18,7 @@ export type FetchOptions = {
   verificar_token: (token: TAuth | null) => Promise<string | false | undefined>; // Ajuste para aceptar null
   params?: Record<string, any>;
   action?: Dispatch<SetStateAction<boolean>>;
+  ids? : any;
 };
 
 export type PutOptions = {

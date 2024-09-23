@@ -15,7 +15,7 @@ import { useAuth } from '../../../../../context/authContext';
 import { useParams } from 'react-router-dom';
 import { HeroXMark } from '../../../../../components/icon/heroicons';
 import toast from 'react-hot-toast';
-import { fetchWithTokenDelete, fetchWithTokenPut } from '../../../../../utils/peticiones.utils';
+import { fetchWithTokenDelete, fetchWithTokenPut, fetchWithTokenPost } from '../../../../../utils/peticiones.utils';
 import { fetchBinsPepaCalibrada, registrar_bines_procesados_masivamente } from '../../../../../redux/slices/seleccionSlice';
 import { FaForward } from 'react-icons/fa';
 import { ThunkDispatch } from '@reduxjs/toolkit';
@@ -54,9 +54,25 @@ const TablaEnvasesLotes = () => {
     if (res.ok){
       toast.success("Bin Procesado Correctamente")
       //@ts-ignore
+      asignar_dias_kilos()
       dispatch(fetchBinsPepaCalibrada({ id, token, verificar_token: verificarToken }))
     } else {
       toast.error("No se pudo procesar el lote, vuelve a intentarlo")
+    }
+  }
+
+  const asignar_dias_kilos = async () => {
+    try {
+      const token_verificado = await verificarToken(token!)
+      if (!token_verificado) throw new Error('Token no verificado')
+      const response = await fetchWithTokenPost(`api/seleccion/${id}/asignar_dias_kilos/`, {}, token_verificado)
+      if (response.ok) {
+        toast.success('Dias Asignados')
+      } else {
+        toast.error('Error' + `${await response.json()}`)
+      }
+    } catch {
+      console.log('Error dias asignados')
     }
   }
 

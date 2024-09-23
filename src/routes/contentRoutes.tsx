@@ -77,6 +77,7 @@ const ListaControlCalidadTBinResultanteProceso  = lazy(() => import('../pages/Co
 const ListaProgramas = lazy(() => import('../pages/Produccion/Programa Produccion/Tabla/ListaProgramas.tsx'));
 const DetallePrograma = lazy(() => import ('../pages/Produccion/Programa Produccion/Detalles/DashboardProduccion.tsx'))
 const DetalleControlRendimiento = lazy(() => import ('../pages/Produccion/Programa Produccion/Detalles/Detalle Control Rendimiento/DetalleControlRendimiento.tsx'))
+const Resultados = lazy(() => import('../pages/Produccion/Resultados/resultados.tsx'));
 const FormularioRegistroPrograma = lazy(() => import ('../pages/Produccion/Programa Produccion/Formularios/Formulario Registro Programa/TablaRegistroPrograma.tsx'))
 const PDFOperarioXKilo = lazy(() => import ('../pages/Produccion/Programa Produccion/PDF/PDFOperarioXKilo.tsx'))
 const PDFResumidoOperario = lazy(() => import ('../pages/Produccion/Programa Produccion/PDF/PDFResumidoOperario.tsx'))
@@ -168,7 +169,6 @@ const PDFPedidoExportacion = lazy(() => import('../pages/Pedidos/Pedido Exportac
 
 const DetalleGuiaSalida = lazy(() => import('../pages/Pedidos/Guia Salida/DetalleGuiaSalida.tsx'))
 const PDFGuiaSalida = lazy(() => import('../pages/Pedidos/Guia Salida/PDF/PDFGuiaSalida.tsx'))
-
 
 
 const ListaInventarios = lazy(() => import('../pages/Bodegas/Inventario/TablaInventarios.tsx'))
@@ -293,10 +293,9 @@ const contentRoutes: RouteProps[] = [
 
 	{ path: appPages.produccion.subPages.seleccion.subPages.bins_subproducto_lista.to, element: <ListaBinSubProductos />},
 	{ path: appPages.produccion.subPages.seleccion.subPages.bins_subproducto.subPages.detalle_bin_subproducto.to, element:  <DetalleBinSubProducto /> },
+	// Resultados
 
 
-
-	
 	// PEDIDOS
 	{ path: appPages.ventas.subPages.pedidos.to, element:  <ListaPedidos /> },
 	{ path: appPages.ventas.subPages.pedidos.subPages.detalle_pedido_interno.to, element:  <DetallePedidoMercadoInterno /> },
@@ -385,8 +384,9 @@ const contentRoutes: RouteProps[] = [
 	{ path: appPages.bodega.subPages.acciones.subPages.inventario_bodega.subPages.PDFResumidoInventario.to, element: <PDFResumidoInventario />},
 	{ path: appPages.bodega.subPages.acciones.subPages.inventario_bodega.subPages.PDFDetalladoInventario.to, element: <PDFDetalladoInventario />},
 
-
-
+	// add routs for comercializadores
+	{path: appPages.comercializadores.subPages.proyeccion.to, element: <ProyeccionDeFRuta />},
+	{path: appPages.comercializadores.subPages.resultados.to, element: <Resultados />},
 	
 
 	// {path: '/pruebas', element: <Prueba />},

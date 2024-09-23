@@ -30,6 +30,7 @@ const TablaDetalleDescuento: FC<IRendimientoMuestra> = ({ ccLote }) => {
   const { isDarkTheme } = useDarkMode();
   const { width } = useDeviceScreen()
   
+  
 
   return (
     <div className='flex relative mx-auto'>

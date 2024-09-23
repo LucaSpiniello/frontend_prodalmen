@@ -39,7 +39,7 @@ const FormularioRegistroOperarioSeleccion: FC<IFormCamiones> = ({ setOpen }) => 
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 
   useEffect(() => {
-    dispatch(fetchOperariosFiltro({token, verificar_token: verificarToken, nombre: filtroNombre, apellido: filtroApellido, skill: filtroSkill ?? '?skill=seleccion'}))
+    dispatch(fetchOperariosFiltro({token, verificar_token: verificarToken, nombre: filtroNombre, apellido: filtroApellido, skill: filtroSkill ?? '?skill=seleccion, sub_prod'}))
   }, [filtroNombre, filtroApellido, filtroSkill])
 
   const columns = [
@@ -57,7 +57,7 @@ const FormularioRegistroOperarioSeleccion: FC<IFormCamiones> = ({ setOpen }) => 
     }),
     columnHelper.accessor('skills', {
       cell: (info) => {
-        const skill = info.row.original.skills.find(element => element.tipo_operario === 'seleccion')?.tipo_operario_label
+        const skill = info.row.original.skills.find(element => element.tipo_operario === 'seleccion' || element.tipo_operario === 'sub_prod')?.tipo_operario_label
         return (
           <div className="font-bold">{skill}</div>
         )
@@ -67,11 +67,14 @@ const FormularioRegistroOperarioSeleccion: FC<IFormCamiones> = ({ setOpen }) => 
     columnHelper.display({
       id: 'acciones',
       cell: (info) => {
+        const operarioSkill = info.row.original.skills.find(
+          element => element.tipo_operario === 'seleccion' || element.tipo_operario === 'sub_prod'
+        )?.tipo_operario;
         return (
           <div className="font-bold">
             {
               formik.values.operario === '' ?
-                <Button variant="solid" color="blue" icon="HeroPlus" onClick={() => {formik.setFieldValue('operario', info.row.original.id.toString()); formik.setFieldValue('skill_operario', 'seleccion')}}></Button>
+                <Button variant="solid" color="blue" icon="HeroPlus" onClick={() => {formik.setFieldValue('operario', info.row.original.id.toString()); formik.setFieldValue('skill_operario', operarioSkill)}}></Button>
               : formik.values.operario == info.row.original.id.toString() ?
                 <Button color="red" variant="solid" icon="HeroMinus" onClick={() => {formik.setFieldValue('operario', ''); formik.setFieldValue('skill_operario', '')}}></Button>
               : formik.values.operario != info.row.original.id.toString() && formik.values.operario != '' && (null)
