@@ -42,7 +42,7 @@ const TablaBinBodegaEmbalaje = ({refresh} : {refresh:boolean}) => {
 
   useEffect(() => {
     // dispatch(fetchBinBodega({ params: { search: !filtroBodega ? 'g1,g2,g3,g4,g5,g6' : filtroBodega }, token, verificar_token: verificarToken }));
-    dispatch(listaBinBodegaFiltroThunk({token: token, verificar_token: verificarToken, filtro: !filtroBodega ? '' : filtroBodega}))
+    dispatch(listaBinBodegaFiltroThunk({token: token, verificar_token: verificarToken, filtro: !filtroBodega ? 'g4' : filtroBodega}))
   }, [filtroBodega, refresh])
 
   const validarTiposDePrograma = (nuevoBin: TBinBodega, listaBinbodegas: TBinBodega[]) => {

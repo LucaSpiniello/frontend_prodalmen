@@ -181,7 +181,7 @@ const DashboardEmbalaje = () => {
                     : null
                 } */}
                 {
-                    programa_embalaje?.condicion_termino && !['4', '5'].includes(estado!)
+                    programa_embalaje?.condicion_termino && !['4', '5'].includes(estado!) && programa_embalaje.kilos_faltantes <= 0
                       ? (
 
                         <>

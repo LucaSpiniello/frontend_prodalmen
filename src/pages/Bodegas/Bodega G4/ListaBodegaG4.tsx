@@ -14,6 +14,7 @@ const ListaBodegaG4 = () => {
   const token = useAppSelector((state: RootState) => state.auth.authTokens)
   const { verificarToken } = useAuth()
   const [refresco, setRefresco] = useState<boolean>(false)
+  const filteredData : any = bodegag4.filter((tarja : any) => tarja.estado_binbodega !== "Procesado En Embalaje")
 
   useEffect(() => {
     // @ts-ignore
@@ -24,7 +25,7 @@ const ListaBodegaG4 = () => {
 
   return (
     <div className="w-full h-full">
-      <TablaBodegaG4 data={bodegag4} refresco={refresco} setRefresco={setRefresco} />
+      <TablaBodegaG4 data={filteredData} refresco={refresco} setRefresco={setRefresco} />
     </div>
   )
 }

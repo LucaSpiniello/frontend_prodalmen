@@ -35,6 +35,7 @@ export type TEmbalaje = {
   fecha_termino_embalaje: string
   kilos_ingresados: number
   metricas_embalaje: TMetricasEmbalaje[]
+  margen_fruta?: number
 }
 
 

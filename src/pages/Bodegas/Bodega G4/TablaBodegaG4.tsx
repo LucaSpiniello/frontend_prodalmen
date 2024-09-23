@@ -41,7 +41,6 @@ const columnHelper = createColumnHelper<TBinBodega>();
 const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<any>({
-		productor: '',
 		variedad: '',
 		calibre: '',
 		calidad: '',
@@ -101,12 +100,12 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 		} catch (error) {
 			console.log('Error al cambiar la calle')
 		}
-	}
+	} 
  
  
 
 
-	const columns = [
+	const columns : any = [
 		columnHelper.accessor('binbodega', {
 			cell: (info) => (
 				<div className='font-bold'>
@@ -254,12 +253,14 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 // 		// { id: 'controles', header: '',className: 'md:w-28 lg:w-40'},
 //   ]
 
+// filtered data by the filed estado_binbodega 
+
 const table = useReactTable({
-  data,
-  columns,
-  state: {
+	data,
+  	columns,
+  	state: {
     globalFilter,
-  },
+  	},
   onGlobalFilterChange: setGlobalFilter,
   getCoreRowModel: getCoreRowModel(),
   getFilteredRowModel: getFilteredRowModel(),
@@ -268,7 +269,7 @@ const table = useReactTable({
   initialState: {
     pagination: { pageSize: 5 },
   },
-  globalFilterFn: (row, columnIds, filterValue) => {
+  globalFilterFn: (row, filterValue : any) => {
     // Desestructuramos los filtros de globalFilter
     const { productor, variedad, calibre, calidad, calle } = filterValue;
 
@@ -340,9 +341,9 @@ const table = useReactTable({
                   <Label htmlFor="calle">Variedad: </Label>
                   <SelectReact
                       options={[{ value: '', label: 'Selecciona una variedad' }, ...optionsVariedad]}
-                      id='productor'
-                      placeholder='Variedad'
-                      name='productor'
+                      id='variedad'                      
+					  placeholder='Variedad'
+                      name='variedad'
                       className='w-full h-14 py-2'
                       onChange={(selectedOption: any) => {
                         setGlobalFilter((prev : any) => (
@@ -379,9 +380,9 @@ const table = useReactTable({
                   <Label htmlFor="calle">Calidad: </Label>
                   <SelectReact
                     options={[{ value: '', label: 'Selecciona una calidad' }, ...optionsCalidad]}
-                    id='variedad'
+                    id='calidad'
                     placeholder='Calidad'
-                    name='Variedad'
+                    name='calidad'
                     className='w-full h-14 py-2'
                     onChange={(selectedOption: any) => {
 						setGlobalFilter((prev : any) => (
@@ -399,9 +400,9 @@ const table = useReactTable({
                   <Label htmlFor="calle">Calle Bodega: </Label>
                   <SelectReact
                     options={[{ value: '', label: 'Selecciona una calle' }, ...optionCalleBodega.slice(0,14)]}
-                    id='variedad'
+                    id='calle'
                     placeholder='Calle'
-                    name='Variedad'
+                    name='calle'
                     className='w-full h-14 py-2'
                     onChange={(selectedOption: any) => {
                      setGlobalFilter((prev : any) => (
