@@ -696,7 +696,12 @@ export const appPages = {
 			pdf_salida_embalaje: {
 				id: 'pdf_entrada_embalaje',
 				to: '/emb/pdf-salida/:id'
-			}
+			},
+			pdf_informe_embalaje: {
+				id: 'pdf_embalaje',
+				text: 'PDF Embalaje',
+				to: '/emb/pdf-informe-embalaje/'
+			},
 		}
 	},
 	planta_harina: {

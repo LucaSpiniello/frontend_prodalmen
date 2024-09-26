@@ -49,6 +49,8 @@ import { fetchProgramasEmbalaje } from '../../redux/slices/embalajeSlice';
 import FormularioRegistroProgramaEmbalaje from './Formularios/FormularioRegistroProgramaEmbalaje';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from '@reduxjs/toolkit';
+// impoer FormularioInformeEmbalaje
+import FormularioInformeEmbalaje from './Formularios/Formulario PDF/FormularioInformeEmbalaje';
 
 
 
@@ -394,6 +396,24 @@ const TablaProgramaEmbalaje = () => {
 								
 
 							</div> */}
+
+							<div className='flex gap-2 '>
+									<ModalForm
+										open={informePro}
+										setOpen={setInformePro}
+										title='Informe de Selección'
+										variant='solid'
+										icon={
+										<div className='flex items-center gap-1.5'>
+												<FaFilePdf style={{ fontSize: 20, color: 'white'}}/>
+											<span className='text-md font-semibold'>Generar Informe de Embalaje</span>
+										</div>
+										}
+										width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-auto text-white bg-red-700 hover:bg-red-600 hover:scale-105 border-none`}
+									>
+										<FormularioInformeEmbalaje setOpen={setInformePro}/>
+									</ModalForm>
+							</div>
 						</CardHeaderChild>
 					</CardHeader>
 					<CardBody className='overflow-x-auto'>

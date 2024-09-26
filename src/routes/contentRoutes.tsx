@@ -184,6 +184,7 @@ const DetalleEmbalaje = lazy(() => import('../pages/Embalaje/Detalles/DashboardE
 const ListaTiposEmbalaje = lazy(() => import('../pages/Embalaje/TablaTiposEmbajales.tsx'));
 const ListaEtiquetas = lazy(() => import('../pages/Embalaje/TablaEtiquetados.tsx'));
 const PDFEntradaEmbalaje = lazy(() => import('../pages/Embalaje/PDF/PDFDocumentoEntradaEmbalaje.tsx'));
+const PDFInformeEmbalaje = lazy(() => import('../pages/Embalaje/PDF/PDFInformeEmbalaje.tsx'));
 const PDFSalidaEmbalaje = lazy(() => import('../pages/Embalaje/PDF/PDFDocumentoSalidaEmbalaje.tsx'));
 
 const contentRoutes: RouteProps[] = [
@@ -327,6 +328,7 @@ const contentRoutes: RouteProps[] = [
 	{ path: appPages.embalaje.subPages.etiquetados.to, element: <ListaEtiquetas />},
 	{ path: appPages.embalaje.subPages.pdf_entrada_embalaje.to, element: <PDFEntradaEmbalaje />},
 	{ path: appPages.embalaje.subPages.pdf_salida_embalaje.to, element: <PDFSalidaEmbalaje />},
+	{path: appPages.embalaje.subPages.pdf_informe_embalaje.to, element: <PDFInformeEmbalaje />},
 
 
 

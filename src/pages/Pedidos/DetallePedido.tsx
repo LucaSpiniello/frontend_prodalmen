@@ -38,8 +38,7 @@ function DetallePedido() {
         }
     }, [id, refrescar, token])
 
-    function actualizarEstadoPedido({estado} : {estado: string | undefined | null}) {
-        console.log(pedido)
+    function actualizarEstadoPedido({} : {estado: string | undefined | null}) {
         if (pedido?.mercado_interno){
             let totalKilosSolicitados = 0
             pedido.mercado_interno.fruta_ficticia.forEach((fruta: any) => {

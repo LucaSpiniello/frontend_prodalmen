@@ -426,7 +426,7 @@ const PDFDetalleEnvases = () => {
           </View>
 
           {
-            detalle_pdf?.detalle_envase?.map((lote: DetalleEnvase, index) => {
+            detalle_pdf?.detalle_envase?.map((lote: DetalleEnvase) => {
               return (
                 <View style={{ 
                   width: '100%',
