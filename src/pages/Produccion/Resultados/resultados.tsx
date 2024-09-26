@@ -69,6 +69,8 @@ const DetalleProyeccion = () => {
   const [filtroFechas, setFiltroFechas] = useState<any>(false);
   const [fechaChange, setfechaChange] = useState<any>(false);
 
+  const [comercializador, setComercializador] = useState<string>('');
+
   const handleSelect = (ranges: any) => {
     setFechaInicio(ranges.selection.startDate);
     setFechaFin(ranges.selection.endDate);
@@ -111,8 +113,10 @@ const DetalleProyeccion = () => {
 
     if (programas_seleccion && filtroVariedad && hasGroup(['dnandres'])) {
       filterByComercializador("Prodalmen")
+      setComercializador("Prodalmen")
     } else if (programas_seleccion && filtroVariedad && hasGroup(['comercializador'])) {
       filterByComercializador("Pacific Nut")
+      setComercializador("Pacific Nut")
     }
   }, [programas_seleccion, filtroVariedad, dispatch, token, verificarToken, filtroVariedad]);
 
@@ -199,6 +203,8 @@ const DetalleProyeccion = () => {
 		<>
 			<PageWrapper name='Detalle Programa Producción'>
         <Subheader className='z-10'>
+          <div className='mb-2 inline-block w-full cursor-pointer text-xl content-center'>Informacion resultados comercializador {comercializador} 
+          </div>
 					<SubheaderLeft className='w-auto'>
 						<ButtonsTabsResults activeTab={activeTab} setActiveTab={setActiveTab} />
 					</SubheaderLeft>
@@ -212,6 +218,7 @@ const DetalleProyeccion = () => {
           </SubheaderRight>
 				</Subheader>
         <Subheader>
+          
           <div className="w-auto lg:w-2/12 flex-col">
             <Label htmlFor="calle">Variedad: </Label>
             <SelectReact
@@ -285,6 +292,7 @@ const DetalleProyeccion = () => {
           </div>
 
         </Subheader>
+
 				<Container breakpoint={null} className='w-full h-full'>
           { seleccionesCombinadas ?
 					<div className='border'>

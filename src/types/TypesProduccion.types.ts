@@ -54,6 +54,7 @@ export type TProduccion = {
   numero_programa: number
   condicion_cierre: boolean
   condicion_termino: boolean
+  hay_bins_en_g2? : boolean
 }
 
 export type   TLoteProduccion = {

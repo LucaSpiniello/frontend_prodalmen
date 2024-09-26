@@ -212,7 +212,7 @@ const PDFDocumentoEntradaSalida = () => {
             </View>
 
             <Text style={{ width: 'auto', textAlign: 'center', fontSize: 14, position: 'relative', left: 10, top: 10}}>
-              Documento Entrada Programa Embalaje N° {id} 
+              Documento Salida Programa Embalaje N° {id} 
             </Text>
 
 

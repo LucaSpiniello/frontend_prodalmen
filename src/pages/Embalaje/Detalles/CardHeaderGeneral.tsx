@@ -203,7 +203,13 @@ const CardHeaderGeneral = () => {
               <div className='w-full h-full flex-col rounded-md flex py-2'>
                 <Label htmlFor="producto_embalar" className="text-lg">Kilos Sobrantes</Label>
                 <div className="dark:bg-zinc-700 bg-zinc-300 p-2 rounded-md">
-                  <span className="text-lg">{programa_embalaje?.kilos_sobrantes}</span>
+                  <span className="text-lg">
+                    {
+                      programa_embalaje?.fruta_embalada && programa_embalaje?.fruta_embalada - programa_embalaje?.kilos_solicitados > 0  ?
+                      programa_embalaje?.fruta_embalada - programa_embalaje?.kilos_solicitados : programa_embalaje?.kilos_sobrantes
+                    }
+
+                  </span>
                 </div>
               </div>
 

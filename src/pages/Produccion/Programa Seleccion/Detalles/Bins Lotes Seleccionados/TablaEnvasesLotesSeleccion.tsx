@@ -246,7 +246,7 @@ const TablaEnvasesLotes = () => {
                   )
                 : null
           }
-          {
+          {/* {
             (programa_seleccion?.estado_programa! === '0' || programa_seleccion?.estado_programa! !== '2' && programa_seleccion?.estado_programa! <= '3') || estado 
               ? null
               : (
@@ -260,7 +260,7 @@ const TablaEnvasesLotes = () => {
                     <HeroXMark style={{ fontSize: 25 }}/>
                 </Button>
               )
-          }
+          } */}
 
           
         </div>

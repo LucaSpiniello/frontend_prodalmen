@@ -27,7 +27,7 @@ const DefaultAsideTemplate = () => {
 			<AsideBody>
 				<Nav>
 					<NavTitle>Accesos</NavTitle>
-					{ !hasGroup(['comercializador']) || hasGroup(['dnandres']) && (
+					{ (!hasGroup(['comercializador']) || hasGroup(['dnandres']) ) ?(
 							<NavCollapse
 							text={appPages.registroAppPages.text}
 							to={appPages.registroAppPages.to}
@@ -40,7 +40,7 @@ const DefaultAsideTemplate = () => {
 							<NavItem {...appPages.registroAppPages.subPages.comercializadores} />
 							<NavItem {...appPages.registroAppPages.subPages.operarios} />
 						</NavCollapse>
-					)
+					)  : null
 				}
 
 					{(hasGroup(['controlcalidad', 'bodega', 'recepcion-mp', 'jefe-planta']) && !hasGroup(['comercializador']) || hasGroup(['dnandres'])) && (

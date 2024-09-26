@@ -24,6 +24,8 @@ import toast from "react-hot-toast"
 import ModalPPTReal from "./Formularios/ModalPPTReal"
 import Label from "../../components/form/Label"
 import Validation from "../../components/form/Validation"
+import { FaFilePdf } from 'react-icons/fa6';
+import { Link, useNavigate } from 'react-router-dom';
 
 const columnHelper = createColumnHelper<TFrutaReal>();
 const columnHelperBins = createColumnHelper<TBinBodega>();
@@ -37,6 +39,7 @@ function ComponerFrutaReal() {
     const ct = useAppSelector((state) => state.core.contenttypes)
     const [frutaReal, setFrutaReal] = useState<TFrutaReal[]>([])
     const { bin_bodega } = useAppSelector((state) => state.bodegas)
+    const [binsFiltrados, setBinsFiltrados] = useState<TBinBodega[]>([])
     const [sorting, setSorting] = useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = useState<string>('')
     const [sortingBins, setSortingBins] = useState<SortingState>([]);
@@ -74,6 +77,12 @@ function ComponerFrutaReal() {
             dispatch(listaBinBodegaFiltroThunk({token, verificar_token: verificarToken, filtro: ''}))
         }
     }, [modalRegistrarBin])
+
+    useEffect(() =>{
+        const filtered = bin_bodega.filter(bin => bin.estado_binbodega !== "Procesado En Embalaje");
+        setBinsFiltrados(filtered);
+    }, [bin_bodega]
+    )
 
     const columns = [
         columnHelper.accessor('codigo_fruta', {
@@ -267,7 +276,7 @@ function ComponerFrutaReal() {
             id: 'acciones',
             cell: (info) => (
                 <div className="font-bold">
-                    { pedido && pedido.frutas.length > 0 && ctBin > 0 && pedido.frutas.find(fruta => fruta.id_fruta === info.row.original.id && fruta.tipo_fruta === ctBin) ? (
+                    { pedido && pedido.frutas.length > 0 && ctBin > 0 && pedido.frutas.find((fruta : any) => fruta.id_fruta === info.row.original.id && fruta.tipo_fruta === ctBin) ? (
                         <Tooltip text="Bin Ya Agregado">
                             
                         </Tooltip>
@@ -301,7 +310,7 @@ function ComponerFrutaReal() {
     ]
 
     const tableBins = useReactTable({
-        data: bin_bodega,
+        data: binsFiltrados,
         columns: columnsBins,
         state: {
             sorting: sortingBins,
@@ -334,7 +343,29 @@ function ComponerFrutaReal() {
                                     <Button variant="solid" color="gray" onClick={() => {setModalRegistrarPPT(true)}}>Agregar PPT</Button>
                                 </>
                             )}
-                        </div>
+
+                    <Link
+                    to={
+                        pedido?.exportacion
+                        ? `/ventas/pedidos/pdf-pedido-exportacion/${pedido.id_pedido}`
+                        : pedido?.guia_salida
+                        ? `/ventas/pedidos/guia/pdf-guia-salida/${pedido.id_pedido}`
+                        : pedido?.mercado_interno
+                        ? `/ventas/pedidos/pdf-pedido-interno/${pedido.id_pedido}`
+                        : '#'
+                    }
+                    >
+                    <Button
+                        title="Detalle"
+                        variant="solid"
+                        color="red"
+                        colorIntensity="800"
+                        className="hover:scale-105"
+                    >
+                        <FaFilePdf style={{ fontSize: 25 }} />
+                    </Button>
+                    </Link>
+                                            </div>
                     </CardHeaderChild>
                 </CardHeader>
                 <CardBody>

@@ -25,7 +25,8 @@ import Button from '../../../../../components/ui/Button';
 import { IoIosBarcode } from 'react-icons/io';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
-
+// impoer TIPO_RESULTANTE_SELECCION from constante.ts
+import { TIPO_RESULTANTE_SELECCION } from '../../../../../utils/constante'
 
 interface IRendimientoMuestra {
 
@@ -92,6 +93,20 @@ const TablaTarjaResultanteSeleccion: FC<IRendimientoMuestra> = () => {
           </div>
         ),
         header: 'Fruta Neta',
+      }),
+      columnHelper.accessor('tipo_resultante', {
+        cell: (info) => {
+          const tipoResultante = TIPO_RESULTANTE_SELECCION.find(
+            (item) => item.value === info.row.original.tipo_resultante
+          );
+          
+          return (
+            <div className='font-bold text-center'>
+              {tipoResultante ? tipoResultante.label : 'Desconocido'}
+            </div>
+          );
+        },
+        header: 'Tipo',
       }),
       columnHelper.accessor('calidad', {
         cell: (info) => (
@@ -232,6 +247,7 @@ const TablaTarjaResultanteSeleccion: FC<IRendimientoMuestra> = () => {
   const columnas: TableColumn[] = [
     { id: 'id', header: 'Código Tarja', className: 'lg:w-36 ' },
     { id: 'peso', header: 'Fruta Neta', className: 'lg:w-32' },
+    { id: 'tipo_resultante', header: 'Tipo', className: 'lg:w-40' },
     { id: 'calidad', header: '', className: 'lg:w-40' },
     { id: 'variedad', header: '', className: 'lg:w-40' },
     { id: 'calibre', header: '', className: 'lg:w-40' },

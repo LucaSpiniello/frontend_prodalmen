@@ -261,15 +261,17 @@ const TablaBinSubProducto = ({ filtro, binSeleccionado, setBin, openModal, setOp
               !pathname.includes('/pro/seleccion/programa-seleccion/programa')
                 ? (
                   <>
-                    <Tooltip text={`Detalle Bin SubProducto N° ${cell.row.original.id}`}>
-                      <Link to={`/bin-subproducto-agrupado/${cell.row.original.id}`} state={{ pathname: '/bins-subproductos'}}>
-                        <Button
-                          variant='solid'
-                          >
-                            <HeroEye style={{ fontSize: 27 }}/>
-                        </Button>
-                      </Link>
-                    </Tooltip>
+              <Tooltip text={`Detalle Bin SubProducto N° ${cell.row.original.id}`}>
+                <Link 
+                  to={`/pro/seleccion/subproducto-seleccion/bin-subproducto-agrupado/${cell.row.original.id}`} 
+                  state={{ pathname: '/bins-subproducto' }}
+                >
+                  <Button variant='solid'>
+                    <HeroEye style={{ fontSize: 27 }} />
+                  </Button>
+                </Link>
+              </Tooltip>
+
                     <Tooltip text={`Eliminar Bin SubProducto N° ${cell.row.original.id}`}>
                         <Button
                           variant='solid'

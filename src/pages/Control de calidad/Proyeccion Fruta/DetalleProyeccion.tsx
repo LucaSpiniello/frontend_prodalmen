@@ -59,6 +59,7 @@ const DetalleProyeccion = () => {
   const [rendimientosCombinados, setRendimientosCombinados] = useState<TRendimiento | null>(null);
   const [selectedNumeroGuia, setSelectedNumeroGuia] = useState<string>(''); 
 
+  const [comercializador, setComercializador] = useState<string>('')
   useEffect(() => {
     setFiltroVariedad('NN')
   }, [])
@@ -70,11 +71,13 @@ const DetalleProyeccion = () => {
   useEffect(() => {
 
     if (control_calidad && filtroVariedad && hasGroup(['dnandres'])) {
+      setComercializador("Prodalmen")
       const ids = filterByComercializador("Prodalmen").map((lote: any) => lote.id)
       ids.forEach((id : any) => {
         dispatch(fetchRendimientoLotes({ id,  params: { variedad: filtroVariedad }, token, verificar_token: verificarToken }));
       });
     } else if (control_calidad && filtroVariedad && hasGroup(['comercializador'])) {
+      setComercializador("Pacific Nut")
       const ids = filterByComercializador("Pacific Nut").map((lote: any) => lote.id)
       ids.forEach((id : any) => {
         dispatch(fetchRendimientoLotes({ id,  params: { variedad: filtroVariedad }, token, verificar_token: verificarToken }));
@@ -187,6 +190,8 @@ const DetalleProyeccion = () => {
 		<>
 			<PageWrapper name='Detalle Programa Producción'>
         <Subheader className='z-10'>
+        <div className='mb-2 inline-block w-full cursor-pointer text-xl content-center'>Informacion de proyeccion comercializador {comercializador} 
+        </div>
 					<SubheaderLeft className='w-auto'>
 						<ButtonsTabsProyeccion activeTab={activeTab} setActiveTab={setActiveTab} />
 					</SubheaderLeft>

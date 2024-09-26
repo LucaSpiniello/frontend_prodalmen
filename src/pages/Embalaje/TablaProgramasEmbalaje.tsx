@@ -149,13 +149,13 @@ const TablaProgramaEmbalaje = () => {
 			),
 			header: 'Estado Embalaje',
 		}),
-		columnHelper.accessor('kilos_faltantes', {
+		columnHelper.accessor('kilos_sobrantes', {
 			cell: (info) => (
 				<div className='font-bold'>
-					{`${info.row.original.kilos_faltantes}`}
+					{`${info.row.original?.kilos_sobrantes}`}
 				</div>
 			),
-			header: 'Kilos Faltantes',
+			header: 'Kilos Sobrantes',
 		}),
 		columnHelper.display({
 			id: 'actions',

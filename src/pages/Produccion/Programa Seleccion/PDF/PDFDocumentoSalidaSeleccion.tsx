@@ -286,6 +286,14 @@ const PDFDocumentoSalida = () => {
             <View style={styles.header_info_box_superior}>
              <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Calibre</Text>
             </View>
+            
+            <View style={styles.header_info_box_superior}>
+             <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Calidad</Text>
+            </View>
+
+            <View style={styles.header_info_box_superior}>
+             <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Tipo</Text>
+            </View>
 
             <View style={styles.header_info_box_superior}>
              <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Trozo</Text>
@@ -358,6 +366,14 @@ const PDFDocumentoSalida = () => {
       
                   <View style={styles.header_info_box_superior}>
                    <Text style={{ fontSize: 9}}>{entrada?.calibre}</Text>
+                  </View>
+
+                  <View style={styles.header_info_box_superior}>
+                   <Text style={{ fontSize: 9}}>{entrada?.calidad}</Text>
+                  </View>
+
+                  <View style={styles.header_info_box_superior}>
+                   <Text style={{ fontSize: 9}}>{entrada?.tipo}</Text>
                   </View>
 
                   <View style={styles.header_info_box_superior}>

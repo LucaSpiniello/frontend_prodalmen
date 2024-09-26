@@ -309,6 +309,7 @@ export type TPDFEntradaSeleccion = {
   pepa: number
   kilos: number
   colectado: boolean
+  programa_produccion?: string
 }
 
 export type TPDFSalidaSeleccion = {
@@ -332,6 +333,8 @@ export type Bines = {
   goma: number
   pepa: number
   kilos: number
+  calidad?:string
+  tipo?:string
 }
 
 export type Productos = {

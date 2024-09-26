@@ -221,7 +221,7 @@ const TablaPedidos = () => {
 								<HeroEye style={{ fontSize: 25 }}/>
 							</Button>
 						</Link>
-					{
+					{/* {
 						hasGroup(['registros-admin', ''])
 								? (
 									<Button
@@ -242,7 +242,7 @@ const TablaPedidos = () => {
 									</Button>
 								)
 							: null
-					}
+					} */}
 
 					{
 							['Pedido Completado', 'Pedido Entregado y Finalizado', 'Completado', 'Completado','Aprobada', 'Completada y entregada'].includes(info.row.original.estado_pedido) 

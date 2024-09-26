@@ -192,7 +192,7 @@ export type TFrutaExportacion = {
 // Define the interface for the main object
 export type TPedidoExportacion = {
   id: number;
-  frutas: TFrutaExportacion[];
+  fruta_pedido: TFrutaExportacion[];
   fecha_creacion: string;
   fecha_modificacion: string;
   retira_cliente: boolean;
@@ -233,6 +233,7 @@ export type TPedidoExportacion = {
   tipo_despacho_label: string
   tipo_flete_label: string
   id_pedido_padre: number
+  fruta_ficticia: any
 }
 
 
@@ -245,12 +246,14 @@ export type TPDFGuiaSalida = {
 export type TPDFPedidoInterno = {
   pedido_interno: TPedidoInterno
   fruta_en_pedido: TFrutaEnGuiaMany[]
+  fruta_solicitada?: any
 
 }
 
 export type TPDFPedidoExportacion = {
   pedido_exportacion: TPedidoExportacion
   fruta_en_pedido: TFrutaEnGuiaMany[]
+  fruta_solicitada? : any
 }
 
 export type TFrutaEnGuiaMany = {
@@ -260,11 +263,12 @@ export type TFrutaEnGuiaMany = {
   calidad: string
   variedad: string
   calibre: string
+  kilos?: number
 }
 
 export type TPedido = {
   id: string
-  frutas: TFrutaReal[]
+  frutas: any
   pedido: string
   mercado_interno: TPedidoInterno | false,
   exportacion: TPedidoExportacion | false

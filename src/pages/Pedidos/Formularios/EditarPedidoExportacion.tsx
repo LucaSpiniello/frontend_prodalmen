@@ -10,7 +10,6 @@ import { actualizar_estado_pedido_exportacion, fetchDespacho, fetchFrutaEnPedido
 import { format } from '@formkit/tempo'
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
-import TablaFrutaPedidoExportacion from './TablaFrutaPedidoExportacion'
 import Button from '../../../components/ui/Button'
 import { useFormik } from 'formik'
 import { fetchWithTokenPatch } from '../../../utils/peticiones.utils'
@@ -21,7 +20,6 @@ import SelectReact, { TSelectOptions } from '../../../components/form/SelectReac
 import Input from '../../../components/form/Input'
 import Validation from '../../../components/form/Validation'
 import ButtonsPedido, { OPTIONS_PEDIDO, TTabsPedidos } from '../ButtonsDetallePedido'
-import TablaPedidoExportacion from './TablaPedidoExportacion'
 import DetalleDespacho from '../Despacho/DetalleDespacho'
 import { Switch } from 'antd'
 
@@ -35,14 +33,16 @@ const optionsEstadosPedido: TSelectOptions = [
   { value: '7', label: 'Pedido Devuelto'},
 ]
 
-const DetallePedidoExportacion = () => {
-  const { id } = useParams() 
+interface EditarExportacionProps {
+    id: string;  // Define id como un prop
+}
+
+const EditarExportacion: React.FC<EditarExportacionProps> = ({ id }) => {
+
   const { verificarToken } = useAuth()
   const [editar, setEditar] = useState<boolean>(false)
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
   const token = useAppSelector((state: RootState) => state.auth.authTokens)
-	const [activeTab, setActiveTab] = useState<TTabsPedidos>(OPTIONS_PEDIDO.FS)
-  
 
   const pedido_exportacion = useAppSelector((state: RootState) => state.pedidos.pedido_exportacion)
 
@@ -414,4 +414,4 @@ const DetallePedidoExportacion = () => {
   )
 }
 
-export default DetallePedidoExportacion
+export default EditarExportacion

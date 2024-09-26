@@ -166,7 +166,7 @@ const TablaFrutaPedidoExportacion: FC<TablaFrutaProps> = () => {
   ]
 
   const table = useReactTable({
-    data: pedido_exportacion?.frutas ? pedido_exportacion?.frutas : [],
+    data: pedido_exportacion?.fruta_pedido ? pedido_exportacion?.fruta_pedido : [],
     columns,
     state: {
       sorting,
@@ -247,7 +247,7 @@ const TablaFrutaPedidoExportacion: FC<TablaFrutaProps> = () => {
               }
 
               {
-                pedido_exportacion?.frutas.length! > 2
+                pedido_exportacion?.fruta_pedido.length! > 2
                 ? (
                   <Button
                     variant='solid'

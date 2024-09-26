@@ -36,6 +36,7 @@ export type TEmbalaje = {
   kilos_ingresados: number
   metricas_embalaje: TMetricasEmbalaje[]
   margen_fruta?: number
+  fruta_embalada?: number
 }
 
 

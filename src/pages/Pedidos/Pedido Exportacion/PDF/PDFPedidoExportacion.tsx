@@ -191,10 +191,10 @@ const styles = StyleSheet.create({
 const PDFPedidoExportacion = () => {
   const { id } = useParams()
 
-  
+
 
   const perfilData = useAppSelector((state: RootState) => state.auth.dataUser)
-	const pdf_exportacion = useAppSelector((state: RootState) => state.pedidos.pdf_pedido_exportacion)
+  const pdf_exportacion = useAppSelector((state: RootState) => state.pedidos.pdf_pedido_exportacion)
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
   const token = useAppSelector((state: RootState) => state.auth.authTokens)
   const { verificarToken } = useAuth()
@@ -203,264 +203,321 @@ const PDFPedidoExportacion = () => {
     dispatch(fetchPDFPedidoExportacion({ id: parseInt(id!), token, verificar_token: verificarToken }))
   }, [])
 
-  console.log(pdf_exportacion)
-
-
-
   return (
-    <PDFViewer style={{ height: '100%'}}>
+    <PDFViewer style={{ height: '100%' }}>
       <Document title={`Documento Detalle Pedido Exportación ${id}`}>
         <Page size={'A4'}>
-         <View style={styles.header}>
-          <View style={styles.header_superior}>
-            <View style={{ position: 'relative', top: -9 }}>
-              <Image source="/src/assets/prodalmen_foto.png" style={{ height: 100, width: 100}}/>
-            </View>
-
-            <Text style={{ width: 'auto', textAlign: 'center', fontSize: 14, position: 'relative', left: 10, top: 10}}>
-                Guia Salida Fruta N° {id} 
-            </Text>
-
-
-            <View style={{ width: 180, border: '1px solid green', height: 40, padding: 5, borderRadius: 2, position: 'relative', top: -10 }}>
-
-              <View style={styles.header_date_info_box}>
-                <Text style={styles.header_date_info_text}>Generado el {format(new Date(), { date: 'medium', time: 'short'}, 'es')}</Text>
-                <Text style={styles.header_date_info_text}>{}</Text>
+          <View style={styles.header}>
+            <View style={styles.header_superior}>
+              <View style={{ position: 'relative', top: -9 }}>
+                <Image source="/src/assets/prodalmen_foto.png" style={{ height: 100, width: 100 }} />
               </View>
 
-              <View style={styles.header_date_info_box}>
-                <Text style={styles.header_date_info_text}>Creado Por: </Text>
+              <Text style={{ width: 'auto', textAlign: 'center', fontSize: 14, position: 'relative', left: 10, top: 10 }}>
+                Guia Exportación Fruta N° {id}
+              </Text>
 
-                <Text style={styles.header_date_info_text}>{`${perfilData?.first_name} ${perfilData?.last_name} `} </Text>
+
+              <View style={{ width: 180, border: '1px solid green', height: 40, padding: 5, borderRadius: 2, position: 'relative', top: -10 }}>
+
+                <View style={styles.header_date_info_box}>
+                  <Text style={styles.header_date_info_text}>Generado el {format(new Date(), { date: 'medium', time: 'short' }, 'es')}</Text>
+                  <Text style={styles.header_date_info_text}>{ }</Text>
+                </View>
+
+                <View style={styles.header_date_info_box}>
+                  <Text style={styles.header_date_info_text}>Creado Por: </Text>
+
+                  <Text style={styles.header_date_info_text}>{`${perfilData?.first_name} ${perfilData?.last_name} `} </Text>
+                </View>
               </View>
             </View>
-          </View>
 
-          <Text style={{ textAlign: 'center', fontSize: 15, fontWeight: 'bold' }}>Información del Cliente</Text>
-          <View style={{
-            width: '100%',
-            border: '1px solid black',
-            display: 'flex',
-            flexDirection: 'row'
-          }}>
+            <Text style={{ textAlign: 'center', fontSize: 15, fontWeight: 'bold' }}>Información del Cliente</Text>
             <View style={{
               width: '100%',
-              padding: 5,
+              border: '1px solid black',
               display: 'flex',
-              flexDirection: 'column',
-              gap: 5
+              flexDirection: 'row'
             }}>
-            
-              <View style={styles.header_date_info_box}>
-                <Text style={styles.header_date_info_text}>Cliente: </Text>
-                <Text style={styles.header_date_info_text}>{pdf_exportacion?.pedido_exportacion.cliente_info.nombre}</Text>
+              <View style={{
+                width: '100%',
+                padding: 5,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 5
+              }}>
+
+                <View style={styles.header_date_info_box}>
+                  <Text style={styles.header_date_info_text}>Cliente: </Text>
+                  <Text style={styles.header_date_info_text}>{pdf_exportacion?.pedido_exportacion.cliente_info.nombre}</Text>
+                </View>
+
+                <View style={styles.header_date_info_box}>
+                  <Text style={styles.header_date_info_text}>Teléfono: </Text>
+                  <Text style={styles.header_date_info_text}>{pdf_exportacion?.pedido_exportacion.cliente_info.telefono}</Text>
+                </View>
+
               </View>
 
-              <View style={styles.header_date_info_box}>
-                <Text style={styles.header_date_info_text}>Teléfono: </Text>
-                <Text style={styles.header_date_info_text}>{pdf_exportacion?.pedido_exportacion.cliente_info.telefono}</Text>
-              </View>
+              <View style={{
+                width: '100%',
+                padding: 5,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 5
+              }}>
 
+                <View style={styles.header_date_info_box}>
+                  <Text style={styles.header_date_info_text}>Rut: </Text>
+                  <Text style={styles.header_date_info_text}>{pdf_exportacion?.pedido_exportacion.cliente_info.rut} </Text>
+                </View>
+
+                <View style={styles.header_date_info_box}>
+                  <Text style={styles.header_date_info_text}>Movil: </Text>
+                  <Text style={styles.header_date_info_text}>{pdf_exportacion?.pedido_exportacion.cliente_info.movil} </Text>
+                </View>
+
+                <View style={styles.header_date_info_box}>
+                  <Text style={styles.header_date_info_text}>Email: </Text>
+                  <Text style={styles.header_date_info_text}>{pdf_exportacion?.pedido_exportacion.cliente_info.email} </Text>
+                </View>
+
+              </View>
             </View>
+
+            <Text style={{ textAlign: 'center', fontSize: 15, fontWeight: 'bold', marginTop: 10 }}>Información de la Guia</Text>
+            <View style={{
+              width: '100%',
+              border: '1px solid black',
+              display: 'flex',
+              flexDirection: 'row'
+            }}>
+              <View style={{
+                width: '100%',
+                padding: 5,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 5
+              }}>
+
+                <View style={styles.header_date_info_box}>
+                  <Text style={styles.header_date_info_text}>Fecha Entrega: </Text>
+                  <Text style={styles.header_date_info_text}>{(format(pdf_exportacion?.pedido_exportacion.fecha_entrega!, { date: 'short', time: 'short' }, 'es'))}</Text>
+                </View>
+
+                <View style={styles.header_date_info_box}>
+                  <Text style={styles.header_date_info_text}>Número Factura: </Text>
+                  <Text style={styles.header_date_info_text}>{pdf_exportacion?.pedido_exportacion.numero_factura}</Text>
+                </View>
+
+              </View>
+
+              <View style={{
+                width: '100%',
+                padding: 5,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 5
+              }}>
+
+                <View style={styles.header_date_info_box}>
+                  <Text style={styles.header_date_info_text}>Observaciones: </Text>
+                  <Text style={styles.header_date_info_text}>{pdf_exportacion?.pedido_exportacion.observaciones}</Text>
+                </View>
+
+              </View>
+            </View>
+
+            <Text style={{ textAlign: 'center', fontSize: 15, fontWeight: 'bold', marginTop: 15 }}>Información de Fruta en la Guia Entrada</Text>
 
             <View style={{
               width: '100%',
-              padding: 5,
+              height: 30,
+              backgroundColor: '#f2f2f3',
+              borderRadius: '1px',
               display: 'flex',
-              flexDirection: 'column',
-              gap: 5
-            }}>
-            
-              <View style={styles.header_date_info_box}>
-                <Text style={styles.header_date_info_text}>Rut: </Text>
-                <Text style={styles.header_date_info_text}>{pdf_exportacion?.pedido_exportacion.cliente_info.rut} </Text>
-              </View>
-
-              <View style={styles.header_date_info_box}>
-                <Text style={styles.header_date_info_text}>Movil: </Text>
-                <Text style={styles.header_date_info_text}>{pdf_exportacion?.pedido_exportacion.cliente_info.movil} </Text>
-              </View>
-
-              <View style={styles.header_date_info_box}>
-                <Text style={styles.header_date_info_text}>Email: </Text>
-                <Text style={styles.header_date_info_text}>{pdf_exportacion?.pedido_exportacion.cliente_info.email} </Text>
-              </View>
-
-            </View>
-          </View>
-
-          <Text style={{ textAlign: 'center', fontSize: 15, fontWeight: 'bold', marginTop: 10 }}>Información de la Guia Salida</Text>
-          <View style={{
-            width: '100%',
-            border: '1px solid black',
-            display: 'flex',
-            flexDirection: 'row'
-          }}>
-            <View style={{
-              width: '100%',
-              padding: 5,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 5
-            }}>
-            
-              <View style={styles.header_date_info_box}>
-                <Text style={styles.header_date_info_text}>Fecha Entrega: </Text>
-                <Text style={styles.header_date_info_text}>{(format(pdf_exportacion?.pedido_exportacion.fecha_entrega!, { date: 'short', time: 'short' }, 'es' ))}</Text>
-              </View>
-
-              <View style={styles.header_date_info_box}>
-                <Text style={styles.header_date_info_text}>Número Factura: </Text>
-                <Text style={styles.header_date_info_text}>{pdf_exportacion?.pedido_exportacion.numero_factura}</Text>
-              </View>
-
-            </View>
-
-            <View style={{
-              width: '100%',
-              padding: 5,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 5
-            }}>
-            
-              <View style={styles.header_date_info_box}>
-                <Text style={styles.header_date_info_text}>Observaciones: </Text>
-                <Text style={styles.header_date_info_text}>{pdf_exportacion?.pedido_exportacion.observaciones}</Text>
-              </View>
-
-            </View>
-          </View>
-          
-
-          <Text style={{ textAlign: 'center', fontSize: 15, fontWeight: 'bold', marginTop: 15 }}>Información de Fruta en la Guia Salida</Text>
-
-          <View style={{ 
-            width: '100%',
-            height: 30,
-            backgroundColor: '#f2f2f3',
-            borderRadius: '1px', 
-            display: 'flex',
-            flexDirection: 'row',
-            fontWeight: 'bold',
-            paddingBottom: 2
+              flexDirection: 'row',
+              fontWeight: 'bold',
+              paddingBottom: 2
             }}>
 
-            <View style={styles.header_info_box_superior}>
-             <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Producto</Text>
+
+              <View style={styles.header_info_box_superior}>
+                <Text style={{ fontSize: 10, position: 'relative', top: -3 }}>Producto</Text>
+              </View>
+
+              <View style={styles.header_info_box_superior}>
+                <Text style={{ fontSize: 10, position: 'relative', top: -3 }}>Variedad</Text>
+              </View>
+
+              <View style={styles.header_info_box_superior}>
+                <Text style={{ fontSize: 10, position: 'relative', top: -3 }}>Calibre</Text>
+              </View>
+
+              <View style={styles.header_info_box_superior}>
+                <Text style={{ fontSize: 10, position: 'relative', top: -3 }}>Calidad</Text>
+              </View>
+
+              <View style={styles.header_info_box_superior}>
+                <Text style={{ fontSize: 10, position: 'relative', top: -3 }}>Kilos Solicitados</Text>
+              </View>
+
             </View>
 
-            <View style={styles.header_info_box_superior}>
-             <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Programa</Text>
-            </View>
-
-            <View style={styles.header_info_box_superior}>
-             <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Producto</Text>
-            </View>
-
-            <View style={styles.header_info_box_superior}>
-             <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Variedad</Text>
-            </View>
-
-            <View style={styles.header_info_box_superior}>
-             <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Calibre</Text>
-            </View>
-
-            <View style={styles.header_info_box_superior}>
-             <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Calidad</Text>
-            </View>
-
-          </View>
-
-          {
-            pdf_exportacion?.fruta_en_pedido.map((entrada: TFrutaEnGuiaMany) => {
-              return (
-                <View style={{ 
-                  width: '100%',
-                  height: 30,
-                  borderRadius: '1px', 
-                  display: 'flex',
-                  flexDirection: 'row',
+            {
+              pdf_exportacion?.fruta_solicitada.map((entrada: any) => {
+                return (
+                  <View style={{
+                    width: '100%',
+                    height: 30,
+                    borderRadius: '1px',
+                    display: 'flex',
+                    flexDirection: 'row',
                   }}>
 
-                  <View style={styles.header_info_box_superior}>
-                    <Text style={{ fontSize: 9}}>{entrada.codigo}</Text>
-                  </View>
 
-                  <View style={styles.header_info_box_superior}>
-                    <Text style={{ fontSize: 9}}>{entrada.programa}</Text>
-                  </View>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.producto}</Text>
+                    </View>
 
-                  <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.producto}</Text>
-                  </View>
-      
-                  <View style={styles.header_info_box_superior}>
-                    <Text style={{ fontSize: 9}}>{entrada.variedad}</Text>
-                  </View>
-      
-                  <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.calibre}</Text>
-                  </View>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.variedad}</Text>
+                    </View>
 
-                  <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada.calidad}</Text>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.calibre}</Text>
+                    </View>
+
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.calidad}</Text>
+                    </View>
+
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.kilos_solicitados}</Text>
+                    </View>
+
                   </View>
-                  
+                )
+              })
+            }
+
+
+            {pdf_exportacion?.fruta_en_pedido ? (
+              <>
+                <Text style={{ textAlign: 'center', fontSize: 15, fontWeight: 'bold', marginTop: 15 }}>
+                  Información de Fruta en la Guia Salida
+                </Text>
+
+                <View style={{
+                  width: '100%',
+                  height: 30,
+                  backgroundColor: '#f2f2f3',
+                  borderRadius: '1px',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  fontWeight: 'bold',
+                  paddingBottom: 2
+                }}>
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10, position: 'relative', top: -3 }}>Producto</Text>
+                  </View>
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10, position: 'relative', top: -3 }}>Programa</Text>
+                  </View>
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10, position: 'relative', top: -3 }}>Producto</Text>
+                  </View>
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10, position: 'relative', top: -3 }}>Variedad</Text>
+                  </View>
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10, position: 'relative', top: -3 }}>Calibre</Text>
+                  </View>
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10, position: 'relative', top: -3 }}>Calidad</Text>
+                  </View>
                 </View>
-              )
-            })
-          }
 
-          <View style={{ 
-            height: 100,
-            width: '100%',
-            marginTop: 20,
-            display: 'flex',
-            flexDirection: 'row',
-            padding: 20,
-            gap: 20
-          }}>
+                {pdf_exportacion?.fruta_en_pedido.map((entrada: TFrutaEnGuiaMany) => (
+                  <View key={entrada.codigo} style={{
+                    width: '100%',
+                    height: 30,
+                    borderRadius: '1px',
+                    display: 'flex',
+                    flexDirection: 'row',
+                  }}>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.codigo}</Text>
+                    </View>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.programa}</Text>
+                    </View>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.producto}</Text>
+                    </View>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.variedad}</Text>
+                    </View>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.calibre}</Text>
+                    </View>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.calidad}</Text>
+                    </View>
+                  </View>
+                ))}
+              </>
+            ) : null}
 
             <View style={{
+              height: 100,
               width: '100%',
+              marginTop: 20,
               display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              gap: 10
+              flexDirection: 'row',
+              padding: 20,
+              gap: 20
             }}>
-              <View >
-                <Text style={{ fontSize: 15 }}>Nombre: </Text>
-                <View style={{ borderBottom: '1px solid black', width: '100%'}}></View>
+
+              <View style={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                gap: 10
+              }}>
+                <View >
+                  <Text style={{ fontSize: 15 }}>Nombre: </Text>
+                  <View style={{ borderBottom: '1px solid black', width: '100%' }}></View>
+                </View>
+
+                <View >
+                  <Text style={{ fontSize: 15 }}>Firma: </Text>
+                  <View style={{ borderBottom: '1px solid black', width: '100%' }}></View>
+                </View>
               </View>
 
-              <View >
-                <Text style={{ fontSize: 15 }}>Firma: </Text>
-                <View style={{ borderBottom: '1px solid black', width: '100%'}}></View>
-              </View>
-            </View>
+              <View style={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                gap: 10
+              }}>
+                <View>
+                  <Text style={{ fontSize: 15 }}>Responsable: </Text>
+                  <View style={{ borderBottom: '1px solid black', width: '100%' }}></View>
+                </View>
 
-            <View style={{
-              width: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              gap: 10
-            }}>
-              <View>
-                <Text style={{ fontSize: 15 }}>Responsable: </Text>
-                <View style={{ borderBottom: '1px solid black', width: '100%'}}></View>
-              </View>
+                <View >
+                  <Text style={{ fontSize: 15 }}>Autorizador: </Text>
+                  <View style={{ borderBottom: '1px solid black', width: '100%' }}></View>
+                </View>
 
-              <View >
-                <Text style={{ fontSize: 15 }}>Autorizador: </Text>
-                <View style={{ borderBottom: '1px solid black', width: '100%'}}></View>
               </View>
-              
             </View>
           </View>
-         </View>  
         </Page>
       </Document>
     </PDFViewer >

@@ -487,8 +487,6 @@ const FormularioControlCalidadTarja : FC<IFormCC> = ({ id_lote, isOpen, tipo_res
             : null
         }
 
-
-
         <div className='row-start-6 col-start-9 relative w-full h-20 col-span-4'>
          <button type='submit' className='w-full mt-6 bg-[#2563EB] hover:bg-[#2564ebc7] rounded-md text-white py-3'>
             Guardar

@@ -403,10 +403,6 @@ const PDFDetalleEnvases = () => {
             }}>
 
             <View style={styles.header_info_box_superior}>
-             <Text style={{ fontSize: 10, position: 'relative', top: -5}}>#</Text>
-            </View>
-
-            <View style={styles.header_info_box_superior}>
              <Text style={{ fontSize: 10, position: 'relative', top: -5}}>N° Lote</Text>
             </View>
 
@@ -440,11 +436,6 @@ const PDFDetalleEnvases = () => {
                   flexDirection: 'row',
                   // backgroundColor: 
                   }}>
-                  <View style={styles.header_info_box_superior}>
-                    <Text>{index / 2} a</Text> 
-                    <Text style={{ fontSize: 10}}>{lote.id}</Text>
-                  </View>
-      
                   <View style={styles.header_info_box_superior}>
                     <Text style={{ fontSize: 10}}>{lote.numero_lote}</Text>
                   </View>

@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingLeft: 10,
     paddingRight: 10,
-
   },
   header: {
     width: '100%',
@@ -209,7 +208,7 @@ const PDFPedidoInterno = () => {
   return (
     <PDFViewer style={{ height: '100%'}}>
       <Document title={`Documento Detalle Pedido Interno N° ${id}`}>
-        <Page size={'LEGAL'} orientation='landscape'>
+        <Page size={'LEGAL'}>
          <View style={styles.header}>
           <View style={styles.header_superior}>
             <View style={{ position: 'relative', top: -9 }}>
@@ -338,8 +337,7 @@ const PDFPedidoInterno = () => {
             </View>
           </View>
           
-
-          <Text style={{ textAlign: 'center', fontSize: 15, fontWeight: 'bold', marginTop: 15 }}>Información de Fruta en la Guia Salida</Text>
+          <Text style={{ textAlign: 'center', fontSize: 15, fontWeight: 'bold', marginTop: 15 }}>Información de Fruta en la Guia Entrada</Text>
 
           <View style={{ 
             width: '100%',
@@ -352,13 +350,6 @@ const PDFPedidoInterno = () => {
             paddingBottom: 2
             }}>
 
-            <View style={styles.header_info_box_superior}>
-             <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Producto</Text>
-            </View>
-
-            <View style={styles.header_info_box_superior}>
-             <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Programa</Text>
-            </View>
 
             <View style={styles.header_info_box_superior}>
              <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Producto</Text>
@@ -376,10 +367,14 @@ const PDFPedidoInterno = () => {
              <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Calidad</Text>
             </View>
 
+            <View style={styles.header_info_box_superior}>
+             <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Kilos Solicitados</Text>
+            </View>
+
           </View>
 
           {
-            pdf_pedido_interno?.fruta_en_pedido.map((entrada: TFrutaEnGuiaMany) => {
+            pdf_pedido_interno?.fruta_solicitada.map((entrada: any) => {
               return (
                 <View style={{ 
                   width: '100%',
@@ -389,14 +384,6 @@ const PDFPedidoInterno = () => {
                   flexDirection: 'row',
                   }}>
 
-      
-                  <View style={styles.header_info_box_superior}>
-                    <Text style={{ fontSize: 9}}>{entrada.codigo}</Text>
-                  </View>
-
-                  <View style={styles.header_info_box_superior}>
-                    <Text style={{ fontSize: 9}}>{entrada.programa}</Text>
-                  </View>
 
                   <View style={styles.header_info_box_superior}>
                    <Text style={{ fontSize: 9}}>{entrada.producto}</Text>
@@ -414,10 +401,88 @@ const PDFPedidoInterno = () => {
                    <Text style={{ fontSize: 9}}>{entrada.calidad}</Text>
                   </View>
 
+                  <View style={styles.header_info_box_superior}>
+                   <Text style={{ fontSize: 9}}>{entrada.kilos_solicitados}</Text>
+                   </View>
+
                 </View>
               )
             })
           }
+
+
+          {pdf_pedido_interno?.fruta_en_pedido ? (
+              <>
+                <Text style={{ textAlign: 'center', fontSize: 15, fontWeight: 'bold', marginTop: 15 }}>
+                  Información de Fruta en la Guia Salida
+                </Text>
+
+                <View style={{ 
+                  width: '100%',
+                  height: 30,
+                  backgroundColor: '#f2f2f3',
+                  borderRadius: '1px', 
+                  display: 'flex',
+                  flexDirection: 'row',
+                  fontWeight: 'bold',
+                  paddingBottom: 2
+                }}>
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Producto</Text>
+                  </View>
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Programa</Text>
+                  </View>
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Producto</Text>
+                  </View>
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Variedad</Text>
+                  </View>
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Calibre</Text>
+                  </View>
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Calidad</Text>
+                  </View>
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10, position: 'relative', top: -3}}>Kilos</Text>
+                  </View>
+                </View>
+
+                {pdf_pedido_interno?.fruta_en_pedido.map((entrada: TFrutaEnGuiaMany) => (
+                  <View key={entrada.codigo} style={{ 
+                    width: '100%',
+                    height: 30,
+                    borderRadius: '1px', 
+                    display: 'flex',
+                    flexDirection: 'row',
+                  }}>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.codigo}</Text>
+                    </View>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.programa}</Text>
+                    </View>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.producto}</Text>
+                    </View>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.variedad}</Text>
+                    </View>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.calibre}</Text>
+                    </View>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.calidad}</Text>
+                    </View>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.kilos}</Text>
+                      </View>
+                  </View>
+                ))}
+              </>
+            ) : null}
 
           <View style={{ 
             height: 100,

@@ -30,7 +30,7 @@ const FormularioInformeReproceso: FC<IInformeProduccion> = ({ setOpen }) => {
   const [state, setState] = useState<Range[]>([
 		{
 			startDate: dayjs().toDate(),
-			endDate: undefined,
+			endDate: dayjs().toDate(),
 			key: 'selection',
 		},
 	]);

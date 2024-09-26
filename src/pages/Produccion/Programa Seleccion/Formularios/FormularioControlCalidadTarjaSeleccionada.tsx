@@ -125,11 +125,10 @@ const FormularioControlCalidadTarjaSeleccionada : FC<IFormCC> = ({ id_lote, isOp
       fuera_color,
       punto_goma,
       vana_deshidratada,
-      numero_pepa
     } = formik.values;
 
     return (
-      cantidad_muestra - trozo - picada - hongo - daño_insecto - dobles - goma - basura - mezcla_variedad - fuera_color - punto_goma - vana_deshidratada - numero_pepa
+      cantidad_muestra - trozo - picada - hongo - daño_insecto - dobles - goma - basura - mezcla_variedad - fuera_color - punto_goma - vana_deshidratada
     );
   };
 

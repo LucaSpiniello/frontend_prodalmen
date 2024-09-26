@@ -7,7 +7,6 @@ import { TAuth, TVerificar } from '../../types/TypesRegistros.types';
 import toast from 'react-hot-toast';
 
 
-
 export const fetchPatioTechadoExterior = createAsyncThunk('patio-exterior/fetch_lotes_patio', 
   async (payload: FetchOptions) => {
     const { token, verificar_token } = payload;

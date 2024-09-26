@@ -257,11 +257,24 @@ const PDFDocumentoSalida = () => {
             }}>
             
               <View style={styles.header_date_info_box}>
+                <Text style={styles.header_date_info_text}>Programa Produccion N°: </Text>
+                <Text style={styles.header_date_info_text}>{pdf_entrada[0]?.programa_produccion}</Text>
+              </View>
+
+            </View>
+
+            <View style={{
+              width: '100%',
+              padding: 5
+            }}>
+            
+              <View style={styles.header_date_info_box}>
                 <Text style={styles.header_date_info_text}>Fecha inicio programa: </Text>
                 <Text style={styles.header_date_info_text}>{format(state.seleccion?.fecha_creacion!, { date: 'full', time: 'short' }, 'es' )} </Text>
               </View>
 
             </View>
+
           </View>
           
 

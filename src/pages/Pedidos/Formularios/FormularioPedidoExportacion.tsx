@@ -78,7 +78,8 @@ const FormularioPedidoExportacion: FC<IFormComercializadorProps> = ({ setOpen, t
     },
     onSubmit: async (values: any) => {
       const token_verificado = await verificarToken(token!) 
-
+      values.fecha_envio = new Date(values.fecha_envio).toISOString().split('T')[0]
+      values.fecha_entrega = new Date(values.fecha_entrega).toISOString().split('T')[0]
       if (!token_verificado) throw new Error('Token no verificado')
       const res = await fetchWithTokenPost(`api/pedidos_exportacion/`, {
         ...values,

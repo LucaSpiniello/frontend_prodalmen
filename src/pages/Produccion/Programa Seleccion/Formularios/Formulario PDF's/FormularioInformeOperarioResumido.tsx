@@ -27,7 +27,7 @@ const FormularioInformeOperariosResumido: FC<IInformeProduccion> = ({ setOpen })
   const [state, setState] = useState<Range[]>([
 		{
 			startDate: dayjs().toDate(),
-			endDate: undefined,
+			endDate: dayjs().toDate(),
 			key: 'selection',
 		},
 	]);
@@ -47,6 +47,9 @@ const FormularioInformeOperariosResumido: FC<IInformeProduccion> = ({ setOpen })
         const token_verificado = await verificarToken(token!)
       
         if (!token_verificado) throw new Error('Token no verificado')
+          state[0].startDate = dayjs(state[0].startDate).hour(0).minute(0).second(0).millisecond(0).toDate();
+        
+        state[0].endDate = dayjs(state[0].endDate).hour(19).minute(59).second(0).millisecond(0).toDate();
 
         const res = await fetchWithTokenPost(`api/seleccion/pdf_informe_operario_resumido/`,
           {

@@ -78,6 +78,7 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 
 	const[programaProduccion, setProgramaProduccion] = useState<string | null>(null)
 
+
 	const actualizarEstadoProduccion = async (id: number, estado: string) => {
 
 		try {
@@ -430,7 +431,7 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 							<option value="">Selecciona un programa</option>
 							{programas_produccion
 								.map((programa) => (
-								<option key={programa.id} value={programa.id}>
+								<option key={programa.id} value={programa.id} style={{ color: programa.hay_bins_en_g2 ? 'green' : 'red' }}>
 									{`Programa N°${programa.id} - Lotes: ${programa.lotes_length} - Fecha Término: ${programa.fecha_termino_proceso}`}
 								</option>
 								))}

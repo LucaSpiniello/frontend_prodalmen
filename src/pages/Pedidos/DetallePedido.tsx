@@ -7,6 +7,7 @@ import { useAuth } from "../../context/authContext"
 import { useAppSelector } from "../../redux/hooks"
 import Icon from "../../components/icon/Icon"
 import EditarPedidoMercadoInterno from "./Formularios/EditarPedidoMercadoInterno"
+import EditarExportacion from "./Formularios/EditarPedidoExportacion"
 import ComponerFrutaFicticia from "./ComponerFrutaFicticia"
 import { useEffect, useState } from "react"
 import { detallePedidoThunk, patchPedidoThunk } from "../../redux/slices/pedidoSlice"
@@ -16,7 +17,7 @@ import Modal, { ModalBody, ModalHeader } from "../../components/ui/Modal"
 import { GoQuestion } from "react-icons/go"
 import ComponerFrutaReal from "./ComponerFrutaReal"
 import EditarGuiaSalida from "./Formularios/EditarGuiaSalida"
-
+import DetallePedidoExportacion from "./Pedido Exportacion/DetallePedidoExportacion"
 
 function DetallePedido() {
     const { id } = useParams() 
@@ -38,9 +39,25 @@ function DetallePedido() {
     }, [id, refrescar, token])
 
     function actualizarEstadoPedido({estado} : {estado: string | undefined | null}) {
-        if (estado) {
-            dispatch(patchPedidoThunk({id_pedido: id, data: {estado_pedido: estado}, token, verificar_token: verificarToken}))
+        console.log(pedido)
+        if (pedido?.mercado_interno){
+            let totalKilosSolicitados = 0
+            pedido.mercado_interno.fruta_ficticia.forEach((fruta: any) => {
+                totalKilosSolicitados += fruta.kilos_solicitados
+            })
+            let totalKilosEnPedido = 0
+            pedido.frutas.forEach((fruta: any) => {
+                totalKilosEnPedido += fruta.cantidad
+            })
+
+            if (totalKilosEnPedido < totalKilosSolicitados) {
+                alert('No se puede terminar el armado del pedido, la cantidad de fruta en el pedido es menor a la cantidad solicitada')
+                return
+            }
         }
+        // if (estado) {
+        //     dispatch(patchPedidoThunk({id_pedido: id, data: {estado_pedido: estado}, token, verificar_token: verificarToken}))
+        // }
     }
 
     return (
@@ -150,7 +167,7 @@ function DetallePedido() {
                                     <EditarPedidoMercadoInterno />
                                 )}
                                 { pedido.exportacion && (
-                                    <div className="text-9xl">EDITAR EXPORTACION</div>
+                                    <EditarExportacion id={String(pedido.id_pedido)} />
                                 )}
                                 { pedido.guia_salida && (
                                     <EditarGuiaSalida />

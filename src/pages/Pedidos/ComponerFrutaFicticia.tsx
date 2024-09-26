@@ -123,7 +123,11 @@ function ComponerFrutaFicticia() {
                             }
                         }
                         if (pedido.exportacion) {
-
+                            const response = await fetchWithTokenPatch(`api/pedidos_exportacion/${pedido.exportacion.id}/`,{fruta_pedido: pedido.exportacion.fruta_pedido.concat(data.id)}, token_verificado)
+                            if (response.ok) {
+                                dispatch(detallePedidoThunk({id_pedido: id, token, verificar_token: verificarToken}))
+                                toast.success('Fruta Registrada al Pedido Exportacion')
+                            }
                         }
                         if (pedido.guia_salida) {
                             const response = await fetchWithTokenPatch(`api/guias-salida/${pedido.guia_salida.id}/`,{fruta_pedido: pedido.guia_salida.fruta_pedido.concat(data.id)}, token_verificado)
@@ -170,7 +174,7 @@ function ComponerFrutaFicticia() {
                 setFrutaFicticia(pedido.mercado_interno.fruta_ficticia)
             }
             if (pedido.exportacion) {
-                // setFrutaFicticia(pedido.exportacion.)
+                setFrutaFicticia(pedido.exportacion.fruta_ficticia)
             }
             if (pedido.guia_salida) {
                 setFrutaFicticia(pedido.guia_salida.fruta_ficticia)
