@@ -702,6 +702,16 @@ export const appPages = {
 				text: 'PDF Embalaje',
 				to: '/emb/pdf-informe-embalaje/'
 			},
+			pdf_informe_kilos_x_operario: {
+				id: 'pdf_informe_kilos_x_operario',
+				text: 'PDF Kilos X Operario',
+				to: '/emb/pdf-informe-kilos-x-operario/'
+			},
+			pdf_informe_operario_resumido: {
+				id: 'pdf_informe_operario_resumido',
+				text: 'PDF Informe Operario Resumido',
+				to: '/emb/pdf-informe-operario-resumido/'
+			}
 		}
 	},
 	planta_harina: {

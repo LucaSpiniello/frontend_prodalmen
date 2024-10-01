@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const PDFInformeKilosXOperario = () => {
+const PDFInformeXOperarioResumido = () => {
   const { pathname, state } = useLocation()
   const userData = useAppSelector((state: RootState) => state.auth.dataUser)
   const today = new Date()
@@ -277,4 +277,4 @@ const PDFInformeKilosXOperario = () => {
   )
 }
 
-export default PDFInformeKilosXOperario
+export default PDFInformeXOperarioResumido

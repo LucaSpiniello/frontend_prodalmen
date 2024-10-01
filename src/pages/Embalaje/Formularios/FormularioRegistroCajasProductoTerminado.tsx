@@ -65,6 +65,7 @@ const FormularioCajasPalletProductoTerminado: FC<IFormularioCajasPalletProps> = 
       }
       , token_verificado)
       if (res.ok){
+        asignar_dias_kilos()
         toast.success('Caja agregada exitosamente')
         //@ts-ignore
         dispatch(fetchPalletProductoTerminado({ id, params: { id_pallet }, token, verificar_token: verificarToken  }))
@@ -76,6 +77,21 @@ const FormularioCajasPalletProductoTerminado: FC<IFormularioCajasPalletProps> = 
       }
     }
   })
+
+  const asignar_dias_kilos = async () => {
+    try {
+      const token_verificado = await verificarToken(token!)
+      if (!token_verificado) throw new Error('Token no verificado')
+      const response = await fetchWithTokenPost(`api/embalaje/${id}/asignar_dias_kilos/`, {}, token_verificado)
+      if (response.ok) {
+        toast.success('Dias Asignados')
+      } else {
+        toast.error('Error' + `${await response.json()}`)
+      }
+    } catch {
+      console.log('Error dias asignados')
+    }
+  }
 
   const optionsTipoEmbalaje: TSelectOptions = tipo_embalaje.
     filter(tipo => tipo?.id !== Number(formik.values.tipo_caja)).

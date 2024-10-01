@@ -186,6 +186,8 @@ const ListaEtiquetas = lazy(() => import('../pages/Embalaje/TablaEtiquetados.tsx
 const PDFEntradaEmbalaje = lazy(() => import('../pages/Embalaje/PDF/PDFDocumentoEntradaEmbalaje.tsx'));
 const PDFInformeEmbalaje = lazy(() => import('../pages/Embalaje/PDF/PDFInformeEmbalaje.tsx'));
 const PDFSalidaEmbalaje = lazy(() => import('../pages/Embalaje/PDF/PDFDocumentoSalidaEmbalaje.tsx'));
+const PDFInformeKilosXOperarioEmbalaje = lazy(() => import('../pages/Embalaje/PDF/PDFInformeKilosXOperario.tsx'));
+const PDFInformeOperarioResumidoEmbalaje = lazy(() => import('../pages/Embalaje/PDF/PDFInformeOperarioResumido.tsx'));
 
 const contentRoutes: RouteProps[] = [
 	{ path: authPages.loginPage.to, element: <LoginPage /> },
@@ -329,7 +331,8 @@ const contentRoutes: RouteProps[] = [
 	{ path: appPages.embalaje.subPages.pdf_entrada_embalaje.to, element: <PDFEntradaEmbalaje />},
 	{ path: appPages.embalaje.subPages.pdf_salida_embalaje.to, element: <PDFSalidaEmbalaje />},
 	{path: appPages.embalaje.subPages.pdf_informe_embalaje.to, element: <PDFInformeEmbalaje />},
-
+	{path: appPages.embalaje.subPages.pdf_informe_kilos_x_operario.to, element: <PDFInformeKilosXOperarioEmbalaje />},
+	{path: appPages.embalaje.subPages.pdf_informe_operario_resumido.to, element: <PDFInformeOperarioResumidoEmbalaje />},
 
 
 

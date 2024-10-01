@@ -9,7 +9,7 @@ import {
 	useReactTable,
 } from '@tanstack/react-table';
 
-import { 
+import {
 	FaPlay,
 	FaStop,
 	FaPause,
@@ -52,7 +52,8 @@ import { ThunkDispatch } from '@reduxjs/toolkit';
 // impoer FormularioInformeEmbalaje
 import FormularioInformeEmbalaje from './Formularios/Formulario PDF/FormularioInformeEmbalaje';
 
-
+import FormularioInformeKilosXOperario from './Formularios/Formulario PDF/FormularioInformeKilosXOperario';
+import FormularioInformeOperariosResumido from './Formularios/Formulario PDF/FormularioInformeOperarioResumido';
 
 
 
@@ -83,15 +84,15 @@ const TablaProgramaEmbalaje = () => {
 		try {
 			const token_verificado = await verificarToken(token!)
 
-			if (!token_verificado){
-					throw new Error('Token no valido')
-				}
+			if (!token_verificado) {
+				throw new Error('Token no valido')
+			}
 
 			const response_estado = await fetchWithTokenPatch(`api/embalaje/${id}/`, { id, estado_embalaje: estado, registrado_por: perfil?.id }, token_verificado)
-			if (response_estado.ok){
+			if (response_estado.ok) {
 				const data: TEmbalaje = await response_estado.json()
 				toast.success(`El programa esta en ${data.estado_embalaje_label}`)
-	
+
 				dispatch(fetchProgramasEmbalaje({ token, verificar_token: verificarToken }))
 			}
 		} catch (error) {
@@ -165,7 +166,7 @@ const TablaProgramaEmbalaje = () => {
 				const id = info.row.original.id;
 				const row = info.row.original
 				const estado = info.row.original.estado_embalaje
-				
+
 
 				return (
 					<div className='h-full w-full flex justify-center gap-5 flex-wrap md:flex-wrap'>
@@ -179,10 +180,10 @@ const TablaProgramaEmbalaje = () => {
 										colorIntensity='600'
 										className='hover:scale-105'
 										onClick={() => actualizarEstadoEmbalaje(id, '2')}
-										>
-											<FaPlay style={{ fontSize: 25, color: 'white'}}/>
+									>
+										<FaPlay style={{ fontSize: 25, color: 'white' }} />
 									</Button>
-									)
+								)
 								: null
 						}
 
@@ -195,10 +196,10 @@ const TablaProgramaEmbalaje = () => {
 										colorIntensity='500'
 										className='hover:scale-105'
 										onClick={() => actualizarEstadoEmbalaje(id, '3')}
-										>
-											<FaPause style={{ fontSize: 25, color: 'white'}}/>
+									>
+										<FaPause style={{ fontSize: 25, color: 'white' }} />
 									</Button>
-									)
+								)
 								: null
 						}
 
@@ -212,7 +213,7 @@ const TablaProgramaEmbalaje = () => {
 											colorIntensity='700'
 											variant='solid'
 											className='hover:scale-105'>
-											<HeroPlus style={{ fontSize: 25, color: 'white' }}/>
+											<HeroPlus style={{ fontSize: 25, color: 'white' }} />
 										</Button>
 									</Link>
 								)
@@ -224,7 +225,7 @@ const TablaProgramaEmbalaje = () => {
 								colorIntensity='700'
 								variant='solid'
 								className='hover:scale-105'>
-								<HeroEye style={{ fontSize: 25, color: 'white' }}/>
+								<HeroEye style={{ fontSize: 25, color: 'white' }} />
 							</Button>
 						</Link>
 
@@ -235,7 +236,7 @@ const TablaProgramaEmbalaje = () => {
 								colorIntensity='800'
 								variant='solid'
 								className='hover:scale-105'>
-								<FaFilePdf style={{ fontSize: 25, color: 'white' }}/>
+								<FaFilePdf style={{ fontSize: 25, color: 'white' }} />
 							</Button>
 						</Link>
 
@@ -246,10 +247,10 @@ const TablaProgramaEmbalaje = () => {
 								colorIntensity='800'
 								variant='solid'
 								className='hover:scale-105'>
-								<FaFilePdf style={{ fontSize: 25, color: 'white' }}/>
+								<FaFilePdf style={{ fontSize: 25, color: 'white' }} />
 							</Button>
 						</Link>
-				
+
 					</div>
 				);
 			},
@@ -306,19 +307,19 @@ const TablaProgramaEmbalaje = () => {
 					</FieldWrap>
 				</SubheaderLeft>
 
-							<SubheaderRight>
-								<ModalForm
-									title='Registro Programa Embalaje'
-									variant='solid'
-									open={openModal}
-									setOpen={setOpenModal}
-									textButton='Registrar Programa Embalaje'
-									size={800}
-									>
-										<FormularioRegistroProgramaEmbalaje />
-								</ModalForm>
-							</SubheaderRight>
-								
+				<SubheaderRight>
+					<ModalForm
+						title='Registro Programa Embalaje'
+						variant='solid'
+						open={openModal}
+						setOpen={setOpenModal}
+						textButton='Registrar Programa Embalaje'
+						size={800}
+					>
+						<FormularioRegistroProgramaEmbalaje />
+					</ModalForm>
+				</SubheaderRight>
+
 
 			</Subheader>
 			<Container breakpoint={null} className='w-full overflow-auto'>
@@ -336,43 +337,44 @@ const TablaProgramaEmbalaje = () => {
 						</CardHeaderChild>
 
 						<CardHeaderChild className='lg:w-[70%] sm:w-full md:w-full'>
-							 	{/* <div className='flex gap-2 '>
-									<ModalForm
-										open={informePro}
-										setOpen={setInformePro}
-										title='Informe de Selección'
-										variant='solid'
-										icon={
-										<div className='flex items-center gap-1.5'>
-												<FaFilePdf style={{ fontSize: 20, color: 'white'}}/>
-											<span className='text-md font-semibold'>Generar Informe de Selección</span>
-										</div>
-										}
-										width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-auto text-white bg-red-700 hover:bg-red-600 hover:scale-105 border-none`}
-									>
-										hola
-										<FormularioInformeSeleccion setOpen={setInformePro}/>
-									</ModalForm>
+					
 
-									<ModalForm
-										open={informeKgOp}
-										setOpen={setInformeinformeKgOp}
-										title='Informe de Kilos por Operario'
-										variant='solid'
-										icon={
+							<div className='flex gap-2 '>
+								<ModalForm
+									open={informePro}
+									setOpen={setInformePro}
+									title='Informe de Selección'
+									variant='solid'
+									icon={
 										<div className='flex items-center gap-1.5'>
-											<FaFilePdf style={{ fontSize: 20, color: 'white'}}/>
+											<FaFilePdf style={{ fontSize: 20, color: 'white' }} />
+											<span className='text-md font-semibold'>Generar Informe de Embalaje</span>
+										</div>
+									}
+									width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-auto text-white bg-red-700 hover:bg-red-600 hover:scale-105 border-none`}
+								>
+									<FormularioInformeEmbalaje setOpen={setInformePro} />
+								</ModalForm>
+
+
+								<ModalForm
+									open={informeKgOp}
+									setOpen={setInformeinformeKgOp}
+									title='Informe de Kilos por Operario'
+									variant='solid'
+									icon={
+										<div className='flex items-center gap-1.5'>
+											<FaFilePdf style={{ fontSize: 20, color: 'white' }} />
 											<span className='text-md font-semibold'>Generar Informe de Kilos por Operario</span>
 										</div>
-										}
-										width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-0 text-white bg-red-700 hover:bg-red-600 hover:scale-105 border-none`}
-										size={700}
-									>
-										hola
-										<FormularioInformeKilosXOperario setOpen={setInformePro}/>
-									</ModalForm>
+									}
+									width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-0 text-white bg-red-700 hover:bg-red-600 hover:scale-105 border-none`}
+									size={700}
+								>
+									<FormularioInformeKilosXOperario setOpen={setInformePro} />
+								</ModalForm>
 
-									<ModalForm
+								<ModalForm
 										open={informeResOp}
 										setOpen={setInformeinformeResOp}
 										title='Informe de Operarios Resumido'
@@ -386,33 +388,9 @@ const TablaProgramaEmbalaje = () => {
 										width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-0 text-white bg-red-700 hover:bg-red-600 hover:scale-105 border-none`}
 										size={500}
 										>
-											hola
 											<FormularioInformeOperariosResumido setOpen={setInformePro}/>
 									</ModalForm>
-								</div> */}
 
-								
-							{/*
-								
-
-							</div> */}
-
-							<div className='flex gap-2 '>
-									<ModalForm
-										open={informePro}
-										setOpen={setInformePro}
-										title='Informe de Selección'
-										variant='solid'
-										icon={
-										<div className='flex items-center gap-1.5'>
-												<FaFilePdf style={{ fontSize: 20, color: 'white'}}/>
-											<span className='text-md font-semibold'>Generar Informe de Embalaje</span>
-										</div>
-										}
-										width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-auto text-white bg-red-700 hover:bg-red-600 hover:scale-105 border-none`}
-									>
-										<FormularioInformeEmbalaje setOpen={setInformePro}/>
-									</ModalForm>
 							</div>
 						</CardHeaderChild>
 					</CardHeader>
