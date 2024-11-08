@@ -99,7 +99,7 @@ const TablaBinBodegaEmbalaje = ({refresh} : {refresh:boolean}) => {
       bin_bodega.forEach((element) => {
         if (!nuevos_bin_para_embalar.find(bin => bin.id === element.id) && 
             element.estado_binbodega !== "Procesado En Embalaje" && 
-            element.estado_binbodega !== "Ingresado En Embalaje") {
+            element.estado_binbodega !== "Ingresado En Embalaje" && !element.tipo_binbodega.includes('SubProducto')) {
           lista.push(element)
         }
       })

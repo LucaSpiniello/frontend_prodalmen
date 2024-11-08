@@ -44,6 +44,14 @@ const TablaPalletProductoTerminado = () => {
   }, [id])
 
   const columns = [
+    columnHelper.accessor('id', {
+      cell: (info) => (
+        <div className='font-bold w-full'>
+          {`${info.row.original.id}`}
+        </div>
+      ),
+      header: 'Numero Pallet'
+    }),
     columnHelper.accessor('codigo_pallet', {
       cell: (info) => (
         <div className='font-bold w-full'>
@@ -67,6 +75,14 @@ const TablaPalletProductoTerminado = () => {
         </div>
       ),
       header: 'Peso Pallet'
+    }),
+    columnHelper.accessor('info_pallet', {
+      cell: (info) => (
+        <div className='font-bold w-full'>
+          {`${info.row.original.variedad_programa} - ${info.row.original.calibre_programa} - ${info.row.original.calidad_programa}`}
+        </div>
+      ),
+      header: 'Info Fruta'
     }),
 		columnHelper.accessor('registrado_por_label', {
       cell: (info) => (

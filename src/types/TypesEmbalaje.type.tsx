@@ -37,6 +37,7 @@ export type TEmbalaje = {
   metricas_embalaje: TMetricasEmbalaje[]
   margen_fruta?: number
   fruta_embalada?: number
+  ciente?: string
 }
 
 
@@ -109,6 +110,7 @@ export type TPalletProductoTerminado = {
   calibre_programa?: string
   calidad_programa?: string
   variedad_programa?: string
+  info_pallet?: any
 }
 
 export type TCajasEnPalletProductoTerminado = {
@@ -168,6 +170,8 @@ export type PDFPalletSalidaEmbalaje = {
   calibre: string
   kilos_fruta: number
   fecha_creacion: string
+  id?: number
+  calidad?: string
 }
 
 

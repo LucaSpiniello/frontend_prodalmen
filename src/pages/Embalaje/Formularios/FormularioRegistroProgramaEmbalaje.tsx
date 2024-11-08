@@ -20,7 +20,7 @@ import Textarea from '../../../components/form/Textarea'
 import Button from '../../../components/ui/Button'
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
-
+import { fetchClientes } from '../../../redux/slices/clientes'
 
 
 const FormularioRegistroProgramaEmbalaje = () => {
@@ -31,6 +31,7 @@ const FormularioRegistroProgramaEmbalaje = () => {
   const navigate = useNavigate()
   const tipo_embalaje = useAppSelector((state: RootState) => state.embalaje.tipo_embalaje)
   const etiqueta_embalaje = useAppSelector((state: RootState) => state.embalaje.etiquetas)
+  const clientes = useAppSelector((state: RootState) => state.clientes.clientes)
 
   const formik = useFormik({
     initialValues: {
@@ -41,7 +42,8 @@ const FormularioRegistroProgramaEmbalaje = () => {
       calidad: '',
       calibre: '',
       variedad: '',
-      kilos_solicitados: '' 
+      kilos_solicitados: '' ,
+      cliente : ''
     },
     onSubmit: async (values: any) => {
       const token_verificado = await verificarToken(token!)
@@ -70,6 +72,10 @@ const FormularioRegistroProgramaEmbalaje = () => {
     dispatch(fetchEtiquetasEmbalaje({ token, verificar_token: verificarToken }))
   }, [])
 
+  useEffect(() => {
+    dispatch(fetchClientes({ params: { search: `?tipo_cliente=all` }, token, verificar_token: verificarToken }))
+  }, [])
+
 
   const optionsTipoEmbalaje: TSelectOptions = tipo_embalaje.
     filter(tipo => tipo?.id !== Number(formik.values.tipo_embalaje)).
@@ -80,6 +86,9 @@ const FormularioRegistroProgramaEmbalaje = () => {
     filter(tipo => tipo?.id !== Number(formik.values.etiquetado)).
     map((tipo) => ({ value: String(tipo.id), label: tipo.nombre}))
     ?? []
+    const optionsClientes: any = clientes.
+    filter(cliente => cliente?.id !== Number(formik.values.cliente)).
+    map((cliente) => ({ value: String(cliente.id), label: cliente.nombre_fantasia}))
 
   return (
     <Container>
@@ -150,6 +159,27 @@ const FormularioRegistroProgramaEmbalaje = () => {
                     }}
                   />
                 
+                </FieldWrap>
+              </Validation>
+            </div>
+            <div className='w-full'>  
+              <Label htmlFor='cliente'>Cliente: </Label>
+              <Validation
+                isValid={formik.isValid}
+                isTouched={formik.touched.cliente ? true : undefined}
+                invalidFeedback={formik.errors.cliente ? String(formik.errors.cliente) : undefined}
+                >
+                <FieldWrap>
+                  <SelectReact
+                    options={optionsClientes}
+                    id='cliente'
+                    placeholder='Selecciona un cliente'
+                    name='cliente'
+                    className='h-14 py-2'
+                    onChange={(value: any) => {
+                      formik.setFieldValue('cliente', value.label)
+                    }}
+                  />
                 </FieldWrap>
               </Validation>
             </div>

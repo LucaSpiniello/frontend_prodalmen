@@ -43,7 +43,7 @@ const TablaPalletProductoTerminado: FC<ITablePalletProps> = ({ setFruta }) => {
 	const todos_pallets_productos_terminados = useAppSelector((state: RootState) => state.embalaje.todos_los_pallets_productos_terminados)
 
   const pallets_seleccionados_fruta_pedido = useAppSelector((state: RootState) => state.pedidos.pallet_en_fruta_pedido)
-
+  
 
   useEffect(() => {
     //@ts-ignore

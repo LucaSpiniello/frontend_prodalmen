@@ -122,7 +122,7 @@ const CardHeaderGeneral = () => {
                 <span className="text-center mx-auto">Fruta en producción: {(totales_kilos_en_programa)?.toFixed(2)} kgs</span>
               </div>
               <div className='w-full py-3 dark:bg-zinc-700 bg-zinc-300	rounded-md flex items-center '>
-                <span className="text-center mx-auto">Fruta Procesada: {(programa_embalaje?.kilos_resultantes)?.toFixed(2)} kgs.</span>
+                <span className="text-center mx-auto">Fruta resultante del PG: {(programa_embalaje?.kilos_resultantes)?.toFixed(2)} kgs.</span>
               </div>
               <div className='w-full py-3 dark:bg-zinc-700 bg-zinc-300	rounded-md flex items-center '>
                 <span className="text-center mx-auto">Total de envases a procesar: {bins_en_embalaje?.filter(bin => bin.procesado !== true).length} </span>
@@ -147,11 +147,19 @@ const CardHeaderGeneral = () => {
               </div>
 
               <div className='w-full h-full flex-col rounded-md flex py-2'>
+                <Label htmlFor="variedad" className="text-lg">Cliente</Label>
+                <div className="dark:bg-zinc-700 bg-zinc-300 p-2 rounded-md">
+                  <span className="text-lg">{programa_embalaje?.cliente}</span>
+                </div>
+              </div>
+
+              <div className='w-full h-full flex-col rounded-md flex py-2'>
                 <Label htmlFor="variedad" className="text-lg">Variedad</Label>
                 <div className="dark:bg-zinc-700 bg-zinc-300 p-2 rounded-md">
                   <span className="text-lg">{programa_embalaje?.variedad_label}</span>
                 </div>
               </div>
+
 
               <div className='w-full h-full flex-col rounded-md flex py-2'>
                 <Label htmlFor="calidad" className="text-lg">Calidad</Label>

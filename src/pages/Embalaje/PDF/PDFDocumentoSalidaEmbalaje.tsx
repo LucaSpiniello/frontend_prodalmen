@@ -288,6 +288,11 @@ const PDFDocumentoEntradaSalida = () => {
             paddingBottom: 2
             }}>
 
+              
+            <View style={styles.header_info_box_superior}>
+             <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Numero Pallet </Text>
+            </View>
+
             <View style={styles.header_info_box_superior}>
              <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Codigo Pallet </Text>
             </View>
@@ -299,6 +304,10 @@ const PDFDocumentoEntradaSalida = () => {
 
             <View style={styles.header_info_box_superior}>
              <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Calibre</Text>
+            </View>
+
+            <View style={styles.header_info_box_superior}>
+             <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Calidad</Text>
             </View>
 
             <View style={styles.header_info_box_superior}>
@@ -320,8 +329,11 @@ const PDFDocumentoEntradaSalida = () => {
                   display: 'flex',
                   flexDirection: 'row',
                   }}>
-
-      
+                    
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 9}}>{entrada.id}</Text>
+                  </View>
+                  
                   <View style={styles.header_info_box_superior}>
                     <Text style={{ fontSize: 9}}>{entrada.codigo_pallet}</Text>
                   </View>
@@ -332,6 +344,10 @@ const PDFDocumentoEntradaSalida = () => {
       
                   <View style={styles.header_info_box_superior}>
                    <Text style={{ fontSize: 9}}>{entrada.calibre}</Text>
+                  </View>
+
+                  <View style={styles.header_info_box_superior}>
+                   <Text style={{ fontSize: 9}}>{entrada.calidad}</Text>
                   </View>
 
                   <View style={styles.header_info_box_superior}>
