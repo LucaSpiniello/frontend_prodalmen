@@ -37,7 +37,7 @@ export type TEmbalaje = {
   metricas_embalaje: TMetricasEmbalaje[]
   margen_fruta?: number
   fruta_embalada?: number
-  ciente?: string
+  cliente?: string
 }
 
 
