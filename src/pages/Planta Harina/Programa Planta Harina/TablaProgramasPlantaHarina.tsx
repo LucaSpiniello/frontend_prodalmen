@@ -48,13 +48,15 @@ import { TProgramaPlantaHarina } from '../../../types/typesPlantaHarina';
 import { actualizar_planta_harina, fetchProgramasPlantaHarina } from '../../../redux/slices/plantaHarinaSlice';
 import FormularioRegistroProgramaPlantaHarina from './Formularios/FormularioRegistroProgramaPlantaHarina';
 import ModalConfirmacion from '../../../components/ModalConfirmacion';
+import FormularioInformePHarina from './Formularios/Formulario PDF/FormularioInformePHarina';
+
+import FormularioInformeKilosXOperario from './Formularios/Formulario PDF/FormularioInformeKilosXOperario';
+import FormularioInformeOperariosResumido from './Formularios/Formulario PDF/FormularioInformeOperarioResumido';
 
 
 
 
-
-
-const TablaProgramaEmbalaje = () => {
+const TablaProgramaPHarina = () => {
 	const { pathname } = useLocation()
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
@@ -187,7 +189,7 @@ const TablaProgramaEmbalaje = () => {
 					
 
 							{
-								info.row.original.condicion_termino
+								1==1
 									? (
 										<>
 											<Button
@@ -277,9 +279,7 @@ const TablaProgramaEmbalaje = () => {
 					</FieldWrap>
 				</SubheaderLeft>
 
-				{
-					programas_planta_harina?.length <= 1 || programas_planta_harina?.slice(2).every((bin) => bin.estado_programa === '5')
-						? (
+				{ (
 							<SubheaderRight>
 								<ModalForm
 									title='Registro Programa Planta Harina'
@@ -292,9 +292,7 @@ const TablaProgramaEmbalaje = () => {
 										<FormularioRegistroProgramaPlantaHarina />
 								</ModalForm>
 							</SubheaderRight>
-							)	
-						: null 
-				}
+							)				}
 			</Subheader>
 			<Container breakpoint={null} className='w-full overflow-auto'>
 				<Card className='h-full w-full'>
@@ -311,22 +309,21 @@ const TablaProgramaEmbalaje = () => {
 						</CardHeaderChild>
 
 						<CardHeaderChild className='lg:w-[70%] sm:w-full md:w-full'>
-							 	{/* <div className='flex gap-2 '>
+							 	<div className='flex gap-2 '>
 									<ModalForm
 										open={informePro}
 										setOpen={setInformePro}
-										title='Informe de Selección'
+										title='Informe Programas'
 										variant='solid'
 										icon={
 										<div className='flex items-center gap-1.5'>
 												<FaFilePdf style={{ fontSize: 20, color: 'white'}}/>
-											<span className='text-md font-semibold'>Generar Informe de Selección</span>
+											<span className='text-md font-semibold'>Generar Informe Programas</span>
 										</div>
 										}
 										width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-auto text-white bg-red-700 hover:bg-red-600 hover:scale-105 border-none`}
 									>
-										hola
-										<FormularioInformeSeleccion setOpen={setInformePro}/>
+										<FormularioInformePHarina setOpen={setInformePro}/>
 									</ModalForm>
 
 									<ModalForm
@@ -343,7 +340,6 @@ const TablaProgramaEmbalaje = () => {
 										width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-0 text-white bg-red-700 hover:bg-red-600 hover:scale-105 border-none`}
 										size={700}
 									>
-										hola
 										<FormularioInformeKilosXOperario setOpen={setInformePro}/>
 									</ModalForm>
 
@@ -361,16 +357,10 @@ const TablaProgramaEmbalaje = () => {
 										width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-0 text-white bg-red-700 hover:bg-red-600 hover:scale-105 border-none`}
 										size={500}
 										>
-											hola
 											<FormularioInformeOperariosResumido setOpen={setInformePro}/>
 									</ModalForm>
-								</div> */}
+								</div>
 
-								
-							{/*
-								
-
-							</div> */}
 						</CardHeaderChild>
 					</CardHeader>
 					<CardBody className='overflow-x-auto'>
@@ -383,5 +373,5 @@ const TablaProgramaEmbalaje = () => {
 	);
 };
 
-export default TablaProgramaEmbalaje;
+export default TablaProgramaPHarina;
 

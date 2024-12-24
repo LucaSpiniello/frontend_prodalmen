@@ -233,7 +233,7 @@ const TablaBinsParaPlantaHarina = () => {
     })
     
 	];
-  
+
   const table = useReactTable({
 		data: bins_para_planta_harina ? bins_para_planta_harina : [],
 		columns,

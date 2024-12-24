@@ -41,7 +41,10 @@ import FormularioRegistroProgramaPlantaHarina from './Formularios/FormularioRegi
 import { actualizar_proceso_planta_harina, fetchProcesosPlantaHarina } from '../../../redux/slices/procesoPlantaHarina';
 import FormularioRegistroProcesoPlantaHarina from './Formularios/FormularioRegistroProcesoPlantaHarina';
 
+import FormularioInformeProcesoHarina from './Formularios/Formulario PDF/FormularioInformeProcesoHarina';
 
+import FormularioInformeKilosXOperario from './Formularios/Formulario PDF/FormularioInformeKilosXOperario';
+import FormularioInformeOperariosResumido from './Formularios/Formulario PDF/FormularioInformeOperarioResumido';
 
 
 
@@ -105,7 +108,7 @@ const TablaProcesoPlantaHarina = () => {
 				return (
 					<div className='h-full w-full flex justify-center gap-5 flex-wrap md:flex-wrap'>
 						{
-							estado === '0' && info.row.original.condicion_inicio || estado !== '2' && estado! <= '3' && info.row.original.bins_ingresados_length >= 1 && info.row.original.condicion_inicio
+							estado === '1' || estado !== '2' && estado! <= '3' 
 								? (
 									<Button
 										variant='solid'
@@ -188,8 +191,6 @@ const TablaProcesoPlantaHarina = () => {
 						</Link>
 
 						{
-								info.row.original.condicion_termino
-									? (
 										<>
 											<Button
 												title='Documento Entrada'
@@ -212,8 +213,6 @@ const TablaProcesoPlantaHarina = () => {
 											</Button>
 
 										</>
-										)
-									: null
 								}
 			
 					</div>
@@ -306,22 +305,21 @@ const TablaProcesoPlantaHarina = () => {
 						</CardHeaderChild>
 
 						<CardHeaderChild className='lg:w-[70%] sm:w-full md:w-full'>
-							 	{/* <div className='flex gap-2 '>
+						<div className='flex gap-2 '>
 									<ModalForm
 										open={informePro}
 										setOpen={setInformePro}
-										title='Informe de Selección'
+										title='Informe Programas'
 										variant='solid'
 										icon={
 										<div className='flex items-center gap-1.5'>
 												<FaFilePdf style={{ fontSize: 20, color: 'white'}}/>
-											<span className='text-md font-semibold'>Generar Informe de Selección</span>
+											<span className='text-md font-semibold'>Generar Informe Procesos</span>
 										</div>
 										}
 										width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-auto text-white bg-red-700 hover:bg-red-600 hover:scale-105 border-none`}
 									>
-										hola
-										<FormularioInformeSeleccion setOpen={setInformePro}/>
+										<FormularioInformeProcesoHarina setOpen={setInformePro}/>
 									</ModalForm>
 
 									<ModalForm
@@ -338,7 +336,6 @@ const TablaProcesoPlantaHarina = () => {
 										width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-0 text-white bg-red-700 hover:bg-red-600 hover:scale-105 border-none`}
 										size={700}
 									>
-										hola
 										<FormularioInformeKilosXOperario setOpen={setInformePro}/>
 									</ModalForm>
 
@@ -356,16 +353,9 @@ const TablaProcesoPlantaHarina = () => {
 										width={`w-full md:w-full px-4 sm:py-3 md:py-3 lg:py-0 text-white bg-red-700 hover:bg-red-600 hover:scale-105 border-none`}
 										size={500}
 										>
-											hola
 											<FormularioInformeOperariosResumido setOpen={setInformePro}/>
 									</ModalForm>
-								</div> */}
-
-								
-							{/*
-								
-
-							</div> */}
+								</div>
 						</CardHeaderChild>
 					</CardHeader>
 					<CardBody className='overflow-x-auto'>

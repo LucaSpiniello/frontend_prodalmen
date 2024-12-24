@@ -119,7 +119,7 @@ const CardDetalleProgramaSeleccion = () => {
                 <span className="text-center w-8/12 mx-auto">Fruta Procesada: {(kilos_totales_ingresados)?.toFixed(2)} kgs.</span>
               </div>
               <div className='w-full h-full dark:bg-zinc-700 bg-zinc-300	rounded-md flex items-center p-2'>
-                <span className="text-center w-8/12 mx-auto">Total de bins a procesar: {bins_calibrados.filter(bin => bin.bin_procesado === true).length} </span>
+                <span className="text-center w-8/12 mx-auto">Total de bins a procesar: {bins_calibrados?.filter(bin => bin.bin_procesado === true).length} </span>
               </div>
             </div>
             <div className="w-full h-full">

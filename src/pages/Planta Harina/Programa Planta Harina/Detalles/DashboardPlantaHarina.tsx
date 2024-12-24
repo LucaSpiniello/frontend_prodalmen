@@ -142,7 +142,7 @@ const DashboardPlantaHarina = () => {
               </Badge>
                 
                {
-                  estado === '0' && programa_planta_harina && programa_planta_harina.condicion_inicio || estado !== '2' && estado! <= '3' && programa_planta_harina && programa_planta_harina.condicion_inicio
+                  estado === '1' && programa_planta_harina && programa_planta_harina.condicion_inicio 
                     ? (
                         <Button
                           title="Iniciar Programa"

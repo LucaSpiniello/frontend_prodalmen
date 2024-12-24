@@ -43,13 +43,13 @@ const TablaBinBodegaPlantaHarina = ({refresh}: {refresh: boolean}) => {
 
   useEffect(() => {
     // dispatch(fetchBinBodega({ params: { search: !filtroBodega ? 'g1,g2' : filtroBodega }, token, verificar_token: verificarToken }));
-    dispatch(listaBinBodegaFiltroThunk({token: token, verificar_token: verificarToken, filtro: !filtroBodega ? 'g3,g4,g5,g6' : filtroBodega}))
+    dispatch(listaBinBodegaFiltroThunk({token: token, verificar_token: verificarToken, filtro: !filtroBodega ? 'g5' : filtroBodega}))
   }, [filtroBodega, refresh])
 
   useEffect(() => {
     const lista: TBinBodega[] = []
     if (bin_bodega && bin_bodega.length > 0) {
-      bin_bodega.forEach((element) => {
+      bin_bodega.forEach((element : any) => {
         if (bins_para_planta_harina.find(bin => bin.id === element.id)) {
         } else {
           lista.push(element)
@@ -216,10 +216,7 @@ const TablaBinBodegaPlantaHarina = ({refresh}: {refresh: boolean}) => {
                 <Label htmlFor="bodega">Bodegas: </Label>
                 <SelectReact
                     options={[{ value: '', label: 'Selecciona una bodega' },
-                      { value: 'g3', label: 'Bodega G3' },
-                      { value: 'g4', label: 'Bodega G4' },
                       { value: 'g5', label: 'Bodega G5' },
-                      { value: 'g6', label: 'Bodega G6' },
                     ]}
                     id='bodega'
                     placeholder='Seleccione una bodega'

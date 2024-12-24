@@ -143,13 +143,17 @@ const RegistroBinPlantaHarina = lazy(() => import ('../pages/Planta Harina/Progr
 const DetalleProgramaPlantaHarina = lazy(() => import ('../pages/Planta Harina/Programa Planta Harina/Detalles/DashboardPlantaHarina.tsx'))
 const PDFDocumentoEntradaPlantaHarina = lazy(() => import ('../pages/Planta Harina/Programa Planta Harina/PDF/PDFDocumentoEntradaPlantaHarina.tsx'))
 const PDFDocumentoSalidaPlantaHarina = lazy(() => import ('../pages/Planta Harina/Programa Planta Harina/PDF/PDFDocumentoSalidaPlantaHarina.tsx'))
-
-
+const PDFInformeKilosXOperarioPlantaHarina = lazy(() => import ('../pages/Planta Harina/Programa Planta Harina/PDF/PDFInformeKilosXOperario.tsx'))
+const PDFInformeOperarioResumidoPlantaHarina = lazy(() => import ('../pages/Planta Harina/Programa Planta Harina/PDF/PDFInformeOperarioResumido.tsx'))
+const PDFInformeProgramaPHarina = lazy(() => import ('../pages/Planta Harina/Programa Planta Harina/PDF/PDFInformeProgramaPHarina.tsx'))
 const ListaProcesoPlantaHarina = lazy(() => import ('../pages/Planta Harina/Proceso Planta Harina/TablaProcesoPlantaHarina.tsx'))
 const RegistroBinProcesoPlantaHarina = lazy(() => import ('../pages/Planta Harina/Proceso Planta Harina/Formularios/Formulario Registro Bin Proceso Planta Harina/RegistroBinAProcesoPlantaHarina.tsx'))
 const DetalleProcesoPlantaHarina = lazy(() => import ('../pages/Planta Harina/Proceso Planta Harina/Detalles/DashboardProcesoPlantaHarina.tsx'))
 const PDFDocumentoEntradaProcesoPlantaHarina = lazy(() => import ('../pages/Planta Harina/Proceso Planta Harina/PDF/PDFDocumentoEntradaProcesoPlantaHarina.tsx'))
 const PDFDocumentoSalidaProcesoPlantaHarina = lazy(() => import ('../pages/Planta Harina/Proceso Planta Harina/PDF/PDFDocumentoSalidaProcesoPlantaHarina.tsx'))
+const PDFInformeKilosXOperarioProcesoHarina = lazy(() => import ('../pages/Planta Harina/Proceso Planta Harina/PDF/PDFInformeKilosXOperario.tsx'))
+const PDFInformeOperarioResumidoProcesoHarina = lazy(() => import ('../pages/Planta Harina/Proceso Planta Harina/PDF/PDFInformeOperarioResumido.tsx'))
+const PDFInformeProgramaProcesoHarina = lazy(() => import ('../pages/Planta Harina/Proceso Planta Harina/PDF/PDFInformeProcesoPHarina.tsx'))
 
 // const DetalleProgramaPlantaHarina = lazy(() => import ('../pages/Planta Harina/Programa Planta Harina/Detalles/DashboardEmbalaje.tsx'))
 
@@ -344,14 +348,17 @@ const contentRoutes: RouteProps[] = [
 	{ path: appPages.planta_harina.subPages.programas_planta_harina.subPages.programa_planta_harina.to, element: <DetalleProgramaPlantaHarina />},
 	{ path: appPages.planta_harina.subPages.programas_planta_harina.subPages.pdf_documento_entrada.to, element: <PDFDocumentoEntradaPlantaHarina />},
 	{ path: appPages.planta_harina.subPages.programas_planta_harina.subPages.pdf_documento_salida.to, element: <PDFDocumentoSalidaPlantaHarina />},
-
+	{ path: appPages.planta_harina.subPages.programas_planta_harina.subPages.pdf_informe_kilos_x_operario.to, element: <PDFInformeKilosXOperarioPlantaHarina />},
+	{path : appPages.planta_harina.subPages.programas_planta_harina.subPages.pdf_informe_operario_resumido.to, element: <PDFInformeOperarioResumidoPlantaHarina/>},
+	{path : appPages.planta_harina.subPages.programas_planta_harina.subPages.pdf_informe_programa.to, element: <PDFInformeProgramaPHarina/>},
 	{ path: appPages.planta_harina.subPages.procesos_planta_harina.to, element: <ListaProcesoPlantaHarina />},
 	{ path: appPages.planta_harina.subPages.procesos_planta_harina.subPages.registro_planta_harina.to, element: <RegistroBinProcesoPlantaHarina />},
 	{ path: appPages.planta_harina.subPages.procesos_planta_harina.subPages.proceso_planta_harina.to, element: <DetalleProcesoPlantaHarina />},
 	{ path: appPages.planta_harina.subPages.procesos_planta_harina.subPages.pdf_documento_entrada.to, element: <PDFDocumentoEntradaProcesoPlantaHarina />},
-	{ path: appPages.planta_harina.subPages.procesos_planta_harina.subPages.pdf_documento_salida.to, element: <PDFDocumentoSalidaProcesoPlantaHarina />},
-
-
+	{ path: appPages.planta_harina.subPages.procesos_planta_harina.subPages.pdf_documento_salida.to, element: <PDFDocumentoSalidaProcesoPlantaHarina />},	
+	{path: appPages.planta_harina.subPages.procesos_planta_harina.subPages.pdf_informe_kilos_x_operario.to, element: <PDFInformeKilosXOperarioProcesoHarina />},
+	{path : appPages.planta_harina.subPages.procesos_planta_harina.subPages.pdf_informe_operario_resumido.to, element: <PDFInformeOperarioResumidoProcesoHarina/>},
+	{path : appPages.planta_harina.subPages.procesos_planta_harina.subPages.pdf_informe_proceso.to, element: <PDFInformeProgramaProcesoHarina/>},
 
 
 

@@ -77,7 +77,7 @@ const DetalleBinsParaPlantaHarina: FC<IMuestraProps> = () => {
                     colorIntensity="700"
                     className="hover:scale-105 text-white"
                     >
-                      Añadir Bin A Programa Planta Harina 
+                      Añadir Bin A Programa Planta Harina
                   </Button>
                 </Link>
               )

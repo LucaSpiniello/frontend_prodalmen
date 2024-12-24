@@ -29,7 +29,7 @@ const RegistroBinParaPlantaHarina = () => {
   
   useEffect(() => {
     // dispatch(fetchBinBodega({ params: { search: !filtroBodega ? 'g1,g2' : filtroBodega }, token, verificar_token: verificarToken }));
-    dispatch(listaBinBodegaFiltroThunk({token: token, verificar_token: verificarToken, filtro: 'g3,g4,g5,g6'}))
+    dispatch(listaBinBodegaFiltroThunk({token: token, verificar_token: verificarToken, filtro: 'g5'}))
   }, [])
 
   useEffect(() => {

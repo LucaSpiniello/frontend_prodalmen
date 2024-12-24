@@ -62,9 +62,9 @@ const DetalleProyeccion = () => {
 
   const [productores, setProductores] = useState<string[]>([]);
   const [seleccionesCombinadas, setSeleccionesCombinadas] = useState<any | null>(null);
-
-  const [fechaInicio, setFechaInicio] = useState<any>(null);
-  const [fechaFin, setFechaFin] = useState<any>(null);
+  const today = new Date();
+  const [fechaInicio, setFechaInicio] = useState<any>(today);
+  const [fechaFin, setFechaFin] = useState<any>(today);
 
   const [filtroFechas, setFiltroFechas] = useState<any>(false);
   const [fechaChange, setfechaChange] = useState<any>(false);
@@ -89,8 +89,8 @@ const DetalleProyeccion = () => {
   };
 
   const reestablecerFechas = () => {
-    setFechaInicio(null);
-    setFechaFin(null);
+    setFechaInicio(today);
+    setFechaFin(today);
   }
 
   const handleReestablecerFiltro = () => {
@@ -365,7 +365,7 @@ const DetalleProyeccion = () => {
                       Reestablecer Filtro
                     </button>
                     <button
-                      onClick={handleOpenDateRange}
+                      onClick={() => setIsDateRangeVisible(false)}
                       className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-700 transition"
                     >
                       Cerrar

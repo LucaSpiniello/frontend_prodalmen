@@ -156,21 +156,7 @@ const TablaOperarioPlantaHarina= ( ) => {
                 {
                   (programa_planta_harina?.estado_programa === '5' || programa_planta_harina?.estado_programa !== '2')
                     ? 
-                      operarios_planta_harina.length >= 1 && programa_planta_harina && programa_planta_harina.estado_programa === '5' &&  (
-                        <Button variant="solid" color="amber" className="w-full md:w-auto lg:w-auto hover:scale-105" onClick={ async () => {
-                          try {
-                            const token_verificado = await verificarToken(token!)
-                            if (!token_verificado)throw new Error('Token no verificado')
-                            const response = await fetchWithTokenPost(`api/programas/${id}/asignar_dias_kilos/`, {}, token_verificado)
-                            if (response.ok) {
-                              toast.success('Dias Asignados')
-                            } else {
-                              toast.error('Error' + `${await response.json()}`)
-                            }
-                          } catch {
-                            console.log('Error dias asignados')
-                          }
-                        }}>Asignar Dias</Button>
+                    (null
                       )
                     : (
                       <>

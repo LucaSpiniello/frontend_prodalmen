@@ -38,7 +38,7 @@ function DetallePedido() {
         }
     }, [id, refrescar, token])
 
-    function actualizarEstadoPedido({} : {estado: string | undefined | null}) {
+    function actualizarEstadoPedido({estado} : {estado: string | undefined | null}) {
         if (pedido?.mercado_interno){
             let totalKilosSolicitados = 0
             pedido.mercado_interno.fruta_ficticia.forEach((fruta: any) => {
@@ -49,14 +49,12 @@ function DetallePedido() {
                 totalKilosEnPedido += fruta.cantidad
             })
 
-            if (totalKilosEnPedido < totalKilosSolicitados) {
+            if ( totalKilosSolicitados < totalKilosEnPedido) {
                 alert('No se puede terminar el armado del pedido, la cantidad de fruta en el pedido es menor a la cantidad solicitada')
                 return
             }
+            dispatch(patchPedidoThunk({id_pedido: id, data: {estado_pedido: estado}, token, verificar_token: verificarToken}))
         }
-        // if (estado) {
-        //     dispatch(patchPedidoThunk({id_pedido: id, data: {estado_pedido: estado}, token, verificar_token: verificarToken}))
-        // }
     }
 
     return (

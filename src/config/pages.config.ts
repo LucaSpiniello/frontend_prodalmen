@@ -741,7 +741,21 @@ export const appPages = {
 					pdf_documento_salida: {
 						id: 'pdf_documentro_salida_planta_harina',
 						to: '/ph/ph-prog/pdf-detalle-salida-planta-harina/:id'
-					}
+					},
+					pdf_informe_kilos_x_operario: {
+						id: 'pdf_informe_kilos_x_operario',
+						to: '/ph/ph-prog/pdf-informe-kilos-x-operario'
+					},
+					pdf_informe_operario_resumido: {
+						id: 'pdf_informe_operario_resumido',
+						text: 'PDF Informe Operario Resumido',
+						to: '/ph/ph-prog/pdf-informe-operario-resumido'
+					},
+					pdf_informe_programa: {
+						id: 'pdf_programa',
+						text: 'PDF Programa ',
+						to: '/ph/ph-prog/pdf-informe-programa/'
+					},
 				}
 			},
 				procesos_planta_harina: {
@@ -765,7 +779,21 @@ export const appPages = {
 					pdf_documento_salida: {
 						id: 'pdf_documentro_salida_planta_harina',
 						to: '/ph/ph-proc/pdf-detalle-salida-proceso-planta-harina/:id'
-					}
+					},
+					pdf_informe_kilos_x_operario: {
+						id: 'pdf_informe_kilos_x_operario',
+						to: '/ph/ph-proc/pdf-informe-kilos-x-operario'
+					},
+					pdf_informe_operario_resumido: {
+						id: 'pdf_informe_operario_resumido',
+						text: 'PDF Informe Operario Resumido',
+						to: '/ph/ph-proc/pdf-informe-operario-resumido'
+					},
+					pdf_informe_proceso: {
+						id: 'pdf_programa',
+						text: 'PDF Programa ',
+						to: '/ph/ph-proc/pdf-informe-programa/'
+					},
 				}
 			}
 		}

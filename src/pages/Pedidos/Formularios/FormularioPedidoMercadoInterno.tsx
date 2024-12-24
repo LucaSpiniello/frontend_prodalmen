@@ -103,7 +103,7 @@ const FormularioPedidoMercadoInterno: FC<IFormComercializadorProps> = ({ setOpen
 
   useEffect(() => {
     const lista: TSelectOptions = []
-    sucursales.forEach((element) => {
+    sucursales?.forEach((element) => {
       lista.push({value: `${element.id}`, label: element.nombre})
     })
     setOptionsSucursales(lista)
@@ -132,7 +132,7 @@ const FormularioPedidoMercadoInterno: FC<IFormComercializadorProps> = ({ setOpen
                       className='h-12'
                       onChange={(value: any) => {
                         formik.setFieldValue('cliente_rut', value.value)
-                        const cliente = clientes.find(cliente => cliente.rut_dni === value.value)
+                        const cliente = clientes?.find(cliente => cliente.rut_dni === value.value)
                         formik.setFieldValue('cliente', cliente?.id)
                       }}
                     />
@@ -157,7 +157,7 @@ const FormularioPedidoMercadoInterno: FC<IFormComercializadorProps> = ({ setOpen
                           placeholder='Selecciona un opción'
                           name='sucursal'
                           className='h-12'
-                          value={{value: formik.values.sucursal, label: sucursales.find(suc => `${suc.id}` == formik.values.sucursal)?.nombre ?? ''}}
+                          value={{value: formik.values.sucursal, label: sucursales?.find(suc => `${suc.id}` == formik.values.sucursal)?.nombre ?? ''}}
                           onChange={(value: any) => {
                             formik.setFieldValue('sucursal', value.value)
                           }}

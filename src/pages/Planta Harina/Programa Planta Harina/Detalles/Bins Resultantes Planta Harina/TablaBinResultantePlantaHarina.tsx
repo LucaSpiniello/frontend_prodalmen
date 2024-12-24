@@ -38,7 +38,7 @@ const TablaBinResultantePlantaHarina = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
   const bins_resultantes = useAppSelector((state: RootState) => state.planta_harina.bins_resultantes_planta_harina)
-  const produccion = useAppSelector((state: RootState) => state.programa_produccion.programa)
+  const produccion = useAppSelector((state: RootState) => state.planta_harina.programa_planta_harina)
   const { pathname } = useLocation()
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
   const token = useAppSelector((state: RootState) => state.auth.authTokens)
@@ -179,7 +179,7 @@ const TablaBinResultantePlantaHarina = () => {
                   </Button>
                 </>
                 )
-              : (produccion && produccion.estado <= '3')
+              : (produccion && produccion.estado_programa <= '3')
                 ? (
                   <ModalForm
                     open={openModalCCTarja}

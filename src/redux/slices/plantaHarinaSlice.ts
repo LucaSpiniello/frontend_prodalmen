@@ -417,6 +417,7 @@ export const registrar_bin_resultante_planta_harina = createAsyncThunk(
         const res = await fetchWithTokenPost(`api/programas/${id}/bines-resultantes-programa/`,data, token_validado)
       if (res.ok){
         const data: TBinResultantePlantaHarina = await res.json()
+        asignarDiasKilos(id, verificar_token, token)
         toast.success(`Bin Resultante registrado exitosamente`)
         thunkAPI.dispatch(fetchBinsResultantePlantaHarina({ id, token, verificar_token }))
         thunkAPI.dispatch(fetchProgramaPlantaHarina({ id, token, verificar_token }))
@@ -434,6 +435,21 @@ export const registrar_bin_resultante_planta_harina = createAsyncThunk(
     }
   }
 )
+
+const asignarDiasKilos = async (id : any, verificar_token : any, token : any) => {
+  try {
+    const token_verificado = await verificar_token(token!)
+    if (!token_verificado)throw new Error('Token no verificado')
+    const response = await fetchWithTokenPost(`api/programas/${id}/asignar-dias-kilos/`, {}, token_verificado)
+    if (response.ok) {
+      toast.success('Dias Asignados')
+    } else {
+      toast.error('Error' + `${await response.json()}`)
+    }
+  } catch {
+    console.log('Error dias asignados')
+  }
+}
 
 export const registro_cc_bin_resultante_planta_harina = createAsyncThunk(
   'planta_harina/registro_cc_bin_resultante_planta_harina',

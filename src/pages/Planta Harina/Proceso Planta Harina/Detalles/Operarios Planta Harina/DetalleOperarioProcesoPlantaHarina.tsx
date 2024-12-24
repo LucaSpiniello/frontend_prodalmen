@@ -59,24 +59,6 @@ const DetalleOperarioProcesoPlantaHarina: FC<ITablaOperariosProcesoPlantaHarinaP
                 </ModalForm>
               )
           }
-          {
-            proceso_planta_harina && proceso_planta_harina.estado_proceso === '5' && proceso_planta_harina.condicion_termino && (
-              <Button variant="solid" color="amber" className="w-full md:w-auto lg:w-auto hover:scale-105" onClick={ async () => {
-                try {
-                  const token_verificado = await verificarToken(token!)
-                  if (!token_verificado)throw new Error('Token no verificado')
-                  const response = await fetchWithTokenPost(`api/procesos/${id}/asignar_dias_kilos/`, {}, token_verificado)
-                  if (response.ok) {
-                    toast.success('Dias Asignados')
-                  } else {
-                    toast.error('Error' + `${await response.json()}`)
-                  }
-                } catch {
-                  console.log('Error dias asignados')
-                }
-              }}>Asignar Dias</Button>
-            )
-          }
         </CardHeader>
         <CardBody>
           <article className={`row-start-4 row-span-4 col-span-3 w-full h-full dark:bg-zinc-900 bg-zinc-50 flex flex-col lg:flex-col  justify-between pb-10`}>
