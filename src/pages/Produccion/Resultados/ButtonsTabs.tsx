@@ -26,6 +26,7 @@ const ButtonsTabsResults: FC<IPeriodButtonsPartialProps> = (props) => {
 	const OPTIONSPRO: any = {
 		CONTROL_PEPA: { text: 'Control Pepa' },
 		CALIBRE_PEPA: { text: 'Calibres Pepa' },
+		CALIDAD_PEPA: { text: 'Calidades Pepa' },
 	};
 	
 	return (

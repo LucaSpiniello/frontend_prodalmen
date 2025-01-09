@@ -239,8 +239,6 @@ const TablaBodegaG5: FC<IBodegaG4Props> = ({ data, refresco, setRefresco}) => {
 
 	
 
-
-
 	const table = useReactTable({
 		data,
 		columns,

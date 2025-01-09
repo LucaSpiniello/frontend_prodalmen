@@ -7,6 +7,7 @@ import Subheader, {
 } from '../../../components/layouts/Subheader/Subheader';
 import CardFrutaCalibradaSeleccion from './Calibres.chart';
 import CardFrutaPerdidasSeleccion from './ControlPepa.chart';
+import CardFrutaCalidadSeleccion from './Calidades.chart';
 import CardMuestraControl from '../../Control de calidad/Proyeccion Fruta/MuestraControl.chart';
 import ButtonsTabsResults from './ButtonsTabs';
 import { useAppSelector } from '../../../redux/hooks';
@@ -301,7 +302,9 @@ const DetalleProyeccion = () => {
                     ? <CardFrutaPerdidasSeleccion activeTab={activeTab} rendimiento={seleccionesCombinadas!}/>
                     : activeTab.text === 'Calibres Pepa'
                       ? <CardFrutaCalibradaSeleccion activeTab={activeTab} programa={seleccionesCombinadas!}/>
-                      : null
+                      : activeTab.text === 'Calidades Pepa'
+                        ? <CardFrutaCalidadSeleccion activeTab={activeTab} programa={seleccionesCombinadas!}/>
+                        : null
               }
 					</div>
            : <div className='flex justify-center items-center h-96'>
@@ -398,6 +401,12 @@ function combinarControles(selecciones: any): any {
       "PreCalibre": { kilos: 0, pct: 0 },
       "Sin Calibre": { kilos: 0, pct: 0 },
     },
+    calidades: {
+      "Sin Calidad": { kilos: 0, pct: 0 },
+      "Extra N°1": { kilos: 0, pct: 0 },
+      "Supreme": { kilos: 0, pct: 0 },
+      "Whole & Broken": { kilos: 0, pct: 0 },
+    },
     perdidas: {
       trozo_kilos: 0,
       picada_kilos: 0,
@@ -441,6 +450,14 @@ function combinarControles(selecciones: any): any {
       }
     }
 
+    // Sumar calidades
+    for (let calidad in resultado.calidades) {
+      if (seleccion.calidades[calidad] !== undefined) {
+        resultado.calidades[calidad].kilos += seleccion.calidades[calidad];
+      }
+    }
+
+
     resultado.perdidas.trozo_kilos += seleccion.perdidas?.trozo_kilos || 0;
     resultado.perdidas.picada_kilos += seleccion.perdidas?.picada_kilos || 0;
     resultado.perdidas.hongo_kilos += seleccion.perdidas?.hongo_kilos || 0;
@@ -475,6 +492,14 @@ function combinarControles(selecciones: any): any {
   if (totalCalibresKilos > 0) {
     for (let calibre in resultado.calibres) {
       resultado.calibres[calibre].pct = (resultado.calibres[calibre].kilos / totalCalibresKilos) * 100;
+    }
+  }
+
+  // Recalcular los porcentajes para las calidades
+  const totalCalidadesKilos : any = Object.values(resultado.calidades).reduce((acc : any, calidad : any) => acc + calidad.kilos, 0);
+  if (totalCalidadesKilos > 0) {
+    for (let calidad in resultado.calidades) {
+      resultado.calidades[calidad].pct = (resultado.calidades[calidad].kilos / totalCalidadesKilos) * 100;
     }
   }
 

@@ -685,54 +685,163 @@ const PdfRenderFruta: React.FC<{ controlCombinado: any, variedad: string, produc
 
             </View>
 
+            
             <View style={{
-                width: '100%',
-                height: '60',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-                justifyContent: 'space-between',
-                position: 'relative',
-                top: 10,
-              }}>
-                <Text style={{ fontSize: 14, textAlign: 'center', marginBottom: '10px'}}>Resumen</Text>
-                <View style={{ width: '100%', height: 50, border: '1px solid green', borderRadius: 4, padding: '5px' }}>
+              flexDirection: 'column',
+              width: '100%',
+              display: 'flex',
+              position: 'relative',
+              gap: 2,
+            }}>
 
-                  <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                    <View style={{ width: 150 }}>
-                      <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Totales Seleccionados: </Text>
-                    </View>
-                    <View style={{ width: '50%' }}>
-                      <Text style={styles.header_date_info_text}>{new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format((controlCombinado.fruta_seleccionada))} kgs</Text>
-                    </View>
-                  </View>
+              <View style={{
+                  width: '100%',
+                  height: '100px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 2,
+                  justifyContent: 'space-between',
+                  position: 'relative',
+                  top: 10,
+                }}>
 
-                  
-                  <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                    <View style={{ width: 150 }}>
-                      <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Totales Merma: </Text>
-                    </View>
-                    <View style={{ width: '50%' }}>
-                      <Text style={styles.header_date_info_text}>{new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format((controlCombinado.perdidas.kilos_total_perdidas))} kgs</Text>
-                    </View>
-                  </View>
-                </View>
+                <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: '10px'}}>Detalle Calidad</Text>
+                <View style={{ width: '100%', height: 100 }}>
+                  <View style={styles.body_table}>
 
-  
-                <View style={{ width: '100%', display: 'flex', height: 90, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 5, position: 'absolute', top: 220 }}>
-                        <Image source='/src/assets/firma_donandres.png' style={{ width: 90, height: 50 }} />
-                        <Text style={{
-                          borderBottom: '1px solid green',
-                          height: 15,
-                          width: '100%',
-                          fontSize: 8,
-                          textAlign: 'center'
-                        }}>
-                          CC Aprobado por Andres Hasbun
-                        </Text>
-                        <Text style={{ fontSize: 9 }}>Gerente de Operaciones</Text>
+                    <View style={styles.body_table_header}>
+                      <View style={{ width: '100%' }}>
+                        <Text style={styles.header_date_info_text}>Calidad</Text>
                       </View>
+                      <View style={styles.boxes_table_row}>
+                        <Text style={styles.header_date_info_text}>Kilos</Text>
+                      </View>
+                      <View style={styles.boxes_table_row}>
+                        <Text style={styles.header_date_info_text}>%</Text>
+                      </View>
+                    </View>
+
+                    <View style={styles.body_table_info}>
+                      
+                      <View style={styles.body_table_rows}>
+                        <View style={{ width: '100%' }}>
+                          <Text style={styles.body_table_info_text}>Extra N° 1</Text>
+                        </View>
+                        <View style={styles.boxes_table_row}>
+                          <Text style={styles.body_table_info_text}>
+                            {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                              controlCombinado.calidades["Extra N°1"].kilos
+                            )} kgs
+                          </Text>
+                        </View>
+                        <View style={styles.boxes_table_row}>
+                          <Text style={styles.body_table_info_text}>{controlCombinado.calidades["Extra N°1"].pct.toFixed(2)}%</Text>
+                        </View>
+                      </View>
+
+                      <View style={styles.body_table_rows}>
+                        <View style={{ width: '100%' }}>
+                          <Text style={styles.body_table_info_text}>Supreme</Text>
+                        </View>
+                        <View style={styles.boxes_table_row}>
+                          <Text style={styles.body_table_info_text}>
+                            {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                              controlCombinado.calidades["Supreme"].kilos
+                            )} kgs
+                          </Text>
+                        </View>
+                        <View style={styles.boxes_table_row}>
+                          <Text style={styles.body_table_info_text}>{controlCombinado.calidades["Supreme"].pct.toFixed(2)}%</Text>
+                        </View>
+                      </View>
+
+                      
+                      <View style={styles.body_table_rows}>
+                        <View style={{ width: '100%' }}>
+                          <Text style={styles.body_table_info_text}>Whole & Broken</Text>
+                        </View>
+                        <View style={styles.boxes_table_row}>
+                          <Text style={styles.body_table_info_text}>
+                            {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                              controlCombinado.calidades["Whole & Broken"].kilos
+                            )} kgs
+                          </Text>
+                        </View>
+                        <View style={styles.boxes_table_row}>
+                          <Text style={styles.body_table_info_text}>{controlCombinado.calidades["Whole & Broken"].pct.toFixed(2)}%</Text>
+                        </View>
+                      </View>
+
+                      <View style={styles.body_table_rows}>
+                        <View style={{ width: '100%' }}>
+                          <Text style={styles.body_table_info_text}>Sin Calidad</Text>
+                        </View>
+                        <View style={styles.boxes_table_row}>
+                          <Text style={styles.body_table_info_text}>
+                            {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
+                              controlCombinado.calidades["Sin Calidad"].kilos
+                            )} kgs
+                          </Text>
+                        </View>
+                        <View style={styles.boxes_table_row}>
+                          <Text style={styles.body_table_info_text}>{controlCombinado.calidades["Sin Calidad"].pct.toFixed(2)}%</Text>
+                        </View>
+                      </View>
+                        
+                    </View>
+
+                  </View>
+              </View>          
+              </View>  
+
+              <View style={{
+                  width: '100%',
+                  height: '60',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 2,
+                  justifyContent: 'space-between',
+                  position: 'relative',
+                  top: 50,
+                }}>
+                  <Text style={{ fontSize: 14, textAlign: 'center', marginBottom: '10px'}}>Resumen</Text>
+                  <View style={{ width: '100%', height: 50, border: '1px solid green', borderRadius: 4, padding: '5px' }}>
+
+                    <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
+                      <View style={{ width: 150 }}>
+                        <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Totales Seleccionados: </Text>
+                      </View>
+                      <View style={{ width: '50%' }}>
+                        <Text style={styles.header_date_info_text}>{new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format((controlCombinado.fruta_seleccionada))} kgs</Text>
+                      </View>
+                    </View>
+
+                    
+                    <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
+                      <View style={{ width: 150 }}>
+                        <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Totales Merma: </Text>
+                      </View>
+                      <View style={{ width: '50%' }}>
+                        <Text style={styles.header_date_info_text}>{new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format((controlCombinado.perdidas.kilos_total_perdidas))} kgs</Text>
+                      </View>
+                    </View>
+                  </View>
               </View>
+  
+              <View style={{ width: '100%', display: 'flex', height: 90, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 5, position: 'absolute', top: 220 }}>
+                      <Image source='/src/assets/firma_donandres.png' style={{ width: 90, height: 50 }} />
+                      <Text style={{
+                        borderBottom: '1px solid green',
+                        height: 15,
+                        width: '100%',
+                        fontSize: 8,
+                        textAlign: 'center'
+                      }}>
+                        CC Aprobado por Andres Hasbun
+                      </Text>
+                      <Text style={{ fontSize: 9 }}>Gerente de Operaciones</Text>
+                    </View>
+            </View>
 
 
           </View>

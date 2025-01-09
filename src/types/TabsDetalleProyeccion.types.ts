@@ -1,10 +1,10 @@
-type TTabsText = 'Calibres Pepa' | 'Tabla Informativa' | 'Control Pepa' | 'Muestra Control' | 'Resultados Rendimiento';
+type TTabsText = 'Calibres Pepa' | 'Tabla Informativa' | 'Control Pepa' | 'Muestra Control' | 'Resultados Rendimiento' | 'Calidades Pepa';
 
 export type TTabsPro = {
 	text: TTabsText;
 };
 
-type TTabsKey = 'CP' | 'TD' | 'CPE' | 'MC' | 'RR';
+type TTabsKey = 'CP' | 'TD' | 'CPE' | 'MC' | 'RR' | 'CL';
 
 export type TTabsK = {
 	[key in TTabsKey]: TTabsPro;
@@ -16,4 +16,5 @@ export const OPTIONSPRO: TTabsK = {
   MC: { text: 'Muestra Control'},
   TD: { text: 'Tabla Informativa' },
   RR: { text: 'Resultados Rendimiento' },
+  CL: { text: 'Calidades Pepa' },
 };

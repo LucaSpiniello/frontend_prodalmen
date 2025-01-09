@@ -43,7 +43,7 @@ const TablaBinBodegaPlantaHarina = ({refresh}: {refresh: boolean}) => {
 
   useEffect(() => {
     // dispatch(fetchBinBodega({ params: { search: !filtroBodega ? 'g1,g2' : filtroBodega }, token, verificar_token: verificarToken }));
-    dispatch(listaBinBodegaFiltroThunk({token: token, verificar_token: verificarToken, filtro: !filtroBodega ? 'g5' : filtroBodega}))
+    dispatch(listaBinBodegaFiltroThunk({token: token, verificar_token: verificarToken, filtro: !filtroBodega ? 'g2,g3,g4,g5' : filtroBodega}))
   }, [filtroBodega, refresh])
 
   useEffect(() => {
@@ -217,6 +217,9 @@ const TablaBinBodegaPlantaHarina = ({refresh}: {refresh: boolean}) => {
                 <SelectReact
                     options={[{ value: '', label: 'Selecciona una bodega' },
                       { value: 'g5', label: 'Bodega G5' },
+                      { value: 'g4', label: 'Bodega G4' },
+                      { value: 'g3', label: 'Bodega G3' },
+                      { value: 'g2', label: 'Bodega G2' },
                     ]}
                     id='bodega'
                     placeholder='Seleccione una bodega'
