@@ -665,20 +665,6 @@ const PdfRenderFruta: React.FC<{ controlCombinado: any, variedad: string, produc
                       </Text>
                     </View>
                   </View>
-
-                  <View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <View style={styles.boxes_table_row}>
-                      <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Total Merma</Text>
-                    </View>
-
-                    <View style={styles.boxes_table_row}>
-                      <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>
-                        {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
-                          controlCombinado.perdidas.kilos_total_perdidas
-                        )} Kgs
-                      </Text>
-                    </View>
-                  </View>
                 </View>
                 </View>
               </View>
@@ -816,15 +802,6 @@ const PdfRenderFruta: React.FC<{ controlCombinado: any, variedad: string, produc
                       </View>
                     </View>
 
-                    
-                    <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                      <View style={{ width: 150 }}>
-                        <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Totales Merma: </Text>
-                      </View>
-                      <View style={{ width: '50%' }}>
-                        <Text style={styles.header_date_info_text}>{new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format((controlCombinado.perdidas.kilos_total_perdidas))} kgs</Text>
-                      </View>
-                    </View>
                   </View>
               </View>
   

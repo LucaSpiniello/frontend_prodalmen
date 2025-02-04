@@ -40,10 +40,6 @@ const TablaDetalleDescuento: FC<IRendimientoMuestra> = ({ ccLote }) => {
             <TableRow className='table-row' sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
               <TableCell className='table-cell-5' align='center' style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>Aporte Proporcional PEX más Desechos</TableCell>
               <TableCell className='table-cell-5' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>Pepa Exp más Desechos Kilos</TableCell>
-              <TableCell className='table-cell-5' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>Kilos a Lid Descontando la Merma</TableCell>
-              <TableCell className='table-cell-5' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>% A Liquidar Descontando la Merma</TableCell>
-              <TableCell className='table-cell-5' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>Merma en Kilos</TableCell>
-              <TableCell className='table-cell-5' align="center" style={{ color: `${isDarkTheme ? 'white' : 'black'}`}}>Merma Porcentual</TableCell>
             </TableRow>
           </TableHead>
           <TableBody className='table-body'>

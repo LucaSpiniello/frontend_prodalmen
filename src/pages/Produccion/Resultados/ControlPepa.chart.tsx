@@ -52,9 +52,6 @@ const CardFrutaPerdidasSeleccion: FC<ICardFrutaCalibradaProps> = ({ rendimiento 
                   <div className='text-center text-2xl font-bold text-green-600'>
                     Total Kilos Pepa: {rendimiento?.perdidas?.kilos_total?.toFixed(1)} kgs
                   </div>
-                  <div className='text-center text-2xl font-bold text-red-600'>
-                    Total Kilos Merma: {rendimiento?.perdidas?.kilos_total_perdidas?.toFixed(1)} kgs
-                  </div>
                 </div>
               </div>
             </div>

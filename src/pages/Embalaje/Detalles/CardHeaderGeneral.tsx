@@ -221,12 +221,6 @@ const CardHeaderGeneral = () => {
                 </div>
               </div>
 
-              <div className='w-full h-full flex-col rounded-md flex py-2'>
-                <Label htmlFor="producto_embalar" className="text-lg">Porcentaje Merma</Label>
-                <div className="dark:bg-zinc-700 bg-zinc-300 p-2 rounded-md">
-                  <span className="text-lg">{(programa_embalaje?.merma_porcentual ?? 0)}</span>
-                </div>
-              </div>
             </div>
 
 

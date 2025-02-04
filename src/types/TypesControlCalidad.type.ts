@@ -231,7 +231,6 @@ export type TRendimiento = {
   cc_aportes_pex: TAportePexSerializer[];
   cc_porcentaje_liquidar: TPorcentajeLiquidarSerializer[];
   cc_kilos_des_merma: TKilosMermaSerializer[];
-  cc_merma_porc: TMermaPorcentajeSerializer[];
   cc_calculo_final: TCalculoFinalSerializer;
 
   cc_promedio_porcentaje_muestras: TCCPromedioPorcentajeMuestras

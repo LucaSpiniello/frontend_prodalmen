@@ -41,38 +41,8 @@ const FilaControlDetalleDescuento_total: FC<ILoteCompletadoProps> = () => {
           </span>
         </div>
       </TableCell>
+    
       
-      <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `#10b981`, }}>
-        <div className=' h-full w-full flex items-center justify-center'>
-          <span className={`text-md ${isDarkTheme ? 'text-black' : 'text-black'} font-semibold py-2`}>
-            {formatNumber((rendimiento?.cc_kilos_des_merma[0].exportable! + rendimiento?.cc_kilos_des_merma[0].des!) || 0)} grs
-          </span>
-        </div>
-      </TableCell>
-      
-      <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `#10b981` }}>
-        <div className=' h-full w-full flex items-center justify-center'>
-          <span className={`text-md ${isDarkTheme ? 'text-black' : 'text-black'} font-semibold py-2`}>
-            {formatNumber((rendimiento?.cc_porcentaje_liquidar[0].exportable! + rendimiento?.cc_porcentaje_liquidar[0].des!) || 0)} %
-          </span>
-        </div>
-      </TableCell>
-      
-      <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `#10b981` }}>
-        <div className=' h-full w-full flex items-center justify-center'>
-          <span className={`text-md ${isDarkTheme ? 'text-black' : 'text-black'} font-semibold py-2`}>
-            {formatNumber((rendimiento?.cc_calculo_final.merma_exp! + rendimiento?.cc_calculo_final.merma_des!) || 0)} grs
-          </span>
-        </div>
-      </TableCell>
-      
-      <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `#10b981` }}>
-        <div className=' h-full w-full flex items-center justify-center'>
-          <span className={`text-md ${isDarkTheme ? 'text-black' : 'text-black'} font-semibold py-2`}>
-            {formatNumber((rendimiento?.cc_merma_porc[0].exportable! + rendimiento?.cc_merma_porc[0].des!) || 0)} %
-          </span>
-        </div>
-      </TableCell>
     </>
   )
 }

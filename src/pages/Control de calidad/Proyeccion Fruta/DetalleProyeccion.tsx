@@ -344,7 +344,6 @@ function combinarControles(controles: TRendimiento[]): TRendimiento {
         des: 0,
       }
     ],
-    cc_merma_porc: [],
     cc_muestra: [],
     cc_pepa: [],
     cc_pepa_calibre: [{

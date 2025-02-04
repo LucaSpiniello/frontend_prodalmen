@@ -843,8 +843,7 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                     }}>
                       <Text style={{ fontSize: 8 }}></Text>
                       <Text style={{ fontSize: 8 }}></Text>
-                      <Text style={{ fontSize: 8 }}>Merma</Text>
-                      <Text style={{ fontSize: 8, position: 'relative', left: -20 }}>Final</Text>
+                      <Text style={{ fontSize: 8, position: 'relative', left: -50 }}>Final</Text>
                     </View>
 
                     <View style={{
@@ -862,14 +861,6 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                       }}>
                         <View style={{ width: '300px', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
                           <Text style={{ fontSize: 8 }}>Almendras Exportables</Text>
-                        </View>
-
-                        <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 40 }}>
-                          <Text style={{ fontSize: 8 }}>
-                            {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
-                              controlCombinado.cc_calculo_final.merma_exp
-                            )} kgs
-                          </Text>
                         </View>
 
                         <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
@@ -898,14 +889,6 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                         <View style={{ width: '300px', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
                           <Text style={{ fontSize: 8 }}>CAT 2</Text>
                         </View>
-                        <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 40 }}>
-                          <Text style={{ fontSize: 8 }}>
-                            {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
-                              controlCombinado.cc_calculo_final.merma_cat2
-                            )}
-                          </Text>
-                        </View>
-
                         <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
                           <Text style={{ fontSize: 8 }}>
                             {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
@@ -931,13 +914,6 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                       }}>
                         <View style={{ width: '300px', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
                           <Text style={{ fontSize: 8 }}>Desechos</Text>
-                        </View>
-                        <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 40 }}>
-                          <Text style={{ fontSize: 8, fontWeight: 'bold' }}>
-                            {new Intl.NumberFormat('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(
-                              controlCombinado.cc_calculo_final.merma_des
-                            )} kgs
-                          </Text>
                         </View>
 
                         <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>

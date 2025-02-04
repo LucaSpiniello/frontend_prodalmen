@@ -276,11 +276,6 @@ const PDFDocumentoEntradaSalidaPlantaHarina = () => {
                     <Text style={styles.header_date_info_text}>Valor Referencial: </Text>
                     <Text style={styles.header_date_info_text}>{pdf?.programa.valor_referencial} </Text>
                   </View>
-
-                  <View style={styles.header_date_info_box}>
-                    <Text style={styles.header_date_info_text}>Merma Real: </Text>
-                    <Text style={styles.header_date_info_text}>{pdf?.programa.merma_programa.merma_real} </Text>
-                  </View>
                 </View>
 
                 <View style={[styles.header_date_info_box, { flexDirection: 'column', justifyContent: 'flex-end', position: 'relative' }]}>

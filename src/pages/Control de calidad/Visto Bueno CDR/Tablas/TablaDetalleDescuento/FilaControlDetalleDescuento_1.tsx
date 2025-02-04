@@ -41,38 +41,8 @@ const FilaControlDetalleDescuento_1: FC<ILoteCompletadoProps> = () => {
           </span>
         </div>
       </TableCell>
+    
       
-      <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
-        <div className=' h-full w-full flex items-center justify-center'>
-          <span className={`text-md dark:text-white text-black py-2`}>
-            {formatNumber(rendimiento?.cc_kilos_des_merma[0].exportable || 0)} grs
-          </span>
-        </div>
-      </TableCell>
-      
-      <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
-        <div className=' h-full w-full flex items-center justify-center'>
-          <span className={`text-md dark:text-white text-black py-2`}>
-            {formatNumber(rendimiento?.cc_porcentaje_liquidar[0].exportable || 0)} %
-          </span>
-        </div>
-      </TableCell>
-      
-      <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
-        <div className=' h-full w-full flex items-center justify-center'>
-          <span className={`text-md dark:text-white text-black py-2`}>
-            {formatNumber(rendimiento?.cc_calculo_final.merma_exp || 0)} grs
-          </span>
-        </div>
-      </TableCell>
-      
-      <TableCell className='table-cell-row-detail-2' component="th" scope="row" sx={{ backgroundColor: `${isDarkTheme ? '#18181B' : 'white'}` }}>
-        <div className=' h-full w-full flex items-center justify-center'>
-          <span className={`text-md dark:text-white text-black py-2`}>
-            {formatNumber(rendimiento?.cc_merma_porc[0].exportable || 0)} %
-          </span>
-        </div>
-      </TableCell>
     </>
 
   )
