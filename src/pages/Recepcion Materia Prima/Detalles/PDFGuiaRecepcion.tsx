@@ -256,7 +256,7 @@ const GuiaRecepcionPDF = () => {
 
                         <Text style={{ fontSize: 20, position: 'relative', left: 20, top: 10}}>Guia Recepción MP {state.guia?.id}</Text>
 
-                        <View style={{ width: 150, border: '1px solid green', height: 40, padding: 5, borderRadius: 2, position: 'relative', top: -9 }}>
+                        <View style={{ width: 180, border: '1px solid green', height: 40, padding: 5, borderRadius: 2, position: 'relative', top: -9 }}>
                             <View style={styles.header_date_info_box}>
                                 <Text style={styles.header_date_info_text}>Fecha Recepción: </Text>
                                 <Text style={styles.header_date_info_text}>{format(state.guia?.fecha_creacion!, { date: 'short'}, 'es')}</Text>
