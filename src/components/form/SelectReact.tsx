@@ -21,7 +21,7 @@ type TSelectOption =
 			isFixed?: boolean;
 			isDisabled?: boolean;
 	  }
-	| undefined;
+	| any;
 export type TSelectOptions = TSelectOption[];
 export type TSelectGroups = GroupBase<TSelectOption>[];
 

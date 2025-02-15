@@ -37,7 +37,7 @@ interface InfoControlesCalidad {
 
 const DetalleProyeccion = () => {
 
-  const programas_seleccion = useAppSelector((state: RootState) => state.seleccion.bins_pepas_calibradas_per_program)
+  let programas_seleccion = useAppSelector((state: RootState) => state.seleccion.bins_pepas_calibradas_per_program)
   const info_lotes = useAppSelector((state: RootState) => state.control_calidad.rendimientos_lotes_por_ids)
 	const [activeTab, setActiveTab] = useState<TTabsPro>(OPTIONSPRO.CP);
   
@@ -70,7 +70,6 @@ const DetalleProyeccion = () => {
   const [filtroFechas, setFiltroFechas] = useState<any>(false);
   const [fechaChange, setfechaChange] = useState<any>(false);
 
-  const [comercializador, setComercializador] = useState<string>('');
 
   const handleSelect = (ranges: any) => {
     setFechaInicio(ranges.selection.startDate);
@@ -111,15 +110,13 @@ const DetalleProyeccion = () => {
   }, [])
 
   useEffect(() => {
-
-    if (programas_seleccion && filtroVariedad && hasGroup(['dnandres'])) {
-      filterByComercializador("Prodalmen")
-      setComercializador("Prodalmen")
-    } else if (programas_seleccion && filtroVariedad && hasGroup(['comercializador'])) {
-      filterByComercializador("Pacific Nut")
-      setComercializador("Pacific Nut")
+    if (programas_seleccion.length > 0 && perfil?.comercializador) {
+      programas_seleccion = programas_seleccion.filter((programa: any) => 
+        programa.comercializador.toLowerCase() === perfil.comercializador.toLowerCase()
+      );
     }
-  }, [programas_seleccion, filtroVariedad, dispatch, token, verificarToken, filtroVariedad]);
+  }, [programas_seleccion, perfil?.comercializador]);
+
 
   useEffect(() => {
 
@@ -204,7 +201,7 @@ const DetalleProyeccion = () => {
 		<>
 			<PageWrapper name='Detalle Programa Producción'>
         <Subheader className='z-10'>
-          <div className='mb-2 inline-block w-full cursor-pointer text-xl content-center'>Informacion resultados comercializador {comercializador} 
+          <div className='mb-2 inline-block w-full cursor-pointer text-xl content-center'>Informacion resultados comercializador {perfil?.comercializador} 
           </div>
 					<SubheaderLeft className='w-auto'>
 						<ButtonsTabsResults activeTab={activeTab} setActiveTab={setActiveTab} />

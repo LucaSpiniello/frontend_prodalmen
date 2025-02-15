@@ -24,6 +24,7 @@ import { TDarkMode } from '../../types/darkMode.type';
 import SelectReact, { TSelectOptions } from '../../components/form/SelectReact';
 
 const options: TSelectOptions = [
+	{ value: '2025', label: '2025' },
 	{ value: '2024', label: '2024' },
 	{ value: '2023', label: '2023'},
 	{ value: '2022', label: '2022'},
@@ -107,7 +108,8 @@ const ProfilePage = () => {
 			fecha_nacimiento: perfil?.fecha_nacimiento,
 			rut: perfil?.rut,
 			genero: perfil?.genero,
-			image: perfil?.image
+			image: perfil?.image,
+			comercializador: perfil?.comercializador,
 		},
 		onSubmit: async (values: any) => {
 			const formData = new FormData()

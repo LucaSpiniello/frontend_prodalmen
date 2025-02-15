@@ -45,6 +45,7 @@ const TablaPedidos = () => {
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [modalStatus, setModalStatus] = useState<boolean>(false)
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
+  const comercializador = useAppSelector((state: RootState) => state.auth.dataUser?.comercializador)
   const token = useAppSelector((state: RootState) => state.auth.authTokens)
 	const { verificarToken } = useAuth()
 
@@ -54,15 +55,15 @@ const TablaPedidos = () => {
 	const contenttypes = useAppSelector((state: RootState) => state.core.contenttypes)
 
 	const navigate = useNavigate()
-
-
+	const hasGroup = (groups: any) => userGroup?.groups && groups.some((group: any) => group in userGroup.groups);
+	
+    
 	useEffect(() => {
 		if (contenttypes.length < 1){
 			dispatch(fetchContentTypes({ token, verificar_token: verificarToken }))	
 		}
 	}, [contenttypes])
 
-  const hasGroup = (groups: any) => userGroup?.groups && groups.some((group: any) => group in userGroup.groups);
 
   useEffect(() => {
     setCheckboxSeleccionado({ pedidomercadointerno: true });
@@ -71,12 +72,12 @@ const TablaPedidos = () => {
   useEffect(() => {
     if (Object.keys(checkboxSeleccionado).length > 0) {
       dispatch(fetchPedidos({ 
-        params: { search: `?tipo_pedido=${Object.keys(checkboxSeleccionado)[0]}` }, 
+        params: { search: `?tipo_pedido=${Object.keys(checkboxSeleccionado)[0]}&comercializador=${comercializador}` }, 
         token, 
         verificar_token: verificarToken 
       }));
     }
-  }, [checkboxSeleccionado, dispatch, token, verificarToken]);
+  }, [checkboxSeleccionado, dispatch, token, verificarToken, userGroup]);
 
 
   const handleCheckboxChange = (id: string, checked: boolean) => {
@@ -105,7 +106,7 @@ const TablaPedidos = () => {
 		if  (res.ok){
 			toast.success('Se ha eliminado exitosamente')
 			//@ts-ignore
-			dispatch(fetchPedidos({ params: { search: `?tipo_pedido=${Object.keys(checkboxSeleccionado)[0]}` }, token, verificar_token: verificarToken }))
+			dispatch(fetchPedidos({ params: { search: `?tipo_pedido=${Object.keys(checkboxSeleccionado)[0]}&comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
 		} else {
 			toast.error('No ha logrado eliminar')
 		}
@@ -332,7 +333,7 @@ const TablaPedidos = () => {
 								textButton='Agregar Guía Salida'
 								title='Agregar Guía Salida'
 								>
-									<FormularioGuiaSalida />
+									<FormularioGuiaSalida comercializador={comercializador}/>
 							</ModalForm>
 						)
 						: Object.keys(checkboxSeleccionado)[0] === 'pedidomercadointerno'
@@ -347,7 +348,7 @@ const TablaPedidos = () => {
 										width={`w-full h-11 px-5 dark:bg-[#3B82F6] dark:hover:bg-[#3b83f6cd] bg-[#3B82F6] hover:bg-[#3b83f6cd] text-white hover:scale-105`}
 										textButton={Object.keys(checkboxSeleccionado)[0] === 'pedidomercadointerno' ? 'Agregar Pedido Mercado Interno' : Object.keys(checkboxSeleccionado)[0] === 'pedidoexportacion' ? 'Agregar Pedido Exportación' : null}
 									>
-										<FormularioPedidoMercadoInterno setOpen={setModalStatus} tipo_cliente='pedidomercadointerno'/>
+										<FormularioPedidoMercadoInterno setOpen={setModalStatus} tipo_cliente='pedidomercadointerno' comercializador={comercializador} />
 									</ModalForm>
 								</>
 								)
@@ -362,7 +363,7 @@ const TablaPedidos = () => {
 										width={`w-full h-11 px-5 dark:bg-[#3B82F6] dark:hover:bg-[#3b83f6cd] bg-[#3B82F6] hover:bg-[#3b83f6cd] text-white hover:scale-105`}
 										textButton={Object.keys(checkboxSeleccionado)[0] === 'pedidomercadointerno' ? 'Agregar Pedido Mercado Interno' : Object.keys(checkboxSeleccionado)[0] === 'pedidoexportacion' ? 'Agregar Pedido Exportación' : null}
 									>
-										<FormularioPedidoExportacion setOpen={setModalStatus} tipo_pedido='pedidoexportacion'/>
+										<FormularioPedidoExportacion setOpen={setModalStatus} tipo_pedido='pedidoexportacion' comercializador={comercializador}/>
 									</ModalForm>
 									)
 								: null

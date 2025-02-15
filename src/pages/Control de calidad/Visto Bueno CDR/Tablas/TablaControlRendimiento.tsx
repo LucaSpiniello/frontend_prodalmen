@@ -32,7 +32,7 @@ import useDarkMode from '../../../../hooks/useDarkMode';
 import { HeroEye } from '../../../../components/icon/heroicons';
 import { FaFilePdf } from "react-icons/fa6";
 import { RiErrorWarningFill } from "react-icons/ri";
-import { IoMailOutline } from "react-icons/io5";
+
 import { AiFillLike, AiFillDislike } from "react-icons/ai";
 import { ImSpinner2  } from "react-icons/im";
 import { useAppSelector } from '../../../../redux/hooks';
@@ -49,8 +49,9 @@ import ModalForm from '../../../../components/ModalForm.modal';
 import Button from '../../../../components/ui/Button';
 import { TbFidgetSpinner } from 'react-icons/tb';
 import { ThunkDispatch } from "@reduxjs/toolkit"
-import { useDispatch } from "react-redux"
-
+import { Provider, useDispatch } from "react-redux"
+import store from '../../../../redux/store';
+import GeneratePdfAndSendMail from '../PDFEnvioProductores';
 
 const columnHelper = createColumnHelper<TControlCalidad>();
 
@@ -308,14 +309,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 									{
 										estado_aprobacion > 0 && estado_aprobacion < 2 
 											&& (
-												<Button 
-													title='Mandar Email a Proveedor'
-													variant='solid'
-													color='blue'
-													colorIntensity='700'
-													className=' hover:scale-105'>
-													<IoMailOutline style={{ fontSize: 25 }} />
-												</Button>
+													<GeneratePdfAndSendMail id={id} />
 												)
 											// : (
 											// 	
@@ -362,6 +356,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 
 
 	return (
+
 		<PageWrapper name='Lista Control Rendimiento'>
 			<Subheader>
 				<SubheaderLeft>
@@ -411,6 +406,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 				</Card>
 			</Container>
 		</PageWrapper>
+
 	);
 };
 

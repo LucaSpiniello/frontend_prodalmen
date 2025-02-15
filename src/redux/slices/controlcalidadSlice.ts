@@ -6,6 +6,7 @@ import { TTarjaSeleccionadaCalibracion } from "../../types/TypesSeleccion.type";
 import { TTarjaResultanteReproceso } from "../../types/TypesReproceso.types";
 import { TRendimientoActual } from "../../types/TypesProduccion.types";
 import { add } from "lodash";
+import { all } from "axios";
 
 
 export const fetchControlesDeCalidad = createAsyncThunk('control-calidad/fetch_controles', 
@@ -251,6 +252,27 @@ export const fetchRendimientoLotes = createAsyncThunk('control-calidad/fetch_ren
   }
 )
 
+export const fetchAllCC = createAsyncThunk('control-calidad/get_all_info_proyecccion', 
+  async (payload: any, ThunkAPI) => {
+    const { params, token, verificar_token } = payload
+    const { search } = params
+  try {
+      const token_verificado = await verificar_token(token)
+      if (!token_verificado) throw new Error('Token no verificado')
+
+      const response = await fetchWithToken(`api/control-calidad/recepcionmp/get_all_info_proyecccion${search}`, token_verificado)
+      if (response.ok){
+        const data = await response.json()
+        return data
+      } else if (response.status === 400) {
+        return ThunkAPI.rejectWithValue('No se hizo bien la peticion')
+      }
+    } catch (error) {
+      return ThunkAPI.rejectWithValue('No se hizo bien la peticion')
+    }
+  }
+)
+
 export const fetchRendimientosLotesPorIds = createAsyncThunk(
   'control-calidad/fetch_rendimiento_lotes_por_ids',
   async (payload: FetchOptions, ThunkAPI) => {
@@ -408,7 +430,7 @@ const initialState = {
   cc_calibracion_tarjas_reprocesos: [] as TControlCalidadTarja[],
   cc_calibracion_tarja_reproceso_individual: null as TControlCalidadTarja | null,
   todos_los_rendimientos: [] as TRendimiento[],
-
+  allcc: [],
 
   loading: false,
   error: null as string | null | undefined
@@ -492,6 +514,9 @@ export const ControlCalidad = createSlice({
           information.id = action.meta.arg.id
           state.todos_los_rendimientos.push(action.payload)
         }
+      })
+      .addCase(fetchAllCC.fulfilled, (state, action) => {
+        state.allcc = action.payload
       })
       .addCase(fetchRendimientoLotesTarjas.fulfilled, (state, action) => {
         state.rendimiento_tarjas_actual = action.payload

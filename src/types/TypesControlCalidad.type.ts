@@ -23,7 +23,9 @@ export type TControlCalidad = {
   variedad: string
   registrado_por_label: string
   fotos_cc: [],
-  email_registrador: string
+  email_registrador: string,
+  email_productor? : string,
+  comercializador? : string,
 }
 
 export type TRendimientoMuestra = {

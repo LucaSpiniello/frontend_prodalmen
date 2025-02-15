@@ -24,6 +24,7 @@ export type UserMe = {
     rut: string,
     image: File
     is_staff: boolean
+    comercializador: string
   }
   
 export type UserGroups = {

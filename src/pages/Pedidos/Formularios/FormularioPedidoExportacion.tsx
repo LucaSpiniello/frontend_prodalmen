@@ -29,9 +29,10 @@ import { IoMdArrowRoundBack } from 'react-icons/io'
 interface IFormComercializadorProps {
   setOpen?: Dispatch<SetStateAction<boolean>>
   tipo_pedido?: string
+  comercializador?: string
 }
 
-const FormularioPedidoExportacion: FC<IFormComercializadorProps> = ({ setOpen, tipo_pedido }) => {
+const FormularioPedidoExportacion: FC<IFormComercializadorProps> = ({ setOpen, tipo_pedido, comercializador }) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
   const token = useAppSelector((state: RootState) => state.auth.authTokens)
   const perfil = useAppSelector((state: RootState) => state.auth.dataUser)
@@ -75,6 +76,7 @@ const FormularioPedidoExportacion: FC<IFormComercializadorProps> = ({ setOpen, t
       numero_oc: '',
       tipo_despacho: '0', // Valor por defecto
       valor_dolar: 0.0,
+      comercializador: comercializador
     },
     onSubmit: async (values: any) => {
       const token_verificado = await verificarToken(token!) 
@@ -89,7 +91,7 @@ const FormularioPedidoExportacion: FC<IFormComercializadorProps> = ({ setOpen, t
 
       if (res.ok){
         toast.success('Se ha creado correctamente el pedido')
-        dispatch(fetchPedidos({ params: { search: `?tipo_pedido=${tipo_pedido}` }, token, verificar_token: verificarToken }))
+        dispatch(fetchPedidos({ params: { search: `?tipo_pedido=${tipo_pedido}&comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
         setOpen!(false)
       } else {
         toast.error('Se produjo un error, vuelve a intentarlo')
@@ -103,7 +105,7 @@ const FormularioPedidoExportacion: FC<IFormComercializadorProps> = ({ setOpen, t
   .map(cliente => ({ value: String(cliente.rut_dni!), label: cliente.nombre_fantasia! }))
   ?? []
 
-  const optionSucursales: TSelectOptions = sucursales.
+  const optionSucursales: TSelectOptions = sucursales?.
   filter(sucursal => sucursal.id !== Number(formik.values.sucursal_destino)).
   map(sucursal => ({ value: String(sucursal.id), label: sucursal.nombre }))
   ?? []

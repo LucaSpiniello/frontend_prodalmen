@@ -815,7 +815,13 @@ export const appPages = {
 				text: 'Resultados',
 				to: '/comercializadores/resultados',
 				icon: 'DuoUnion',
-			}
+			},
+			stocks: {
+				id: 'stocks',
+				text: 'Stocks',
+				to: '/comercializadores/stocks',
+				icon: 'HeroRectangleGroup',
+			},
 		}
 	},	
 

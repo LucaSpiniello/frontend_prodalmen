@@ -109,6 +109,27 @@ export const fetchBinsPepaCalibradaPerProgram = createAsyncThunk('seleccion/fetc
     }
   })
 
+export const fetchSeleccionesByComercializador = createAsyncThunk('seleccion/fetch_bins_calibrados_per_comercializador', 
+  async (payload: any, thunkAPI) => {
+    const { params, token, verificar_token } = payload
+    const {search} = params
+    try {
+      const token_verificado = await verificar_token(token)
+    
+      if (!token_verificado) throw new Error('Token no verificado')
+      const response = await fetchWithToken(`api/seleccion/get_all_info_by_comercializador/${search}`, token_verificado)
+      console.log('response', response)
+      if(response.ok){
+        const data = await response.json()
+        return data
+      } else if (response.status === 400){
+        return thunkAPI.rejectWithValue(`No se pudo hacer la petición`)
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue(`No se pudo hacer la petición`)
+    }
+  })
+
 export const fetchSubProductosOperarios = createAsyncThunk('seleccion/fetch_subproductos', 
   async (payload: FetchOptions, thunkAPI) => {
   const { id, token, verificar_token } = payload
@@ -483,6 +504,7 @@ const initialState = {
   nuevos_bin_seleccion: [] as TBinBodega[],
   loading: false,
   error: null as string | null | undefined,
+  bins_pepas_calibradas_per_comercializador: null as any,
 
 
 
@@ -571,6 +593,9 @@ export const SeleccionSlice = createSlice({
       })
       .addCase(fetchBinsPepaCalibradaPerProgram.fulfilled, (state, action) => {
         state.bins_pepas_calibradas_per_program = action.payload
+      })
+      .addCase(fetchSeleccionesByComercializador.fulfilled, (state, action) => {
+        state.bins_pepas_calibradas_per_comercializador = action.payload
       })
       .addCase(fetchSubProductosOperarios.fulfilled, (state, action) => {
         state.sub_productos_operarios = action.payload

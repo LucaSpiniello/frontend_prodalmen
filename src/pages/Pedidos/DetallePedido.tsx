@@ -18,6 +18,7 @@ import { GoQuestion } from "react-icons/go"
 import ComponerFrutaReal from "./ComponerFrutaReal"
 import EditarGuiaSalida from "./Formularios/EditarGuiaSalida"
 import DetallePedidoExportacion from "./Pedido Exportacion/DetallePedidoExportacion"
+import { RootState } from '../../redux/store';
 
 function DetallePedido() {
     const { id } = useParams() 
@@ -29,8 +30,15 @@ function DetallePedido() {
     const [tabs, setTabs] = useState<string>("1")
     const [modalConfirmarArmado, setModalConfirmarArmado] = useState<boolean>(false)
     const [modalConfirmarComposicion, setModalConfirmarComposicion] = useState<boolean>(false)
-    // const userGroup = useAppSelector((state) => state.auth.grupos)
-    // const hasGroup = (groups: any) => userGroup?.groups && groups.some((group: any) => group in userGroup.groups)
+    const userGroup = useAppSelector((state: RootState) => state.auth.grupos)
+    const hasGroup = (groups: any) => userGroup?.groups && groups.some((group: any) => group in userGroup.groups);
+    const [isProdalmen, setIsProdalmen] = useState<boolean>(true)
+    
+    useEffect(() => {
+        if (!hasGroup(['dnandres'])) {
+            setIsProdalmen(false)
+        }
+    }, [userGroup])
 
     useEffect(() => {
         if (token) {
@@ -71,7 +79,7 @@ function DetallePedido() {
                     )}
                 </SubheaderLeft>
                 <SubheaderRight>
-                    { pedido && (
+                    { (pedido) &&  (
                         <>
                             { (pedido.estado_pedido === '1' || pedido.estado_pedido === '0') && tabs === '2' ? (
                                 <>
@@ -101,11 +109,15 @@ function DetallePedido() {
                                             </div>
                                         </ModalBody>
                                     </Modal>
+                                    {(isProdalmen) && (
                                     <Button
                                         variant="solid"
                                         color="red"
                                         onClick={() => {setModalConfirmarArmado(true)}}
                                     >Terminar Armado Pedido</Button>
+                                    )
+                                }
+
                                 </>
                             ) : pedido.estado_pedido === '2' && tabs === '3' ? (
                                 <>

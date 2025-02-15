@@ -6,6 +6,7 @@ import { TEtiquetado, TPalletProductoTerminado } from '../../types/TypesEmbalaje
 import toast from 'react-hot-toast';
 import { fetchGuiaDeSalida } from './guiaSalidaSlice';
 import { TAuth, TVerificar } from '../../types/TypesRegistros.types';
+import { all } from 'axios';
 
 export const fetchPedidos = createAsyncThunk(
   'pedidos/fetch_pedidos',
@@ -19,6 +20,32 @@ export const fetchPedidos = createAsyncThunk(
 
       if (!token_validado) throw new Error('El token no es valido')
         const res = await fetchWithToken(`api/pedidos/unificados/${search}`, token_validado)
+
+      if (res.ok){
+        const data = await res.json()
+        return data
+      } else if (res.status === 400) {
+        const erroData = await res.json()
+        return thunkAPI.rejectWithValue('No se pudo');
+      }
+
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({ error: error.message }); 
+    }
+  }
+)
+
+export const fetchAllPedidos = createAsyncThunk(
+  'pedidos/fetch_all_pedidos',
+  async (payload: FetchOptions, thunkAPI) => {
+    const { params, token, verificar_token } = payload;
+    //@ts-ignore
+    const {search} = params
+    try {
+      const token_validado = await verificar_token(token)
+
+      if (!token_validado) throw new Error('El token no es valido')
+        const res = await fetchWithToken(`api/pedidos/all_pedidos/${search}`, token_validado)
 
       if (res.ok){
         const data = await res.json()
@@ -470,7 +497,7 @@ const initialState = {
     pedidos: [] as TPedidos[],
     pedido_interno: null as TPedidoInterno | null,
     pedido_exportacion: null as TPedidoExportacion | null,
-
+    allpedidos: [],
     pdf_guia_salida: null as TPDFGuiaSalida | null,
     pdf_pedido_interno: null as TPDFPedidoInterno | null,
     pdf_pedido_exportacion: null as TPDFPedidoExportacion | null,
@@ -527,6 +554,9 @@ export const pedidosSlices = createSlice({
       builder
       .addCase(fetchPedidos.fulfilled, (state, action) => {
         state.pedidos = action.payload;
+      })
+      .addCase(fetchAllPedidos.fulfilled, (state, action) => {
+        state.allpedidos = action.payload;
       })
 
       .addCase(fetchPedidoInterno.fulfilled, (state, action) => {

@@ -27,6 +27,7 @@ import Validation from "../../components/form/Validation"
 import { FaFilePdf } from 'react-icons/fa6';
 import { Link, useNavigate } from 'react-router-dom';
 
+
 const columnHelper = createColumnHelper<TFrutaReal>();
 const columnHelperBins = createColumnHelper<TBinBodega>();
 
@@ -74,7 +75,7 @@ function ComponerFrutaReal() {
 
     useEffect(() => {
         if (modalRegistrarBin) {
-            dispatch(listaBinBodegaFiltroThunk({token, verificar_token: verificarToken, filtro: ''}))
+            dispatch(listaBinBodegaFiltroThunk({token, verificar_token: verificarToken, filtro: 'g4'}))
         }
     }, [modalRegistrarBin])
 

@@ -1,5 +1,5 @@
 import { useFormik } from 'formik'
-import React, { useEffect } from 'react'
+import React, { useEffect, FC }from 'react'
 import Container from '../../../components/layouts/Container/Container'
 import Card, { CardBody } from '../../../components/ui/Card'
 import Label from '../../../components/form/Label'
@@ -19,8 +19,12 @@ import { fetchWithTokenPost } from '../../../utils/peticiones.utils'
 import { TGuiaSalida } from '../../../types/TypesGuiaSalida.type'
 import toast from 'react-hot-toast'
 import Input from '../../../components/form/Input'
+interface IFormGuiaSalida {
+  comercializador?: string
+}
 
-const FormularioGuiaSalida = () => {
+
+const FormularioGuiaSalida : FC<IFormGuiaSalida>= ({comercializador}) => {
   const { id } = useParams()
   const dispatch = useAppDispatch()
   const token = useAppSelector((state: RootState) => state.auth.authTokens)
@@ -40,6 +44,7 @@ const FormularioGuiaSalida = () => {
       id_cliente: 0,
       fecha_entrega: '',
       observaciones: '',
+      comercializador: comercializador
     },
     onSubmit: async (values) => {
       const token_verificado = await verificarToken(token)

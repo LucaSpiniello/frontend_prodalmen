@@ -24,9 +24,10 @@ import { useDispatch } from 'react-redux';
 interface IFormComercializadorProps {
   setOpen?: Dispatch<SetStateAction<boolean>>
   tipo_cliente?: string
+  comercializador?: string
 }
 
-const FormularioPedidoMercadoInterno: FC<IFormComercializadorProps> = ({ setOpen, tipo_cliente }) => {
+const FormularioPedidoMercadoInterno: FC<IFormComercializadorProps> = ({ setOpen, tipo_cliente, comercializador }) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
   const token = useAppSelector((state: RootState) => state.auth.authTokens)
   const perfil = useAppSelector((state: RootState) => state.auth.dataUser)
@@ -37,7 +38,7 @@ const FormularioPedidoMercadoInterno: FC<IFormComercializadorProps> = ({ setOpen
   const dolar = useAppSelector((state: RootState) => state.pedidos.dolar)
   const despacho = useAppSelector((state: RootState) => state.pedidos.despacho)
   const [optionsSucursales, setOptionsSucursales] = useState<TSelectOptions>([])
-
+  
   useEffect(() => {
     dispatch(fetchClientes({ params: { search: `?tipo_cliente=clientemercadointerno` }, token, verificar_token: verificarToken }))
   }, [])
@@ -57,6 +58,7 @@ const FormularioPedidoMercadoInterno: FC<IFormComercializadorProps> = ({ setOpen
       tipo_venta: '', // Valor por defecto
       valor_dolar_fact: 0.0,
       numero_factura: '',
+      comercializador: comercializador
     },
     onSubmit: async (values) => {
       // Lógica para enviar el formulario
@@ -71,7 +73,7 @@ const FormularioPedidoMercadoInterno: FC<IFormComercializadorProps> = ({ setOpen
       if (res.ok){
         toast.success('Se ha creado correctamente el pedido')
         //@ts-ignore
-        dispatch(fetchPedidos({ params: { search: `?tipo_pedido=${tipo_cliente}` }, token, verificar_token: verificarToken }))
+        dispatch(fetchPedidos({ params: { search: `?tipo_pedido=${tipo_cliente}&comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
 
         setOpen!(false)
       } else {

@@ -78,6 +78,7 @@ const ListaProgramas = lazy(() => import('../pages/Produccion/Programa Produccio
 const DetallePrograma = lazy(() => import ('../pages/Produccion/Programa Produccion/Detalles/DashboardProduccion.tsx'))
 const DetalleControlRendimiento = lazy(() => import ('../pages/Produccion/Programa Produccion/Detalles/Detalle Control Rendimiento/DetalleControlRendimiento.tsx'))
 const Resultados = lazy(() => import('../pages/Produccion/Resultados/resultados.tsx'));
+const Stocks = lazy(() => import('../pages/Produccion/Stocks/stocks.tsx'));
 const FormularioRegistroPrograma = lazy(() => import ('../pages/Produccion/Programa Produccion/Formularios/Formulario Registro Programa/TablaRegistroPrograma.tsx'))
 const PDFOperarioXKilo = lazy(() => import ('../pages/Produccion/Programa Produccion/PDF/PDFOperarioXKilo.tsx'))
 const PDFResumidoOperario = lazy(() => import ('../pages/Produccion/Programa Produccion/PDF/PDFResumidoOperario.tsx'))
@@ -399,6 +400,7 @@ const contentRoutes: RouteProps[] = [
 	// add routs for comercializadores
 	{path: appPages.comercializadores.subPages.proyeccion.to, element: <ProyeccionDeFRuta />},
 	{path: appPages.comercializadores.subPages.resultados.to, element: <Resultados />},
+	{path : appPages.comercializadores.subPages.stocks.to, element: <Stocks />},
 	
 
 	// {path: '/pruebas', element: <Prueba />},

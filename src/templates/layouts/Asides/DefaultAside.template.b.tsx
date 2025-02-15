@@ -157,7 +157,7 @@ const DefaultAsideTemplate = () => {
 						</NavCollapse>
 					)}
 
-					{hasGroup(['bodega', 'dnandres', 'jefe-planta', 'bodega-jefatura', 'produccion-jefatura'])
+					{hasGroup(['bodega', 'dnandres', 'jefe-planta', 'bodega-jefatura', 'produccion-jefatura', 'comercializador', 'recepcion-mp'])
 						? (
 								<NavCollapse
 									text={appPages.ventas.text}
@@ -209,6 +209,7 @@ const DefaultAsideTemplate = () => {
 							>
 							<NavItem {...appPages.comercializadores.subPages.proyeccion} />
 							<NavItem {...appPages.comercializadores.subPages.resultados} />
+							<NavItem {...appPages.comercializadores.subPages.stocks} />
 							</NavCollapse> )
 							: null
 					}

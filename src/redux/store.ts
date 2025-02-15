@@ -42,7 +42,11 @@ const store = configureStore({
     guia_salida: guiaSalidaSlice,
     planta_harina: plantaHarinaSlices,
     proceso_planta_harina: procesoPlantaHarinaSlice
-  }
+  },
+  middleware: (getDefaultMiddleware : any) =>
+    getDefaultMiddleware({
+      serializableCheck: false
+    }),
 });
 
 export default store;

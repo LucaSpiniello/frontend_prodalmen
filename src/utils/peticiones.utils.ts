@@ -1,6 +1,6 @@
 const base_url = process.env.VITE_BASE_URL;
 
-export async function fetchWithTokenPost(url: string, data: any, token?: string): Promise<Response> {
+export async function fetchWithTokenPost(url: string, data: any, token?: any): Promise<Response> {
   const response = await fetch(`${base_url}/${url}`, {
     method: 'POST',
     headers: {
@@ -8,6 +8,17 @@ export async function fetchWithTokenPost(url: string, data: any, token?: string)
       'Authorization': `Bearer ${token}`
     },
     body: JSON.stringify(data)
+  });
+  return response;
+}
+
+export async function fetchWithTokenPostFile(url: string, data: any, token?: any): Promise<Response> {
+  const response = await fetch(`${base_url}/${url}`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+    body: data
   });
   return response;
 }

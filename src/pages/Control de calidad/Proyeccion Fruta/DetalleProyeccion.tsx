@@ -47,7 +47,7 @@ const DetalleProyeccion = () => {
   const [filtroVariedadLabel, setFiltroVariedadLabel] = useState<string>('')
   const [selectedProductor, setSelectedProductor] = useState<string>('');
   const perfil = useAppSelector((state: RootState) => state.auth.dataUser)
-
+  const comercializador = useAppSelector((state: RootState) => state.auth.dataUser?.comercializador)
   const userGroup = useAppSelector((state: RootState) => state.auth.grupos)
 
   const hasGroup = (groups: any) => userGroup?.groups && groups.some((group: any) => group in userGroup.groups);
@@ -59,7 +59,6 @@ const DetalleProyeccion = () => {
   const [rendimientosCombinados, setRendimientosCombinados] = useState<TRendimiento | null>(null);
   const [selectedNumeroGuia, setSelectedNumeroGuia] = useState<string>(''); 
 
-  const [comercializador, setComercializador] = useState<string>('')
   useEffect(() => {
     setFiltroVariedad('NN')
   }, [])
@@ -71,13 +70,11 @@ const DetalleProyeccion = () => {
   useEffect(() => {
 
     if (control_calidad && filtroVariedad && hasGroup(['dnandres'])) {
-      setComercializador("Prodalmen")
       const ids = filterByComercializador("Prodalmen").map((lote: any) => lote.id)
       ids.forEach((id : any) => {
         dispatch(fetchRendimientoLotes({ id,  params: { variedad: filtroVariedad }, token, verificar_token: verificarToken }));
       });
     } else if (control_calidad && filtroVariedad && hasGroup(['comercializador'])) {
-      setComercializador("Pacific Nut")
       const ids = filterByComercializador("Pacific Nut").map((lote: any) => lote.id)
       ids.forEach((id : any) => {
         dispatch(fetchRendimientoLotes({ id,  params: { variedad: filtroVariedad }, token, verificar_token: verificarToken }));
