@@ -435,6 +435,9 @@ const PDFGuiaSalida = () => {
                   <View style={styles.header_info_box_superior}>
                     <Text style={{ fontSize: 10, position: 'relative', top: -3 }}>Calidad</Text>
                   </View>
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10, position: 'relative', top: -3 }}>Kilos</Text>
+                  </View>
                 </View>
 
                 {pdf_guia_salida?.fruta_en_guia.map((entrada: TFrutaEnGuiaMany) => (
@@ -463,6 +466,9 @@ const PDFGuiaSalida = () => {
                     <View style={styles.header_info_box_superior}>
                       <Text style={{ fontSize: 9 }}>{entrada.calidad}</Text>
                     </View>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.kilos}</Text>
+                      </View>
                   </View>
                 ))}
               </>

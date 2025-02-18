@@ -181,7 +181,7 @@ function ModalPPTReal({ctPPT, modalRegistrarPPT, setModalRegistrarPPT}: {ctPPT: 
                 setIsOpen={setModalRegistrarPPT}
                 size="xl"
             >
-                <ModalHeader>Registrar PPT al Pedido N° </ModalHeader>
+                <ModalHeader>Registrar PPT al Pedido N° {id}</ModalHeader>
                 <ModalBody>
                     <div className="grid grid-cols-12">
                         <div className="col-span-12 justify-end flex gap-4">

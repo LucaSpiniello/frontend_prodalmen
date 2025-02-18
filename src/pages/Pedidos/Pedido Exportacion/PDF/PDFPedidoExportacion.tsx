@@ -437,6 +437,9 @@ const PDFPedidoExportacion = () => {
                   <View style={styles.header_info_box_superior}>
                     <Text style={{ fontSize: 10, position: 'relative', top: -3 }}>Calidad</Text>
                   </View>
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10, position: 'relative', top: -3 }}>Kilos</Text>
+                  </View>
                 </View>
 
                 {pdf_exportacion?.fruta_en_pedido.map((entrada: TFrutaEnGuiaMany) => (
@@ -464,6 +467,9 @@ const PDFPedidoExportacion = () => {
                     </View>
                     <View style={styles.header_info_box_superior}>
                       <Text style={{ fontSize: 9 }}>{entrada.calidad}</Text>
+                    </View>
+                    <View style={styles.header_info_box_superior}>
+                      <Text style={{ fontSize: 9 }}>{entrada.kilos}</Text>
                     </View>
                   </View>
                 ))}

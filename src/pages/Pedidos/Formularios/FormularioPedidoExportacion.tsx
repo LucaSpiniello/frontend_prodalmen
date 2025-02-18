@@ -542,7 +542,7 @@ const FormularioPedidoExportacion: FC<IFormComercializadorProps> = ({ setOpen, t
               size='lg'
               onClick={() => formik.handleSubmit()}
             >
-              Registrar Pedido Mercado Interno
+              Registrar Pedido Exportacion
             </Button>
           </div>
         </CardBody>

@@ -54,16 +54,61 @@ function DetallePedido() {
             })
             let totalKilosEnPedido = 0
             pedido.frutas.forEach((fruta: any) => {
-                totalKilosEnPedido += fruta.cantidad
+                if (fruta.codigo_fruta.split("-")[0] == "G4" ){
+                    totalKilosEnPedido += fruta.kilos
+                } else if (fruta.codigo_fruta.split("-")[0] == "PPT" ){
+                    totalKilosEnPedido += fruta.cantidad
+                }
             })
 
-            if ( totalKilosSolicitados < totalKilosEnPedido) {
+            if ( (totalKilosSolicitados > totalKilosEnPedido) && estado == "3") {
                 alert('No se puede terminar el armado del pedido, la cantidad de fruta en el pedido es menor a la cantidad solicitada')
                 return
             }
             dispatch(patchPedidoThunk({id_pedido: id, data: {estado_pedido: estado}, token, verificar_token: verificarToken}))
         }
+
+        else if (pedido?.exportacion) {
+            let totalKilosSolicitados = 0
+            pedido?.exportacion.fruta_ficticia.forEach((fruta: any) => {
+                totalKilosSolicitados += fruta.kilos_solicitados
+            })
+            let totalKilosEnPedido = 0
+            pedido.frutas.forEach((fruta: any) => {
+                // check if 
+                if (fruta.codigo_fruta.split("-")[0] == "G4" ){
+                    totalKilosEnPedido += fruta.kilos
+                } else if (fruta.codigo_fruta.split("-")[0] == "PPT" ){
+                    totalKilosEnPedido += fruta.cantidad
+                }
+            })
+
+            if ( (totalKilosSolicitados > totalKilosEnPedido) && estado == "3") {
+                alert('No se puede terminar el armado del pedido, la cantidad de fruta en el pedido es menor a la cantidad solicitada')
+                return
+            }
+            dispatch(patchPedidoThunk({id_pedido: id, data: {estado_pedido: estado}, token, verificar_token: verificarToken}))
+    } else if (pedido?.guia_salida) {
+        let totalKilosSolicitados = 0
+        pedido?.guia_salida.fruta_ficticia.forEach((fruta: any) => {
+            totalKilosSolicitados += fruta.kilos_solicitados
+        })
+        let totalKilosEnPedido = 0
+        pedido.frutas.forEach((fruta: any) => {
+            if (fruta.codigo_fruta.split("-")[0] == "G4" ){
+                totalKilosEnPedido += fruta.kilos
+            } else if (fruta.codigo_fruta.split("-")[0] == "PPT" ){
+                totalKilosEnPedido += fruta.cantidad
+            }
+        })
+
+        if ( (totalKilosSolicitados > totalKilosEnPedido) && estado == "3") {
+            alert('No se puede terminar el armado del pedido, la cantidad de fruta en el pedido es menor a la cantidad solicitada')
+            return
+        }
+        dispatch(patchPedidoThunk({id_pedido: id, data: {estado_pedido: estado}, token, verificar_token: verificarToken}))
     }
+}
 
     return (
         <PageWrapper>
