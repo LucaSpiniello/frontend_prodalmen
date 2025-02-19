@@ -309,11 +309,8 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 									{
 										estado_aprobacion > 0 && estado_aprobacion < 2 
 											&& (
-													<GeneratePdfAndSendMail id={id} />
+													<GeneratePdfAndSendMail key = {id} id={info.row.original.id} mailEnviado={info.row.original.mailEnviado} />
 												)
-											// : (
-											// 	
-											// )
 											
 										}
 									</>

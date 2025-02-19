@@ -26,6 +26,7 @@ export type TControlCalidad = {
   email_registrador: string,
   email_productor? : string,
   comercializador? : string,
+  mailEnviado? : boolean,
 }
 
 export type TRendimientoMuestra = {

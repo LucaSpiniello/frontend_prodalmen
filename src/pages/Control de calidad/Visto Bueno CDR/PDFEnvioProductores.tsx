@@ -11,10 +11,11 @@ import { useAuth } from "../../../context/authContext"
 import { fetchControlCalidad, fetchRendimientoLotes } from "../../../redux/slices/controlcalidadSlice"
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
-import { size } from "lodash"
+import { set, size } from "lodash"
 import { fetchWithTokenPostFile } from "../../../utils/peticiones.utils"
 import { IoMailOutline } from "react-icons/io5";
 import Button from '../../../components/ui/Button';
+import { fetchWithToken, fetchWithTokenPostAction } from "../../../utils/peticiones.utils"
 
 const styles = StyleSheet.create({
   page: {
@@ -1040,42 +1041,48 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
       )
     }
 
-const GeneratePdfAndSendMail: FC<{ id : any }> = ({ id}) => {
+const GeneratePdfAndSendMail: FC<{ id : any, mailEnviado : any }> = ({ id, mailEnviado}) => {
   const { verificarToken } = useAuth()
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
   const token = useAppSelector((state: RootState) => state.auth.authTokens)
   const usuario = useAppSelector((state: RootState) => state.auth.dataUser)
   const guia = useAppSelector((state: RootState) => state.recepcionmp.guia_recepcion)
-    const control_calidad = useAppSelector((state: RootState) => state.control_calidad.control_calidad)
-    const rendimientos = useAppSelector((state: RootState) => state.control_calidad.rendimientos_lotes)
-    const rendimiento_cc = rendimientos?.cc_muestra[0] ? rendimientos.cc_muestra[0] : [];
-  
-    useEffect(() => {
-      if (!control_calidad) {
-        //@ts-ignore
-        dispatch(fetchControlCalidad({ id, token, verificar_token: verificarToken }));
-      }
-    }, [id, token, verificarToken, control_calidad, dispatch]);
+  const [isSending, setIsSending] = useState(false);
+    // useEffect(() => {
+    //     //@ts-ignore
+    //     dispatch(fetchControlCalidad({ id, token, verificar_token: verificarToken }));
+    // }, []);
 
-    useEffect(() => {
-      if (control_calidad && !guia) {
-        //@ts-ignore
-        dispatch(fetchGuiaRecepcion({ id: control_calidad?.guia_recepcion, token, verificar_token: verificarToken }));
-        dispatch(fetchRendimientoLotes({ id: control_calidad.recepcionmp, params: { variedad: 'todas' }, token, verificar_token: verificarToken }));
-      }
-    }, [control_calidad, guia, token, verificarToken, dispatch]);
+    // useEffect(() => {
+    //   if (control_calidad && !guia) {
+    //     //@ts-ignore
+    //     dispatch(fetchGuiaRecepcion({ id: control_calidad?.guia_recepcion, token, verificar_token: verificarToken }));
+    //     dispatch(fetchRendimientoLotes({ id: control_calidad.recepcionmp, params: { variedad: 'todas' }, token, verificar_token: verificarToken }));
+    //   }
+    // }, [control_calidad, guia, token, verificarToken, dispatch]);
+
 
 
   const handleGenerate = async () => {
+    setIsSending(true);
+    const token_verificado : any = await verificarToken(token)
+    const response = await fetchWithToken(`api/control-calidad/recepcionmp/${id}`, token_verificado)
+    const control_calidad = await response.json()
+     const response2 = await fetchWithTokenPostAction(`api/control-calidad/recepcionmp/rendimiento_lotes/${id}/?variedad=todas`, token_verificado)
+    const rendimientos = await response2.json()
+    const rendimiento_cc = rendimientos?.cc_muestra[0] ? rendimientos.cc_muestra[0] : [];
+    const response3 = await fetchWithToken(`api/recepcionmp/${control_calidad?.guia_recepcion}/`, token_verificado)
+    const guia = await response3.json()
     const doc = <PdfCC  usuario={usuario} guia={guia} control_calidad={control_calidad} rendimientos={rendimientos} rendimiento_cc={rendimiento_cc}/>;
     const blob = await pdf(doc).toBlob();
-    const token_verificado = await verificarToken(token)
     let email_destinatario : any = ""
     let subject = "PDF Control de Calidad"
     if (control_calidad?.comercializador == "Prodalmen"){
-      email_destinatario = control_calidad?.email_productor
-    } else{
-      email_destinatario = "tmilnes@pacificnut.com"
+      // email_destinatario = control_calidad?.email_productor
+      email_destinatario = "lucafigarispiniello@gmail.com"
+    } else if (control_calidad?.comercializador == "Pacific Nut"){
+      // email_destinatario = "tmilnes@pacificnut.com"
+      email_destinatario = "lucafigarispiniello@gmail.com"
       subject = "PDF Control de Calidad - Pacific Nut"
     }
 
@@ -1083,28 +1090,47 @@ const GeneratePdfAndSendMail: FC<{ id : any }> = ({ id}) => {
     formData.append('pdf', blob, 'documento.pdf');  // Asegúrate de que el nombre sea 'pdf'
     formData.append('email_to', email_destinatario);  // Asegúrate de que el nombre sea 'email_to'
     formData.append('subject', subject);  // Asegúrate de que el nombre sea 'subject'
+    formData.append('id', id)
 
     const res = await fetchWithTokenPostFile('api/control-calidad/recepcionmp/send_mailer/', formData, token_verificado)
-
+    setIsSending(false);
     if (res.ok) {
       alert('Correo enviado correctamente')
+      window.location.reload()
+      
     } else {
       alert('Error al enviar el correo')
     }
+    
 
   };
 
   return (
-    <Button
-      title="Mandar Email a Proveedor"
-      variant="solid"
-      color="blue"
-      colorIntensity="700"
-      className="hover:scale-105"
-      onClick={handleGenerate} // Asignamos la función al evento onClick
-    >
-      <IoMailOutline style={{ fontSize: 25 }} /> {/* Ícono de correo */}
-    </Button>
+    <>
+      {mailEnviado ? (
+        <Button
+          title={isSending ? "Enviando correo..." : "Mandar Email a Proveedor"}
+          variant="solid"
+          color="red"
+          colorIntensity="700"
+          className="hover:scale-105"
+          onClick={handleGenerate}
+        >
+          {isSending ? 'Enviando...' : <IoMailOutline style={{ fontSize: 25 }} />} {/* Texto del botón */}
+        </Button>
+      ) : (
+        <Button
+          title={isSending ? "Enviando correo..." : "Mandar Email a Proveedor"}
+          variant="solid"
+          color="blue"
+          colorIntensity="700"
+          className="hover:scale-105"
+          onClick={handleGenerate}
+        >
+          {isSending ? 'Enviando...' : <IoMailOutline style={{ fontSize: 25 }} />} {/* Texto del botón */}
+        </Button>
+      )}
+    </>
   );
 };
 

@@ -157,7 +157,7 @@ const CCRendimiento = () => {
   const control_calidad = useAppSelector((state: RootState) => state.control_calidad.control_calidad)
   const rendimientos = useAppSelector((state: RootState) => state.control_calidad.rendimientos_lotes)
   const rendimiento_cc = rendimientos?.cc_muestra[0] ? rendimientos.cc_muestra[0] : [];
-
+  const [isReady, setIsReady] = useState(false);
 
 
   let valores: any
@@ -174,12 +174,17 @@ const CCRendimiento = () => {
   }, [])
 
   useEffect(() => {
-    if (control_calidad) {
-      //@ts-ignore
+    if (control_calidad && control_calidad?.recepcionmp.toString() === id) {
+      // Realiza las solicitudes adicionales solo si el control_calidad es el correcto
       dispatch(fetchGuiaRecepcion({ id: control_calidad?.guia_recepcion, token, verificar_token: verificarToken }))
-      dispatch(fetchRendimientoLotes({ id: control_calidad.recepcionmp, params: { variedad: 'todas' }, token, verificar_token: verificarToken }))
+        .then(() => dispatch(fetchRendimientoLotes({ id: control_calidad.recepcionmp, params: { variedad: 'todas' }, token, verificar_token: verificarToken })))
+        .then(() => {
+          // Marca el estado como listo cuando los dispatch se completen
+          setIsReady(true);
+        });
     }
-  }, [control_calidad])
+  }, [control_calidad, id, token, verificarToken, dispatch]);
+
 
   const labels_pre = Object.keys(rendimiento_cc || {});
   valores = Object.values(rendimiento_cc || {});
@@ -197,10 +202,6 @@ const CCRendimiento = () => {
     }
     return null
   }).filter(label => label !== null);
-
-
-
-
 
 
   useEffect(() => {
@@ -276,7 +277,7 @@ const CCRendimiento = () => {
     setImageSrc(myChart.getUrl());
 
     return () => { }
-  }, [formattedData]);
+  }, [formattedData, control_calidad, rendimientos]);
 
   const año = new Date()
   const guia_recepcion = guia?.id
@@ -286,6 +287,7 @@ const CCRendimiento = () => {
   return (
     <PDFViewer style={{ height: '100%' }}>
       <Document title={`CDR_${control_calidad?.numero_lote}_${format(control_calidad?.fecha_creacion!, { date: 'short' }, 'es')}_${guia?.nombre_productor}`}>
+        {isReady && (
         <Page style={styles.page} size='A4'>
           <View style={styles.header}>
             <View style={styles.header_superior}>
@@ -1066,7 +1068,8 @@ const CCRendimiento = () => {
 
 
           </View>
-        </Page>
+        </Page>)
+}
       </Document>
     </PDFViewer >
   )
