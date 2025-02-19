@@ -1078,11 +1078,9 @@ const GeneratePdfAndSendMail: FC<{ id : any, mailEnviado : any }> = ({ id, mailE
     let email_destinatario : any = ""
     let subject = "PDF Control de Calidad"
     if (control_calidad?.comercializador == "Prodalmen"){
-      // email_destinatario = control_calidad?.email_productor
-      email_destinatario = "lucafigarispiniello@gmail.com"
+      email_destinatario = control_calidad?.email_productor
     } else if (control_calidad?.comercializador == "Pacific Nut"){
-      // email_destinatario = "tmilnes@pacificnut.com"
-      email_destinatario = "lucafigarispiniello@gmail.com"
+      email_destinatario = "tmilnes@pacificnut.com"
       subject = "PDF Control de Calidad - Pacific Nut"
     }
 
