@@ -121,7 +121,9 @@ const FormularioEdicionBodega: FC<IFormEnvasesProps> = ({ setOpen, lote }) => {
         <SelectReact
           options={[{ value: "1", label: "Sector 1" },
           { value: "2", label: "Sector 2" },
-          { value: "3", label: "Sector 3" },]}
+          { value: "3", label: "Sector 3" },
+          { value: "4", label: "Sector 4" },
+        ]}
           id='ubicacion'
           placeholder='Selecciona una ubicación'
           name='ubicacion'
