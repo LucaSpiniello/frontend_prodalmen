@@ -49,8 +49,7 @@ const DetalleProyeccion = () => {
   const perfil = useAppSelector((state: RootState) => state.auth.dataUser)
   const comercializador = useAppSelector((state: RootState) => state.auth.dataUser?.comercializador)
   const userGroup = useAppSelector((state: RootState) => state.auth.grupos)
-
-  const hasGroup = (groups: any) => userGroup?.groups && groups.some((group: any) => group in userGroup.groups);
+  const isPacificNut = comercializador === 'Pacific Nut';
   const newInfo: InfoControlesCalidad = {};
   
   const [datosAgrupadosPorProductor, setDatosAgrupadosPorProductor] = useState<any>({});
@@ -69,12 +68,12 @@ const DetalleProyeccion = () => {
 
   useEffect(() => {
 
-    if (control_calidad && filtroVariedad && hasGroup(['dnandres'])) {
+    if (control_calidad && filtroVariedad && !isPacificNut ) {
       const ids = filterByComercializador("Prodalmen").map((lote: any) => lote.id)
       ids.forEach((id : any) => {
         dispatch(fetchRendimientoLotes({ id,  params: { variedad: filtroVariedad }, token, verificar_token: verificarToken }));
       });
-    } else if (control_calidad && filtroVariedad && hasGroup(['comercializador'])) {
+    } else if (control_calidad && filtroVariedad && isPacificNut) {
       const ids = filterByComercializador("Pacific Nut").map((lote: any) => lote.id)
       ids.forEach((id : any) => {
         dispatch(fetchRendimientoLotes({ id,  params: { variedad: filtroVariedad }, token, verificar_token: verificarToken }));

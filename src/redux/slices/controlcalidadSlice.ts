@@ -31,6 +31,28 @@ export const fetchControlesDeCalidad = createAsyncThunk('control-calidad/fetch_c
   }
 )
 
+export const fetchControlesDeCalidadPorComercializador = createAsyncThunk('control-calidad/fetch_controles', 
+  async (payload: any, ThunkAPI) => {
+    const { params, token, verificar_token } = payload
+    const {search} = params
+    try {
+       const token_verificado = await verificar_token(token)
+      
+       if (!token_verificado) throw new Error('Token no verificado')
+      
+      const response = await fetchWithToken(`api/control-calidad/recepcionmp/get_by_comercializador/${search}`, token_verificado)
+      if (response.ok){
+        const data = await response.json()
+        return data
+      } else if (response.status === 400) {
+        return ThunkAPI.rejectWithValue(`No se pudo hacer la petición`)
+      }
+    } catch (error) {
+      return ThunkAPI.rejectWithValue(`No se pudo hacer la petición`)
+    }
+  }
+)
+
 export const fetchControlesDeCalidadVistoBueno = createAsyncThunk('control-calidad/fetch_controles_visto_bueno', 
   async (payload: FetchOptions, ThunkAPI) => {
     const { token, verificar_token } = payload

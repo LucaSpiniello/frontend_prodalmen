@@ -158,8 +158,8 @@ const CCRendimiento = () => {
   const rendimientos = useAppSelector((state: RootState) => state.control_calidad.rendimientos_lotes)
   const rendimiento_cc = rendimientos?.cc_muestra[0] ? rendimientos.cc_muestra[0] : [];
   const [isReady, setIsReady] = useState(false);
-
-
+  const comercializador = useAppSelector((state: RootState) => state.auth.dataUser?.comercializador)
+  const isPacificNut = comercializador == "Pacific Nut"
   let valores: any
   let labels: any
   let formattedData: any
@@ -291,12 +291,21 @@ const CCRendimiento = () => {
         <Page style={styles.page} size='A4'>
           <View style={styles.header}>
             <View style={styles.header_superior}>
-              <View style={{ position: 'relative', top: -30 }}>
-                <Image source="/src/assets/prodalmen_foto.png" style={{ height: 100, width: 100 }} />
-                <Text style={{ fontSize: 5, width: 100 }}>Actividades de Apoyo a la agrícultura
-                  Dirección: Fundo Challay Alto Lote A-1, Paine
-                  Teléfonos: +56 2 228215583 - +56 2 2282 25584</Text>
-              </View>
+              { comercializador == "Pacific Nut" ?
+                <View style={{ position: 'relative', top: -30 }}>
+                <Image source="/src/assets/logoPacific.jpg" style={{ height: 100, width: 100 }} />
+                <Text style={{ fontSize: 5, width: 100 }}>Pacific Nut Company Chile S.A.
+                  Dirección: Cam. Padre Hurtado 19956, San Bernardo, Región Metropolitana
+                  Teléfonos: +56978460481 </Text>
+                </View>
+               :
+                <View style={{ position: 'relative', top: -30 }}>
+                  <Image source="/src/assets/prodalmen_foto.png" style={{ height: 100, width: 100 }} />
+                  <Text style={{ fontSize: 5, width: 100 }}>Actividades de Apoyo a la agrícultura
+                    Dirección: Fundo Challay Alto Lote A-1, Paine
+                    Teléfonos: +56 2 228215583 - +56 2 2282 25584</Text>
+                </View>  
+              }
 
               <View style={{ width: 190, border: '1px solid green', height: 40, padding: 5, borderRadius: 5, position: 'relative', top: 20 }}>
                 <View style={styles.header_date_info_box}>
@@ -756,7 +765,7 @@ const CCRendimiento = () => {
                 </View>
 
 
-                <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: '10px', marginTop: 20 }}>Desechos</Text>
+                {isPacificNut ? <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: '10px', marginTop: 20 }}>Defectos Internos</Text>  : <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: '10px', marginTop: 20 }}>Desechos</Text>}
                 <View style={{ width: '100%', height: '100%' }}>
 
                   <View style={styles.body_table}>
@@ -764,7 +773,7 @@ const CCRendimiento = () => {
                     <View style={styles.body_table_header}>
                       <View style={styles.body_table_rows}>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>Desechos</Text>
+                          {isPacificNut ? <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>Defectos</Text> : <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>Desechos</Text>}
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>%</Text>
@@ -855,7 +864,7 @@ const CCRendimiento = () => {
 
                       <View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Total Deshecho</Text>
+                          {isPacificNut ? <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Total Defectos</Text> : <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Total Deshecho</Text>}
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', color: 'white' }}>1</Text>
@@ -913,26 +922,46 @@ const CCRendimiento = () => {
                     </View>
                   </View>
 
+                  { isPacificNut ? 
+                            <div>
+                            <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
+                              <View style={{ width: 150 }}>
+                                <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Fuera de norma: </Text>
+                              </View>
+                              <View style={{ width: '50%' }}>
+                                <Text style={styles.header_date_info_text}>{ ((rendimientos?.cc_descuentos[0]?.cat2 ?? 0) + (rendimientos?.cc_descuentos[0]?.desechos ?? 0)).toFixed(1) } kgs</Text>
+                              </View>
 
-                  <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                    <View style={{ width: 150 }}>
-                      <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Pepa Exportable: </Text>
-                    </View>
-                    <View style={{ width: '50%' }}>
-                      <Text style={styles.header_date_info_text}>{rendimientos?.cc_kilos_des_merma[0].exportable?.toFixed(1)} kgs</Text>
-                    </View>
+                            </View>
+                            </div>   
+                    : 
+                          <div>   
+                          <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
+                          <View style={{ width: 150 }}>
+                            <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Pepa Exportable: </Text>
+                          </View>
+                          <View style={{ width: '50%' }}>
+                            <Text style={styles.header_date_info_text}>{rendimientos?.cc_kilos_des_merma[0].exportable?.toFixed(1)} kgs</Text>
+                          </View>
 
-                  </View>
+                        </View>
 
-                  <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                    <View style={{ width: 150 }}>
-                      <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Porcentaje Pepa Exportable: </Text>
-                    </View>
+                        <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
+                          <View style={{ width: 150 }}>
+                            <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Porcentaje Pepa Exportable: </Text>
+                          </View>
 
-                    <View style={{ width: '50%' }}>
-                      <Text style={styles.header_date_info_text}>{(rendimientos?.cc_kilos_des_merma[0].exportable! / rendimientos?.cc_calculo_final.kilos_netos! * 100).toFixed(2)} %</Text>
-                    </View>
-                  </View>
+                          <View style={{ width: '50%' }}>
+                            <Text style={styles.header_date_info_text}>{(rendimientos?.cc_kilos_des_merma[0].exportable! / rendimientos?.cc_calculo_final.kilos_netos! * 100).toFixed(2)} %</Text>
+                          </View>
+                        </View>
+                        </div> 
+
+
+
+
+                  }
+              
 
                 </View>
 
@@ -981,14 +1010,25 @@ const CCRendimiento = () => {
                         flexDirection: "row",
                         justifyContent: "space-between",
                       }}>
+                        { isPacificNut ?
                         <View style={{ width: '300px', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                          <Text style={{ fontSize: 8 }}>Almendras Exportables</Text>
+                          <Text style={{ fontSize: 8 }}>Pepa Bruta</Text>
                         </View>
+                        :
+                          <View style={{ width: '300px', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
+                            <Text style={{ fontSize: 8 }}>Almendras Exportables</Text>
+                          </View>
+                        }
 
-
+                        { isPacificNut ?
+                        <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
+                          <Text style={{ fontSize: 8 }}>{rendimientos?.cc_calculo_final.kilos_brutos} kgs</Text>
+                        </View>
+                        :
                         <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
                           <Text style={{ fontSize: 8 }}>{rendimientos?.cc_calculo_final.final_exp} kgs</Text>
                         </View>
+                        } 
 
                       </View>
                     </View>
@@ -1031,7 +1071,8 @@ const CCRendimiento = () => {
                         justifyContent: "space-between",
                       }}>
                         <View style={{ width: '300px', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                          <Text style={{ fontSize: 8 }}>Desechos</Text>
+                          {isPacificNut ? <Text style={{ fontSize: 8 }}>Defectos</Text> : <Text style={{ fontSize: 8 }}>Desechos</Text>}
+                          
                         </View>
 
                         <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
@@ -1045,7 +1086,21 @@ const CCRendimiento = () => {
 
                 {
                   String(control_calidad?.estado_aprobacion_cc) === '1'
-                    ? (
+                    ? comercializador == "Pacific Nut" ? 
+                        <View style={{ width: '100%', display: 'flex', height: 90, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 5, position: 'absolute', top: 220 }}>
+                        <Image source='/src/assets/firmaTrini.png' style={{ width: 90, height: 50 }} />
+                        <Text style={{
+                          borderBottom: '1px solid green',
+                          height: 15,
+                          width: '100%',
+                          fontSize: 8,
+                          textAlign: 'center'
+                        }}>
+                          CC Aprobado por Trinidad Milnes
+                          </Text>
+                          <Text style={{ fontSize: 9 }}>Jefa Programa Almendras</Text>
+                        </View>
+                    : 
                       <View style={{ width: '100%', display: 'flex', height: 90, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 5, position: 'absolute', top: 220 }}>
                         <Image source='/src/assets/firma_donandres.png' style={{ width: 90, height: 50 }} />
                         <Text style={{
@@ -1059,7 +1114,7 @@ const CCRendimiento = () => {
                         </Text>
                         <Text style={{ fontSize: 9 }}>Gerente de Operaciones</Text>
                       </View>
-                    )
+                  
                     : null
 
                 }

@@ -5,6 +5,7 @@ import { TEnvaseEnGuia, TGuia, TLoteGuia, TLoteRechazado } from '../../types/Typ
 import { FetchOptions, PostOptions, PutOptions } from '../../types/fetchTypes.types'
 import { fetchWithToken, fetchWithTokenDelete, fetchWithTokenPatch, fetchWithTokenPost, fetchWithTokenPut } from '../../utils/peticiones.utils'
 import { TAuth, TVerificar } from '../../types/TypesRegistros.types'
+import { FaSearchMinus } from 'react-icons/fa'
 
 
 export const eliminarLoteRecepcionThunk = createAsyncThunk<{},{token: TAuth | null, id_recepcion: string | undefined, id_lote: string | number | undefined, verificar_token: TVerificar}, {rejectValue: string}>(
@@ -92,6 +93,30 @@ export const fetchGuiasdeRecepcion = createAsyncThunk('recepcionmp/fetch_guias',
        }
 
        const response = await fetchWithToken(`api/recepcionmp/`, token_verificado)
+       if (response.ok){
+        const data = await response.json()
+        return data
+       } else if (response.status === 400) {
+        return ThunkApi.rejectWithValue('No se ha logrado realizar la petición')
+       }
+
+    } catch (error) {
+      return ThunkApi.rejectWithValue('No se ha logrado realizar la petición')
+    }
+})
+
+export const fetchGuiasdeRecepcionByComercializador = createAsyncThunk('recepcionmp/fetch_guias', 
+  async (payload: any, ThunkApi) => {
+    const { params, token, verificar_token } = payload
+    const {search} = params
+    try {
+       const token_verificado = await verificar_token(token)
+      
+       if (!token_verificado){
+          throw new Error('Token no verificado')
+       }
+
+       const response = await fetchWithToken(`api/recepcionmp/get_by_comercializador/${search}`, token_verificado)
        if (response.ok){
         const data = await response.json()
         return data

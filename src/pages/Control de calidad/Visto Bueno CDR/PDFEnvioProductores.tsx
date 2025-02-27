@@ -16,7 +16,7 @@ import { fetchWithTokenPostFile } from "../../../utils/peticiones.utils"
 import { IoMailOutline } from "react-icons/io5";
 import Button from '../../../components/ui/Button';
 import { fetchWithToken, fetchWithTokenPostAction } from "../../../utils/peticiones.utils"
-
+import { fetchControlesDeCalidadPorComercializador } from '../../../redux/slices/controlcalidadSlice';
 const styles = StyleSheet.create({
   page: {
     width: '100%',
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   }
 })
 
-const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos : any, rendimiento_cc : any}> = ({ usuario, guia, control_calidad, rendimientos, rendimiento_cc }) => {
+const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos : any, rendimiento_cc : any, isPacificNut : boolean}> = ({ usuario, guia, control_calidad, rendimientos, rendimiento_cc, isPacificNut }) => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
     let valores: any
     let labels: any
@@ -256,37 +256,46 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
   
     return (
           <Document title={`CDR_${control_calidad?.numero_lote}_${format(control_calidad?.fecha_creacion!, { date: 'short' }, 'es')}_${guia?.nombre_productor}`}>
-            <Page style={styles.page} size='A4'>
+    <Page style={styles.page} size='A4'>
               <View style={styles.header}>
                 <View style={styles.header_superior}>
-                  <View style={{ position: 'relative', top: -30 }}>
-                    <Image source="/src/assets/prodalmen_foto.png" style={{ height: 100, width: 100 }} />
-                    <Text style={{ fontSize: 5, width: 100 }}>Actividades de Apoyo a la agrícultura
-                      Dirección: Fundo Challay Alto Lote A-1, Paine
-                      Teléfonos: +56 2 228215583 - +56 2 2282 25584</Text>
-                  </View>
-    
+                  { isPacificNut ?
+                    <View style={{ position: 'relative', top: -30 }}>
+                    <Image source="/src/assets/logoPacific.jpg" style={{ height: 100, width: 100 }} />
+                    <Text style={{ fontSize: 5, width: 100 }}>Pacific Nut Company Chile S.A.
+                      Dirección: Cam. Padre Hurtado 19956, San Bernardo, Región Metropolitana
+                      Teléfonos: +56978460481 </Text>
+                    </View>
+                  :
+                    <View style={{ position: 'relative', top: -30 }}>
+                      <Image source="/src/assets/prodalmen_foto.png" style={{ height: 100, width: 100 }} />
+                      <Text style={{ fontSize: 5, width: 100 }}>Actividades de Apoyo a la agrícultura
+                        Dirección: Fundo Challay Alto Lote A-1, Paine
+                        Teléfonos: +56 2 228215583 - +56 2 2282 25584</Text>
+                    </View>  
+                  }
+
                   <View style={{ width: 190, border: '1px solid green', height: 40, padding: 5, borderRadius: 5, position: 'relative', top: 20 }}>
                     <View style={styles.header_date_info_box}>
                       <Text style={styles.header_date_info_text}>Fecha Recepción: </Text>
                       <Text style={styles.header_date_info_text}>{format(guia?.fecha_creacion!, { date: 'short' }, 'es')}</Text>
                     </View>
-    
+
                     <View style={styles.header_date_info_box}>
                       <Text style={styles.header_date_info_text}>Hora Recepción: </Text>
                       <Text style={styles.header_date_info_text}>{format(guia?.fecha_creacion!, { time: 'short' }, 'es')}</Text>
                     </View>
-    
+
                     <View style={styles.header_date_info_box}>
                       <Text style={styles.header_date_info_text}>Registrado Por: </Text>
-    
+
                       <Text style={styles.header_date_info_text}>{usuario?.first_name}</Text>
                     </View>
                   </View>
                 </View>
-    
+
                 <Text style={{ textAlign: 'center', fontSize: 14, position: 'relative', top: -50 }}>Informe Control De Calidad Materia Prima</Text>
-    
+
                 <View style={{
                   width: '100%',
                   display: 'flex',
@@ -296,77 +305,77 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                   position: 'relative',
                   top: -50
                 }}>
-    
+
                   <View style={styles.header_info_box_superior}>
                     <Text style={{ fontSize: 10 }}>Datos Guia Recepcion Materia Prima </Text>
                     <View style={styles.header_info_inferior}>
                       <View style={styles.header_date_info_box}>
                         <Text style={styles.header_date_info_text}>Productor: </Text>
-    
+
                         <Text style={styles.header_date_info_text}>{guia?.nombre_productor}</Text>
                       </View>
-    
+
                       <View style={styles.header_date_info_box}>
                         <Text style={styles.header_date_info_text}>N° Lote: </Text>
                         <Text style={styles.header_date_info_text}>{control_calidad?.numero_lote}</Text>
                       </View>
-    
+
                       <View style={styles.header_date_info_box}>
                         <Text style={styles.header_date_info_text}>Variedad: </Text>
-    
+
                         <Text style={styles.header_date_info_text}>{control_calidad?.variedad}</Text>
                       </View>
-    
-    
+
+
                       <View style={styles.header_date_info_box}>
                         <Text style={styles.header_date_info_text}>Comercializador: </Text>
-    
+
                         <Text style={styles.header_date_info_text}>{guia?.nombre_comercializador}</Text>
                       </View>
-    
+
                       <View style={styles.header_date_info_box}>
                         <Text style={styles.header_date_info_text}>Guia Recepción Interna: </Text>
-    
+
                         <Text style={styles.header_date_info_text}>MP {guia_recepcion}</Text>
                       </View>
-    
+
                       <View style={styles.header_date_info_box}>
                         <Text style={styles.header_date_info_text}>N° Guia Productor: </Text>
-    
+
                         <Text style={styles.header_date_info_text}>{n_guia}</Text>
                       </View >
-    
+
                     </View>
                   </View>
-    
+
                   <View style={styles.header_info_box_superior}>
                     <Text style={{ fontSize: 10, fontWeight: 'bold' }}>Datos Inspección Control De Calidad</Text>
                     <View style={styles.header_info_inferior}>
-    
+
                       <View style={styles.header_date_info_box}>
                         <Text style={styles.header_date_info_text}>Kilos Totales: </Text>
                         <Text style={styles.header_date_info_text}>{rendimientos?.cc_calculo_final.kilos_netos} kgs</Text>
                       </View>
-    
+
                       <View style={styles.header_date_info_box}>
                         <Text style={styles.header_date_info_text}>Humedad: </Text>
-    
+
                         <Text style={styles.header_date_info_text}>{control_calidad?.humedad} %</Text>
                       </View>
-    
+
                       <View style={styles.header_date_info_box}>
                         <Text style={styles.header_date_info_text}>Presencia de insectos:</Text>
-    
+
                         <Text style={styles.header_date_info_text}>{control_calidad?.presencia_insectos ? 'Con presencia de insectos' : 'Sin presencia de insectos'}</Text>
                       </View>
-    
+
                     </View>
                   </View>
-    
-    
+
+
                 </View>
-    
-    
+
+
                 <Text style={{
                   fontSize: 14,
                   marginTop: 10,
@@ -391,7 +400,7 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                   </Text>
                 </View>
               </View>
-    
+
               <View style={{
                 width: '100%',
                 display: 'flex',
@@ -423,8 +432,8 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                     <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: 5 }}>Calibres</Text>
                     <View style={{ width: '100%', height: '120%' }}>
                       <View style={styles.body_table}>
-    
-    
+
+
                         <View style={styles.body_table_header}>
                           <View style={{ width: '100%' , textAlign: 'center'}}>
                             <Text style={styles.header_date_info_text}>MM</Text>
@@ -439,10 +448,10 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                             <Text style={styles.header_date_info_text}>%</Text>
                           </View>
                         </View>
-    
-    
+
+
                         <View style={styles.body_table_info}>
-    
+
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
                               <Text style={styles.body_table_info_text}>16</Text>
@@ -457,9 +466,9 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{rendimientos?.cc_pepa_calibre[0].calibre_18_20}%</Text>
                             </View>
                           </View>
-    
-    
-    
+
+
+
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
                               <Text style={styles.body_table_info_text}>15</Text>
@@ -474,8 +483,8 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{rendimientos?.cc_pepa_calibre[0].calibre_20_22}%</Text>
                             </View>
                           </View>
-    
-    
+
+
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
                               <Text style={styles.body_table_info_text}>14</Text>
@@ -490,8 +499,8 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{rendimientos?.cc_pepa_calibre[0].calibre_23_25}%</Text>
                             </View>
                           </View>
-    
-    
+
+
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
                               <Text style={styles.body_table_info_text}>13</Text>
@@ -506,8 +515,8 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{rendimientos?.cc_pepa_calibre[0].calibre_25_27}%</Text>
                             </View>
                           </View>
-    
-    
+
+
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
                               <Text style={styles.body_table_info_text}>12</Text>
@@ -522,8 +531,8 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{rendimientos?.cc_pepa_calibre[0].calibre_27_30}%</Text>
                             </View>
                           </View>
-    
-    
+
+
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
                               <Text style={styles.body_table_info_text}>10</Text>
@@ -538,8 +547,8 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{rendimientos?.cc_pepa_calibre[0].calibre_30_32}%</Text>
                             </View>
                           </View>
-    
-    
+
+
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
                               <Text style={styles.body_table_info_text}>9</Text>
@@ -554,8 +563,8 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{rendimientos?.cc_pepa_calibre[0].calibre_32_34}%</Text>
                             </View>
                           </View>
-    
-    
+
+
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
                               <Text style={styles.body_table_info_text}>8</Text>
@@ -570,8 +579,8 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{rendimientos?.cc_pepa_calibre[0].calibre_34_36}%</Text>
                             </View>
                           </View>
-    
-    
+
+
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
                               <Text style={styles.body_table_info_text}>&lt;8</Text>
@@ -586,7 +595,7 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{rendimientos?.cc_pepa_calibre[0].calibre_36_40}%</Text>
                             </View>
                           </View>
-    
+
                           0
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
@@ -602,7 +611,7 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{rendimientos?.cc_pepa_calibre[0].calibre_40_mas}%</Text>
                             </View>
                           </View>
-    
+
                           0
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
@@ -623,7 +632,7 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                     </View>
                   </View>
                 </View>
-    
+
                 <View style={styles.header_inferior}>
                   <View style={{
                     width: '100%',
@@ -634,8 +643,8 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                     <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: '10px' }}>CAT 2</Text>
                     <View style={{ width: '100%', height: 180 }}>
                       <View style={styles.body_table}>
-    
-    
+
+
                         <View style={styles.body_table_header}>
                           <View style={{ width: '100%' }}>
                             <Text style={{ fontSize: 8, textAlign: 'center', paddingVertical: 2 }}>CAT 2</Text>
@@ -650,10 +659,10 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                             <Text style={{ fontSize: 8, textAlign: 'center', paddingVertical: 2 }}>Kilos Desc.</Text>
                           </View>
                         </View>
-    
-    
+
+
                         <View style={styles.body_table_info}>
-    
+
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Mezcla Variedades</Text>
@@ -668,9 +677,9 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{rendimientos?.cc_descuentos[0].mezcla} kgs</Text>
                             </View>
                           </View>
-    
-    
-    
+
+
+
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Fuera Color</Text>
@@ -685,8 +694,8 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{rendimientos?.cc_descuentos[0].color} kgs</Text>
                             </View>
                           </View>
-    
-    
+
+
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Dobles</Text>
@@ -701,8 +710,8 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>{rendimientos?.cc_descuentos[0].dobles} kgs</Text>
                             </View>
                           </View>
-    
-    
+
+
                           <View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', borderTop: '1px solid green' }}>
                             <View style={styles.boxes_table_row}>
                               <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Total CAT2</Text>
@@ -717,22 +726,22 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>{rendimientos?.cc_descuentos[0].cat2} kgs</Text>
                             </View>
                           </View>
-    
-    
+
+
                         </View>
                       </View>
                     </View>
-    
-    
-                    <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: '10px', marginTop: 20 }}>Desechos</Text>
+
+
+                    {isPacificNut ? <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: '10px', marginTop: 20 }}>Defectos Internos</Text>  : <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: '10px', marginTop: 20 }}>Desechos</Text>}
                     <View style={{ width: '100%', height: '100%' }}>
-    
+
                       <View style={styles.body_table}>
-    
+
                         <View style={styles.body_table_header}>
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
-                              <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>Desechos</Text>
+                              {isPacificNut ? <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>Defectos</Text> : <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>Desechos</Text>}
                             </View>
                             <View style={styles.boxes_table_row}>
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>%</Text>
@@ -760,7 +769,7 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{(rendimientos?.cc_descuentos[0].insecto)?.toFixed(2)} Kgs</Text>
                             </View>
                           </View>
-    
+
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Presencia de Hongo</Text>
@@ -775,7 +784,7 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{(rendimientos?.cc_descuentos[0].hongo)?.toFixed(2)} Kgs</Text>
                             </View>
                           </View>
-    
+
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Vana Deshidratada</Text>
@@ -790,7 +799,7 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{(rendimientos?.cc_descuentos[0].vana)?.toFixed(2)} Kgs</Text>
                             </View>
                           </View>
-    
+
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Punto de Goma</Text>
@@ -805,7 +814,7 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{(rendimientos?.cc_descuentos[0].pgoma)?.toFixed(2)} Kgs</Text>
                             </View>
                           </View>
-    
+
                           <View style={styles.body_table_rows}>
                             <View style={styles.boxes_table_row}>
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Goma</Text>
@@ -820,10 +829,10 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                               <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>{(rendimientos?.cc_descuentos[0].goma)?.toFixed(2)} Kgs</Text>
                             </View>
                           </View>
-    
+
                           <View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                             <View style={styles.boxes_table_row}>
-                              <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Total Deshecho</Text>
+                            {isPacificNut ? <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Total Defectos</Text> : <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Total Deshecho</Text>}
                             </View>
                             <View style={styles.boxes_table_row}>
                               <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', color: 'white' }}>1</Text>
@@ -839,8 +848,8 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                       </View>
                     </View>
                   </View>
-    
-    
+
+
                   <View style={{
                     width: '100%',
                     height: `${control_calidad?.estado_aprobacion_cc === 1 ? 320 : 160}`,
@@ -853,7 +862,7 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                   }}>
                     <Text style={{ fontSize: 14, textAlign: 'center' }}>Resumen</Text>
                     <View style={{ width: '100%', height: 58, border: '1px solid green', borderRadius: 4, padding: '5px' }}>
-    
+
                       <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
                         <View style={{ width: 150 }}>
                           <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Totales Recepcionados: </Text>
@@ -862,7 +871,7 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                           <Text style={styles.header_date_info_text}>{rendimientos?.cc_calculo_final.kilos_netos} kgs</Text>
                         </View>
                       </View>
-    
+
                       <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
                         <View style={{ width: 150 }}>
                           <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Pepa Bruta: </Text>
@@ -871,7 +880,7 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                           <Text style={styles.header_date_info_text}>{rendimientos?.cc_calculo_final.kilos_brutos} kgs</Text>
                         </View>
                       </View>
-    
+
                       <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
                         <View style={{ width: 150 }}>
                           <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Porcentaje Pepa Bruta: </Text>
@@ -880,30 +889,50 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                           <Text style={styles.header_date_info_text}>{rendimientos?.cc_calculo_final.por_brutos} %</Text>
                         </View>
                       </View>
-    
-    
-                      <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                        <View style={{ width: 150 }}>
-                          <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Pepa Exportable: </Text>
-                        </View>
-                        <View style={{ width: '50%' }}>
-                          <Text style={styles.header_date_info_text}>{rendimientos?.cc_kilos_des_merma[0].exportable?.toFixed(1)} kgs</Text>
-                        </View>
-    
-                      </View>
-    
-                      <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                        <View style={{ width: 150 }}>
-                          <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Porcentaje Pepa Exportable: </Text>
-                        </View>
-    
-                        <View style={{ width: '50%' }}>
-                          <Text style={styles.header_date_info_text}>{(rendimientos?.cc_kilos_des_merma[0].exportable! / rendimientos?.cc_calculo_final.kilos_netos! * 100).toFixed(2)} %</Text>
-                        </View>
-                      </View>
-    
+
+                      { isPacificNut ? 
+                                <div>
+                                <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
+                                  <View style={{ width: 150 }}>
+                                    <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Fuera de norma: </Text>
+                                  </View>
+                                  <View style={{ width: '50%' }}>
+                                    <Text style={styles.header_date_info_text}>{ ((rendimientos?.cc_descuentos[0]?.cat2 ?? 0) + (rendimientos?.cc_descuentos[0]?.desechos ?? 0)).toFixed(1) } kgs</Text>
+                                  </View>
+
+                                </View>
+                                </div>   
+                        : 
+                              <div>   
+                              <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
+                              <View style={{ width: 150 }}>
+                                <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Kilos Pepa Exportable: </Text>
+                              </View>
+                              <View style={{ width: '50%' }}>
+                                <Text style={styles.header_date_info_text}>{rendimientos?.cc_kilos_des_merma[0].exportable?.toFixed(1)} kgs</Text>
+                              </View>
+
+                            </View>
+
+                            <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
+                              <View style={{ width: 150 }}>
+                                <Text style={{ fontSize: 8, fontWeight: 'bold' }}>Porcentaje Pepa Exportable: </Text>
+                              </View>
+
+                              <View style={{ width: '50%' }}>
+                                <Text style={styles.header_date_info_text}>{(rendimientos?.cc_kilos_des_merma[0].exportable! / rendimientos?.cc_calculo_final.kilos_netos! * 100).toFixed(2)} %</Text>
+                              </View>
+                            </View>
+                            </div> 
+
+
+
+
+                      }
+                  
+
                     </View>
-    
+
                     <View style={{
                       width: '100%',
                       height: 47,
@@ -915,7 +944,7 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                       padding: 5,
                       paddingLeft: 10,
                     }}>
-    
+
                       <View style={{
                         width: '100%',
                         height: 'auto',
@@ -935,7 +964,7 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                           <Text style={{ fontSize: 8 }}></Text>
                           <Text style={{ fontSize: 8, position: 'relative', left: -50  }}>Final</Text>
                         </View>
-    
+
                         <View style={{
                           width: '100%',
                           display: "flex",
@@ -949,18 +978,29 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                             flexDirection: "row",
                             justifyContent: "space-between",
                           }}>
+                            { isPacificNut ?
                             <View style={{ width: '300px', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                              <Text style={{ fontSize: 8 }}>Almendras Exportables</Text>
+                              <Text style={{ fontSize: 8 }}>Pepa Bruta</Text>
                             </View>
-    
-    
+                            :
+                              <View style={{ width: '300px', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
+                                <Text style={{ fontSize: 8 }}>Almendras Exportables</Text>
+                              </View>
+                            }
+
+                            { isPacificNut ?
+                            <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
+                              <Text style={{ fontSize: 8 }}>{rendimientos?.cc_calculo_final.kilos_brutos} kgs</Text>
+                            </View>
+                            :
                             <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
                               <Text style={{ fontSize: 8 }}>{rendimientos?.cc_calculo_final.final_exp} kgs</Text>
                             </View>
-    
+                            } 
+
                           </View>
                         </View>
-    
+
                         <View style={{
                           width: '100%',
                           display: "flex",
@@ -977,14 +1017,14 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                             <View style={{ width: '300px', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
                               <Text style={{ fontSize: 8 }}>CAT 2</Text>
                             </View>
-    
+
                             <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
                               <Text style={{ fontSize: 8 }}>{rendimientos?.cc_calculo_final.final_cat2}</Text>
                             </View>
-    
+
                           </View>
                         </View>
-    
+
                         <View style={{
                           width: '100%',
                           display: "flex",
@@ -999,21 +1039,36 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                             justifyContent: "space-between",
                           }}>
                             <View style={{ width: '300px', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                              <Text style={{ fontSize: 8 }}>Desechos</Text>
+                              {isPacificNut ? <Text style={{ fontSize: 8 }}>Defectos</Text> : <Text style={{ fontSize: 8 }}>Desechos</Text>}
+                              
                             </View>
-    
+
                             <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
                               <Text style={{ fontSize: 8 }}>{rendimientos?.cc_calculo_final.final_des} kgs</Text>
                             </View>
-    
+
                           </View>
                         </View>
                       </View>
                     </View>
-    
+
                     {
                       String(control_calidad?.estado_aprobacion_cc) === '1'
-                        ? (
+                        ? isPacificNut ? 
+                            <View style={{ width: '100%', display: 'flex', height: 90, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 5, position: 'absolute', top: 220 }}>
+                            <Image source='/src/assets/firmaTrini.png' style={{ width: 90, height: 50 }} />
+                            <Text style={{
+                              borderBottom: '1px solid green',
+                              height: 15,
+                              width: '100%',
+                              fontSize: 8,
+                              textAlign: 'center'
+                            }}>
+                              CC Aprobado por Trinidad Milnes
+                              </Text>
+                              <Text style={{ fontSize: 9 }}>Jefa Programa Almendras</Text>
+                            </View>
+                        : 
                           <View style={{ width: '100%', display: 'flex', height: 90, alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 5, position: 'absolute', top: 220 }}>
                             <Image source='/src/assets/firma_donandres.png' style={{ width: 90, height: 50 }} />
                             <Text style={{
@@ -1027,14 +1082,14 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
                             </Text>
                             <Text style={{ fontSize: 9 }}>Gerente de Operaciones</Text>
                           </View>
-                        )
+                      
                         : null
-    
+
                     }
                   </View>
                 </View>
-    
-    
+
+
               </View>
             </Page>
           </Document>
@@ -1048,19 +1103,8 @@ const GeneratePdfAndSendMail: FC<{ id : any, mailEnviado : any }> = ({ id, mailE
   const usuario = useAppSelector((state: RootState) => state.auth.dataUser)
   const guia = useAppSelector((state: RootState) => state.recepcionmp.guia_recepcion)
   const [isSending, setIsSending] = useState(false);
-    // useEffect(() => {
-    //     //@ts-ignore
-    //     dispatch(fetchControlCalidad({ id, token, verificar_token: verificarToken }));
-    // }, []);
-
-    // useEffect(() => {
-    //   if (control_calidad && !guia) {
-    //     //@ts-ignore
-    //     dispatch(fetchGuiaRecepcion({ id: control_calidad?.guia_recepcion, token, verificar_token: verificarToken }));
-    //     dispatch(fetchRendimientoLotes({ id: control_calidad.recepcionmp, params: { variedad: 'todas' }, token, verificar_token: verificarToken }));
-    //   }
-    // }, [control_calidad, guia, token, verificarToken, dispatch]);
-
+  const comercializador = useAppSelector((state: RootState) => state.auth.dataUser?.comercializador)
+  const isPacificNut = comercializador == "Pacific Nut"
 
 
   const handleGenerate = async () => {
@@ -1073,17 +1117,11 @@ const GeneratePdfAndSendMail: FC<{ id : any, mailEnviado : any }> = ({ id, mailE
     const rendimiento_cc = rendimientos?.cc_muestra[0] ? rendimientos.cc_muestra[0] : [];
     const response3 = await fetchWithToken(`api/recepcionmp/${control_calidad?.guia_recepcion}/`, token_verificado)
     const guia = await response3.json()
-    const doc = <PdfCC  usuario={usuario} guia={guia} control_calidad={control_calidad} rendimientos={rendimientos} rendimiento_cc={rendimiento_cc}/>;
+    const doc = <PdfCC  usuario={usuario} guia={guia} control_calidad={control_calidad} rendimientos={rendimientos} rendimiento_cc={rendimiento_cc} isPacificNut={isPacificNut}/>;
     const blob = await pdf(doc).toBlob();
     let email_destinatario : any = ""
     let subject = "PDF Control de Calidad"
-    if (control_calidad?.comercializador == "Prodalmen"){
-      email_destinatario = control_calidad?.email_productor
-    } else if (control_calidad?.comercializador == "Pacific Nut"){
-      email_destinatario = "tmilnes@pacificnut.com"
-      subject = "PDF Control de Calidad - Pacific Nut"
-    }
-
+    email_destinatario = control_calidad?.email_productor
     const formData = new FormData();
     formData.append('pdf', blob, 'documento.pdf');  // Asegúrate de que el nombre sea 'pdf'
     formData.append('email_to', email_destinatario);  // Asegúrate de que el nombre sea 'email_to'
@@ -1093,13 +1131,13 @@ const GeneratePdfAndSendMail: FC<{ id : any, mailEnviado : any }> = ({ id, mailE
     const res = await fetchWithTokenPostFile('api/control-calidad/recepcionmp/send_mailer/', formData, token_verificado)
     setIsSending(false);
     if (res.ok) {
-      alert('Correo enviado correctamente')
-      window.location.reload()
+      alert('Correo enviado correctamente a ' + email_destinatario)
+      dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
       
     } else {
       alert('Error al enviar el correo')
     }
-    
+
 
   };
 

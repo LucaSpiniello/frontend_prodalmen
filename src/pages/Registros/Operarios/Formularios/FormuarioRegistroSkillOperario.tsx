@@ -24,7 +24,7 @@ const FormularioRegistroSkillOperario = ({ id, setOpen }: { id: number, setOpen:
 
   const validationSchema = Yup.object().shape({
     pago_x_kilo: Yup.string()
-      .matches(/^\d+(\.\d{1,3})?$/, 'El número debe estar en el formato correcto y solo usar puntos como separador de decimales')
+      .matches(/^\d+(\.\d{1,4})?$/, 'El número debe estar en el formato correcto y solo usar puntos como separador de decimales')
       .required('Este campo es obligatorio'),
     });
 

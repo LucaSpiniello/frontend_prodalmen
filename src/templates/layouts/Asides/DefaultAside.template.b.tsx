@@ -27,7 +27,7 @@ const DefaultAsideTemplate = () => {
 			<AsideBody>
 				<Nav>
 					<NavTitle>Accesos</NavTitle>
-					{ (!hasGroup(['comercializador']) || hasGroup(['dnandres']) ) ?(
+					{ ((!hasGroup(['comercializador']) && !hasGroup(['cc_comercializador']) ) || hasGroup(['dnandres']))  ?(
 							<NavCollapse
 							text={appPages.registroAppPages.text}
 							to={appPages.registroAppPages.to}
@@ -43,7 +43,7 @@ const DefaultAsideTemplate = () => {
 					)  : null
 				}
 
-					{(hasGroup(['controlcalidad', 'bodega', 'recepcion-mp', 'jefe-planta']) && !hasGroup(['comercializador']) || hasGroup(['dnandres'])) && (
+					{(hasGroup(['controlcalidad', 'bodega', 'recepcion-mp', 'jefe-planta']) || hasGroup(['dnandres'])) && (
 						<NavCollapse
 							text={appPages.recepcionAppPages.text}
 							to={appPages.recepcionAppPages.to}
@@ -54,7 +54,25 @@ const DefaultAsideTemplate = () => {
 						</NavCollapse>
 					)}
 
-					{(hasGroup(['controlcalidad', 'bodega', 'jefe-planta']) && !hasGroup(['comercializador']) || hasGroup(['dnandres'])) && (
+					{hasGroup(['cc_comercializador']) && (
+						<NavCollapse
+							text={appPages.controles_calidad.text}
+							to={appPages.controles_calidad.to}
+							icon={appPages.controles_calidad.icon}
+						>
+							<NavCollapse
+								text={appPages.controles_calidad.subPages.recepcion.text}
+								to={appPages.controles_calidad.subPages.recepcion.to}
+								icon={appPages.controles_calidad.icon}
+							>
+								<NavItem {...appPages.controles_calidad.subPages.recepcion.subPages.controlCalidad} />
+								<NavItem {...appPages.controles_calidad.subPages.recepcion.subPages.control_calidad_vb} />
+								<NavItem {...appPages.controles_calidad.subPages.recepcion.subPages.proyeccion} />
+							</NavCollapse>
+						</NavCollapse>
+					)}
+					
+					{(hasGroup(['controlcalidad', 'bodega', 'jefe-planta'])  || hasGroup(['dnandres'])) && (
 						<NavCollapse
 							text={appPages.controles_calidad.text}
 							to={appPages.controles_calidad.to}

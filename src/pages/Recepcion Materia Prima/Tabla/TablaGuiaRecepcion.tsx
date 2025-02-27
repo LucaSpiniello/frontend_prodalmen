@@ -47,6 +47,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
   	const token = useAppSelector((state: RootState) => state.auth.authTokens)
 	const { verificarToken } = useAuth()
 	const userGroup = useAppSelector((state: RootState) => state.auth.grupos)
+	const comercializador = useAppSelector((state: RootState) => state.auth.dataUser?.comercializador)
 	const columnHelper = createColumnHelper<TGuia>();
 	const columns = [
 		columnHelper.accessor('id', {
@@ -137,7 +138,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 							</Link>
 						)}
 
-						{ hasGroup(['registros-admin']) || hasGroup(['recepcion-mp']) && (
+						{ ((hasGroup(['registros-admin']) || hasGroup(['recepcion-mp'])) && comercializador == "Prodalmen" ) && (
 							<Button
 								variant='solid'
 								color='red'
@@ -199,7 +200,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 						/>
 					</FieldWrap>
 				</SubheaderLeft>
-				{ hasGroup(['recepcion-mp']) && ( 
+				{ (hasGroup(['recepcion-mp']) && comercializador == "Prodalmen") && ( 
 					<SubheaderRight>
 						<Link to={`/rmp/registro-guia-recepcion/`} state={{ pathname: '/recepcionmp/' }}>
 							<Button variant='solid' icon='HeroPlus'>

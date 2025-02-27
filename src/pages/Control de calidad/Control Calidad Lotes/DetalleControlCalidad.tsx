@@ -58,6 +58,7 @@ const DetalleCC = () => {
   const [estadoActivo, setEstadoActivo] = useState<string | null>(null)
   const estadoActivoCoincide = estadoRecepcion.find((estado) => estado.value === (guia_recepcion?.estado_recepcion! ? guia_recepcion.estado_recepcion! : '1'))
   const [lote, setLote] = useState<TLoteGuia | undefined>()
+  const comercializador = useAppSelector((state: RootState) => state.auth.dataUser?.comercializador)
 
   useEffect(() => {
     if (!openModalConfirmacion) {
@@ -448,7 +449,7 @@ const DetalleCC = () => {
             <div className='flex items-center justify-between px-8'>
               <div className='w-72'>
                 {
-                  cc_rendimiento?.length! >= 0 && control_calidad?.esta_contramuestra === '0' && ('controlcalidad' in userGroup?.groups!) && !cc_rendimiento?.some(muestra => muestra?.cc_calibrespepaok === true) && control_calidad.estado_cc != '2' && lote && (lote.estado_recepcion === '5' || lote.estado_recepcion === '6')
+                  cc_rendimiento?.length! >= 0 && control_calidad?.esta_contramuestra === '0' && ('controlcalidad' in userGroup?.groups!) && !cc_rendimiento?.some(muestra => muestra?.cc_calibrespepaok === true) && control_calidad.estado_cc != '2' && lote && (lote.estado_recepcion === '5' || lote.estado_recepcion === '6') && comercializador == "Prodalmen"
                     ? (
                         <ModalForm
                           open={openModalRegistro}
@@ -463,7 +464,7 @@ const DetalleCC = () => {
                           <FormularioCCRendimiento id_lote={control_calidad?.id!} isOpen={setOpenModalRegistro} control_calidad={control_calidad!}/>
                         </ModalForm>
                       )
-                    : control_calidad?.esta_contramuestra === '1' &&  contra_muestras_limit! < 1
+                    : control_calidad?.esta_contramuestra === '1' &&  contra_muestras_limit! < 1 && comercializador == "Prodalmen"
                         ? (
                           <ModalForm
                             open={openModalRegistro}

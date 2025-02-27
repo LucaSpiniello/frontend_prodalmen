@@ -41,7 +41,7 @@ import { TControlCalidad } from '../../../../types/TypesControlCalidad.type';
 import Tooltip from '../../../../components/ui/Tooltip';
 import { useAuth } from '../../../../context/authContext';
 import { fetchWithTokenPatch } from '../../../../utils/peticiones.utils';
-import { fetchControlesDeCalidad } from '../../../../redux/slices/controlcalidadSlice';
+import { fetchControlesDeCalidadPorComercializador } from '../../../../redux/slices/controlcalidadSlice';
 import { BiCheckDouble } from 'react-icons/bi';
 import toast from 'react-hot-toast';
 import ModalConfirmacion from '../../../../components/ModalConfirmacion';
@@ -69,7 +69,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 	const { pathname } = useLocation()
 	const userGroup = useAppSelector((state: RootState) => state.auth.grupos)
 	const hasGroup = (groups: any) => userGroup?.groups && groups.some((group: any) => group in userGroup.groups);
-
+	const comercializador = useAppSelector((state: RootState) => state.auth.dataUser?.comercializador)
 
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
 	const token = useAppSelector((state: RootState) => state.auth.authTokens)
@@ -89,7 +89,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 		)
 		if (response.ok) {
 			toast.success('El lote fue aprobado')
-			dispatch(fetchControlesDeCalidad({ token, verificar_token: verificarToken }))
+			dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
 		} else {
 			toast.error('El lote no fue aprobado')
 		}
@@ -108,7 +108,28 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 
 		if (response.ok) {
 			toast.success('Fue solicitada una Contra Muestra')
-			dispatch(fetchControlesDeCalidad({ token, verificar_token: verificarToken }))
+			dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
+			setPosted(true)
+
+		} else {
+			console.log("nop no lo logre")
+		}
+	}
+
+	const handlePreContramuestra = async (id: number, estado: string,  setPosted: Dispatch<SetStateAction<boolean>>) => {
+		const token_verificado = await verificarToken(token!)
+		await handleEstadoJefatura(id, '1')
+		if (!token_verificado) throw new Error('Token no verificado')
+		const response = await fetchWithTokenPatch(`api/control-calidad/recepcionmp/${id}/`, 
+			{
+				esta_contramuestra: estado
+			},
+			token_verificado
+		)
+
+		if (response.ok) {
+			toast.success('Fue solicitada una Contra Muestra')
+			dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
 			setPosted(true)
 
 		} else {
@@ -123,6 +144,13 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 				<div className='font-bold text-center'>{`${info.row.original.numero_lote}`}</div>
 			),
 			header: 'N° Lote',
+		}),
+		columnHelper.display({
+			id: 'numero_guia',
+			cell: (info) => (
+				<div className='font-bold text-center'>{`${info.row.original.guia_recepcion}`}</div>
+			),
+			header: 'N° Guia',
 		}),
 		columnHelper.accessor('productor', {
 			cell: (info) => {
@@ -219,11 +247,11 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 				return (
 					<div className='h-full w-full flex justify-center  gap-2'>
 						{
-							cantidad >= 2 && hasGroup(['dnandres'])
+							cantidad >= 2 && ( hasGroup(['dnandres']) || hasGroup(['comercializador']))
 								? (
 									<>
 									{
-										estado_aprobacion > 0 && estado_aprobacion < 2
+										estado_aprobacion == 1 
 											&& (
 												<div className='flex items-center'>
 													{
@@ -236,7 +264,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 																	color='amber'
 																	colorIntensity='700'
 																	width='hover:scale-105'
-																	textTool='Solicitar Contra Muestra'
+																	textTool='Solicitar Contra Muestra' // here
 																	icon = {<RiErrorWarningFill className='text-4xl'/>}
 																	>
 																		<ModalConfirmacion
@@ -292,14 +320,29 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 												className='hover:scale-105'>
 												<AiFillLike className='text-4xl'/>
 												</Button>
-												<Button
-												title='Rechazar CC Rendimiento Lote'
-												variant='solid'
-												color='red'
-												onClick={() => handleEstadoJefatura(id, '2')} 
-												className='hover:scale-105'>
-												<AiFillDislike className='text-4xl'/>
-												</Button>
+												<ModalForm
+														variant='solid'
+														open={posted}
+														setOpen={setPosted}
+														color='red'
+														colorIntensity='700'
+														width='hover:scale-105'
+														textTool='Solicitar Contra Muestra' // here
+														icon = {<AiFillDislike className='text-4xl'/>}
+														>
+															<ModalConfirmacion
+																id = {id}
+																confirmacion={confirmacion}
+																setConfirmacion={setConfirmacion}
+																mensaje='¿Está seguro de solicitar contra muestra?. ¡invalidara el muestreo de rendimiento aprobado!'
+																formulario={<TbFidgetSpinner className=' animate-spin text-6xl'/>}
+																setOpen={(setPosted)} 
+																functionAction={handlePreContramuestra}
+															/>
+
+													</ModalForm>
+
+				
 											</>
 											)
 											: <div className='text-red-500 font-bold'>Muestreo Incompleto</div> // Mensaje cuando isComplete es falso
@@ -315,7 +358,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 										}
 									</>
 								)
-								: !hasGroup(['dnandres'])
+								: !hasGroup(['dnandres']) && !hasGroup(['comercializador']) 
 									?	<span>No tienes permisos</span>
 									: <span className='text-md font-semibold'>Muestras insuficientes en CDC</span>
 						}

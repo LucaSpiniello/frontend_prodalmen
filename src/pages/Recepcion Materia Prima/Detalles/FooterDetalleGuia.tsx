@@ -82,7 +82,7 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data }) => {
   const envases = useAppSelector((state: RootState) => state.envasesmp.envases)
   const camiones = useAppSelector((state: RootState) => state.camiones.camiones)
   const camionAcoplado = camiones?.find(camion => camion?.id === Number(data?.camion))?.acoplado
-
+  const comercializador = useAppSelector((state: RootState) => state.auth.dataUser?.comercializador)
   const formik = useFormik({
     initialValues: {
       kilos_brutos_1: 0,
@@ -264,7 +264,7 @@ const FooterDetalleGuia: FC<IFooterProps> = ({ data }) => {
               : (
                 (hasGroup(['recepcion-mp']) || hasGroup(['bodega']) || hasGroup(['controlcalidad'])) && row?.estado_recepcion! >= '2'
                     ? null
-                    : hasGroup(['recepcion-mp'])
+                    : hasGroup(['recepcion-mp']) && comercializador === 'Prodalmen'
                       ? (
                         // <ModalForm
                         //   open={openModalEdicion}
