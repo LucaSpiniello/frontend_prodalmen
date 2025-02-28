@@ -79,7 +79,7 @@ const DetalleProyeccion = () => {
         dispatch(fetchRendimientoLotes({ id,  params: { variedad: filtroVariedad }, token, verificar_token: verificarToken }));
       });
     }
-  }, [control_calidad, filtroVariedad, dispatch, token, verificarToken, filtroVariedad]);
+  }, [control_calidad, filtroVariedad]);
 
   useEffect(() => {
     if (control_calidad) {
@@ -292,7 +292,7 @@ const DetalleProyeccion = () => {
               <span className='text-xl font-semibold text-gray-500'>No hay datos para mostrar</span>
               </div>}
                 {rendimientosCombinados && 
-                  <PDFProyeccion controlCombinado={rendimientosCombinados} variedad={filtroVariedadLabel} productor={selectedProductor} />
+                  <PDFProyeccion controlCombinado={rendimientosCombinados} variedad={filtroVariedadLabel} productor={selectedProductor} isPacificNut={isPacificNut} />
                 }
 
 				</Container>
