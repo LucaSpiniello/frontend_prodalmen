@@ -41,7 +41,7 @@ import { TControlCalidad } from '../../../../types/TypesControlCalidad.type';
 import Tooltip from '../../../../components/ui/Tooltip';
 import { useAuth } from '../../../../context/authContext';
 import { fetchWithTokenPatch } from '../../../../utils/peticiones.utils';
-import { fetchControlesDeCalidadPorComercializador } from '../../../../redux/slices/controlcalidadSlice';
+import { fetchControlesDeCalidadPorComercializador, fetchControlesDeCalidad } from '../../../../redux/slices/controlcalidadSlice';
 import { BiCheckDouble } from 'react-icons/bi';
 import toast from 'react-hot-toast';
 import ModalConfirmacion from '../../../../components/ModalConfirmacion';
@@ -89,7 +89,12 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 		)
 		if (response.ok) {
 			toast.success('El lote fue aprobado')
-			dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
+			if (comercializador == 'Pacific Nut'){
+				dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
+			  }
+			else {
+			dispatch(fetchControlesDeCalidad({ token, verificar_token: verificarToken }))
+			}
 		} else {
 			toast.error('El lote no fue aprobado')
 		}
@@ -108,7 +113,12 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 
 		if (response.ok) {
 			toast.success('Fue solicitada una Contra Muestra')
-			dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
+			if (comercializador == 'Pacific Nut'){
+				dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
+			  }
+			  else {
+				dispatch(fetchControlesDeCalidad({ token, verificar_token: verificarToken }))
+			  }
 			setPosted(true)
 
 		} else {
@@ -129,7 +139,12 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 
 		if (response.ok) {
 			toast.success('Fue solicitada una Contra Muestra')
-			dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
+			if (comercializador == 'Pacific Nut'){
+				dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
+			  }
+			  else {
+				dispatch(fetchControlesDeCalidad({ token, verificar_token: verificarToken }))
+			  }
 			setPosted(true)
 
 		} else {
