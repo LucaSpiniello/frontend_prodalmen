@@ -82,7 +82,7 @@ const FormularioRegistroTara : FC<IFormularioEditable> = ({isOpen, lote }) => {
           {
             ...values,
             creado_por: perfilData?.id,
-            estado_recepcion: 7
+            estado_recepcion: 5
           },
           token_verificado
         )
