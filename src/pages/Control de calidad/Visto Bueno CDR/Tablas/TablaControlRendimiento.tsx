@@ -175,6 +175,14 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 			},
 			header: 'Productor ',
 		}),
+		columnHelper.accessor('comercializador', {
+			cell: (info) => {
+				return (
+					<div className='font-bold'>{`${info.row.original.comercializador}`}</div>
+				)
+			},
+			header: 'Comercializador ',
+		}),
 		columnHelper.display({
 			id: 'cantidad',
 			cell: (info) => {
