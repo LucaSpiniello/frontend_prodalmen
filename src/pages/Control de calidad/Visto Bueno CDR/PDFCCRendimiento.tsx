@@ -163,6 +163,33 @@ const CCRendimiento = () => {
   let valores: any
   let labels: any
   let formattedData: any
+  let var_cat2_defectos_internos: any = null
+  let var_desechos_defectos_sanitarios: any = null
+  let var_kilos_descarte_kg_sobre_norma : any = null
+  let var_fuera_color_manchadas: any = null
+  let var_dobles_mellizas: any = null
+  let hongos : any = null
+  let vana_deshidratada : any = null
+  let precalibre_mas_38 : any = null
+  if (isPacificNut){
+    var_cat2_defectos_internos = "Defectos Internos"
+    var_desechos_defectos_sanitarios = "Defectos Sanitarios"
+    var_kilos_descarte_kg_sobre_norma = "Kg Sobre Norma"
+    var_fuera_color_manchadas = "Manchadas"
+    var_dobles_mellizas = "Mellizas"
+    hongos = "Hongos"
+    vana_deshidratada = "Deshidratada"
+    precalibre_mas_38 = ">38"
+  } else {
+    var_cat2_defectos_internos = "CAT 2"
+    var_desechos_defectos_sanitarios = "Desechos"
+    var_kilos_descarte_kg_sobre_norma = "Kilos Desc."
+    var_fuera_color_manchadas = "Fuera Color"
+    var_dobles_mellizas = "Dobles"
+    hongos = "Presencia de Hongo"
+    vana_deshidratada = "Vana Deshidratada"
+    precalibre_mas_38 = "Precalibre"
+  }
 
   // useEffect(() => {
   //   //@ts-ignores
@@ -650,7 +677,7 @@ const CCRendimiento = () => {
                           <Text style={styles.body_table_info_text}>&lt;8</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ width: '100%', textAlign: 'center', borderRight: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8 }}>Pre calibre</Text>
+                          <Text style={{ width: '100%', textAlign: 'center', borderRight: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8 }}>{precalibre_mas_38}</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={{ width: '100%', textAlign: 'center', borderRight: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8 }}>{(rendimientos?.cc_pepa_calibre[0].precalibre! * rendimientos?.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text>
@@ -672,14 +699,14 @@ const CCRendimiento = () => {
                 position: 'relative',
                 top: -50
               }}>
-                <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: '10px' }}>CAT 2</Text>
+                <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: '10px' }}>{var_cat2_defectos_internos}</Text>
                 <View style={{ width: '100%', height: 180 }}>
                   <View style={styles.body_table}>
 
 
                     <View style={styles.body_table_header}>
                       <View style={{ width: '100%' }}>
-                        <Text style={{ fontSize: 8, textAlign: 'center', paddingVertical: 2 }}>CAT 2</Text>
+                        <Text style={{ fontSize: 8, textAlign: 'center', paddingVertical: 2 }}>{var_cat2_defectos_internos}</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
                         <Text style={{ fontSize: 8, textAlign: 'center', paddingVertical: 2 }}>%</Text>
@@ -688,7 +715,7 @@ const CCRendimiento = () => {
                         <Text style={{ fontSize: 8, textAlign: 'center', paddingVertical: 2 }}>% Permitido</Text>
                       </View>
                       <View style={styles.boxes_table_row}>
-                        <Text style={{ fontSize: 8, textAlign: 'center', paddingVertical: 2 }}>Kilos Desc.</Text>
+                        <Text style={{ fontSize: 8, textAlign: 'center', paddingVertical: 2 }}>{var_kilos_descarte_kg_sobre_norma}</Text>
                       </View>
                     </View>
 
@@ -714,7 +741,7 @@ const CCRendimiento = () => {
 
                       <View style={styles.body_table_rows}>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Fuera Color</Text>
+                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{var_fuera_color_manchadas}</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{rendimientos?.cc_pepa[0].color}%</Text>
@@ -730,7 +757,7 @@ const CCRendimiento = () => {
 
                       <View style={styles.body_table_rows}>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Dobles</Text>
+                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>{var_dobles_mellizas}</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>{rendimientos?.cc_pepa[0].dobles}%</Text>
@@ -765,7 +792,7 @@ const CCRendimiento = () => {
                 </View>
 
 
-                {isPacificNut ? <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: '10px', marginTop: 20 }}>Defectos Internos</Text>  : <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: '10px', marginTop: 20 }}>Desechos</Text>}
+                <Text style={{ fontSize: 12, textAlign: 'center', marginBottom: '10px', marginTop: 20 }}>{var_desechos_defectos_sanitarios}</Text>
                 <View style={{ width: '100%', height: '100%' }}>
 
                   <View style={styles.body_table}>
@@ -773,7 +800,7 @@ const CCRendimiento = () => {
                     <View style={styles.body_table_header}>
                       <View style={styles.body_table_rows}>
                         <View style={styles.boxes_table_row}>
-                          {isPacificNut ? <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>Defectos</Text> : <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>Desechos</Text>}
+                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>{var_desechos_defectos_sanitarios}</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>%</Text>
@@ -782,7 +809,7 @@ const CCRendimiento = () => {
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>% Permitido</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>Kilos des</Text>
+                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center' }}>{var_kilos_descarte_kg_sobre_norma}</Text>
                         </View>
                       </View>
                     </View>
@@ -804,7 +831,7 @@ const CCRendimiento = () => {
 
                       <View style={styles.body_table_rows}>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Presencia de Hongo</Text>
+                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{hongos}</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{(rendimientos?.cc_pepa[0].hongo)?.toFixed(2)} %</Text>
@@ -819,7 +846,7 @@ const CCRendimiento = () => {
 
                       <View style={styles.body_table_rows}>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Vana Deshidratada</Text>
+                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{vana_deshidratada}</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{(rendimientos?.cc_pepa[0].vana)?.toFixed(2)} %</Text>
@@ -864,7 +891,7 @@ const CCRendimiento = () => {
 
                       <View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <View style={styles.boxes_table_row}>
-                          {isPacificNut ? <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Total Defectos</Text> : <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Total Deshecho</Text>}
+                          <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Total {var_desechos_defectos_sanitarios}</Text> 
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', color: 'white' }}>1</Text>
@@ -1047,7 +1074,7 @@ const CCRendimiento = () => {
                         justifyContent: "space-between",
                       }}>
                         <View style={{ width: '300px', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                          <Text style={{ fontSize: 8 }}>CAT 2</Text>
+                          <Text style={{ fontSize: 8 }}>{var_cat2_defectos_internos}</Text>
                         </View>
 
                         <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
@@ -1071,7 +1098,7 @@ const CCRendimiento = () => {
                         justifyContent: "space-between",
                       }}>
                         <View style={{ width: '300px', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5 }}>
-                          {isPacificNut ? <Text style={{ fontSize: 8 }}>Defectos</Text> : <Text style={{ fontSize: 8 }}>Desechos</Text>}
+                          <Text style={{ fontSize: 8 }}>{var_desechos_defectos_sanitarios}</Text> 
                           
                         </View>
 

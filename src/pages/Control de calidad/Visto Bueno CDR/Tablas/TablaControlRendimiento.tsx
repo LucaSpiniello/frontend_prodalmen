@@ -324,7 +324,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 									}
 									{
 										estado_aprobacion == 0 && (
-											isComplete
+											isComplete && comercializador === 'Prodalmen'
 											? (
 											<>
 												<Button
