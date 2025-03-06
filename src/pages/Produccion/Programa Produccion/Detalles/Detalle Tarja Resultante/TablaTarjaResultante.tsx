@@ -69,6 +69,18 @@ const TablaTarjaResultante = () => {
     }
   }
 
+  const reemprimirEtiqueta = async (id_lote: number) => {
+      const token_verificado = await verificarToken(token!)
+      if (!token_verificado) throw new Error('Token no verificado')
+      const res = await fetchWithTokenPatch(`api/produccion/${id}/tarjas_resultantes/${id_lote}/reemprimir_etiqueta/`,
+        {
+          cc_tarja: true,
+          produccion: id
+        },
+        token_verificado
+      )
+    }
+
   const columnHelper = createColumnHelper<TTarjaResultante>();
   const columns = [
 		columnHelper.accessor('codigo_tarja',{
@@ -165,6 +177,7 @@ const TablaTarjaResultante = () => {
                     variant='solid'
                     color='sky'
                     className='w-20 border-none rounded-md h-12 flex items-center justify-center p-2 hover:scale-105'
+                    onClick={() => reemprimirEtiqueta(row?.id)}
                     >
                       <IoIosBarcode  style={{ fontSize: 35 }}/>
                   </Button>

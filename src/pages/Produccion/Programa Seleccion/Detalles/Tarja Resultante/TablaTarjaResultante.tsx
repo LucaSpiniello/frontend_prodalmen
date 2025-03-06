@@ -75,6 +75,20 @@ const TablaTarjaResultanteSeleccion: FC<IRendimientoMuestra> = () => {
     toast.error("No se pudo eliminar la tarja, vuelve a intentarlo")
   }
 }
+    const reimprimir_codigo = async (id_lote: number) => {
+      const token_verificado = await verificarToken(token!)
+    
+      if (!token_verificado) throw new Error('Token no verificado')
+  
+      const res = await fetchWithTokenPatch(`api/seleccion/${id}/tarjaseleccionada/${id_lote}/reimprimir_codigo/`,
+        {
+          cc_tarja: true,
+          seleccion: id
+        },
+        token_verificado
+      )
+  
+    }
   const columnHelper = createColumnHelper<TTarjaSeleccionada>();
 
   const columns = [
@@ -174,6 +188,7 @@ const TablaTarjaResultanteSeleccion: FC<IRendimientoMuestra> = () => {
                       variant='solid'
                       color='violet'
                       className='w-20 border-none rounded-md h-12  flex items-center justify-center p-2 hover:scale-105'
+                      onClick={() => reimprimir_codigo(id)}
                       >
                         <IoIosBarcode style={{ fontSize: 35 }}/>
                     </Button>

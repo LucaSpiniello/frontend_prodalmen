@@ -99,6 +99,7 @@ export type TMuestraSerializer = {
   cascara: number;
   pepa_huerto: number;
   pepa_bruta: number;
+  pelon_adherido? : number;
 };
 
 export type TCCPepaSerializer = {

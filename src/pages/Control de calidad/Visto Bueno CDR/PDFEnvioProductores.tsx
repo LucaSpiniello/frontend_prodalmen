@@ -284,7 +284,7 @@ const PdfCC: FC<{ usuario : any, guia : any, control_calidad : any, rendimientos
   
     return (
           <Document title={`CDR_${control_calidad?.numero_lote}_${format(control_calidad?.fecha_creacion!, { date: 'short' }, 'es')}_${guia?.nombre_productor}`}>
-    <Page style={styles.page} size='A4'>
+          <Page style={styles.page} size='A4'>
               <View style={styles.header}>
                 <View style={styles.header_superior}>
                   { isPacificNut ?

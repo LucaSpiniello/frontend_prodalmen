@@ -171,7 +171,9 @@ const CCRendimiento = () => {
   let hongos : any = null
   let vana_deshidratada : any = null
   let precalibre_mas_38 : any = null
+
   if (isPacificNut){
+    // change the field "ciega" in rendimientos_cc to pelon adherido
     var_cat2_defectos_internos = "Defectos Internos"
     var_desechos_defectos_sanitarios = "Defectos Sanitarios"
     var_kilos_descarte_kg_sobre_norma = "Kg Sobre Norma"
@@ -214,10 +216,27 @@ const CCRendimiento = () => {
 
 
   const labels_pre = Object.keys(rendimiento_cc || {});
+
   valores = Object.values(rendimiento_cc || {});
 
   const entry = Object.entries(rendimiento_cc)
-  const filteredEntry = entry.filter(([key]) => key !== 'cc_lote')
+
+  let filteredEntry = entry.filter(([key]) => key !== 'cc_lote')
+  if (isPacificNut) {
+    filteredEntry = filteredEntry.map(([key, value]) => {
+      if (key === 'ciega') {
+        return ['pelon adherido', value]
+      }
+      if (key =="basura") {
+        return ['palos/hojas/piedras', value]
+      }
+      return [key, value]
+    })
+    labels_pre[labels_pre.indexOf('ciega')] = 'pelon adherido'
+    labels_pre[labels_pre.indexOf('basura')] = 'palos/hojas/piedras'
+
+  }
+
   formattedData = filteredEntry.map(([key, value]) => ({
     label: key,
     data: [value]
@@ -664,14 +683,38 @@ const CCRendimiento = () => {
                           <Text style={styles.body_table_info_text}>40/+</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
-                          <Text style={styles.body_table_info_text}>{(rendimientos?.cc_pepa_calibre[0].calibre_40_mas! * rendimientos?.cc_kilos_des_merma[0].exportable! / 100).toFixed(1)} kgs</Text>
-                        </View>
+                            <Text style={styles.body_table_info_text}>
+                              {isPacificNut
+                                ? (
+                                    ((rendimientos?.cc_pepa_calibre[0]?.calibre_40_mas ?? 0) *
+                                      (rendimientos?.cc_kilos_des_merma[0]?.exportable ?? 0) +
+                                      (rendimientos?.cc_pepa_calibre[0]?.precalibre ?? 0) *
+                                        (rendimientos?.cc_kilos_des_merma[0]?.exportable ?? 0)) /
+                                    100
+                                  ).toFixed(1)
+                                : (
+                                    (rendimientos?.cc_pepa_calibre[0]?.calibre_40_mas ?? 0) *
+                                    (rendimientos?.cc_kilos_des_merma[0]?.exportable ?? 0) /
+                                    100
+                                  ).toFixed(1)}{' '}
+                              kgs
+                            </Text>
+                          </View>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>{rendimientos?.cc_pepa_calibre[0].calibre_40_mas}%</Text>
-                        </View>
+                        {!isPacificNut ? (
+                          <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>
+                            {rendimientos?.cc_pepa_calibre[0]?.calibre_40_mas ?? 0}%
+                          </Text>
+                        ) : (
+                          <Text style={{ width: '100%', borderBottom: '1px solid green', paddingVertical: 4, paddingRight: 2, fontSize: 8, textAlign: 'center' }}>
+                            {((rendimientos?.cc_pepa_calibre[0]?.calibre_40_mas ?? 0) + (rendimientos?.cc_pepa_calibre[0]?.precalibre ?? 0)).toFixed(1)}%
+                          </Text>
+                        )}
+                      </View>
                       </View>
 
                       0
+                      { !isPacificNut &&
                       <View style={styles.body_table_rows}>
                         <View style={styles.boxes_table_row}>
                           <Text style={styles.body_table_info_text}>&lt;8</Text>
@@ -686,6 +729,10 @@ const CCRendimiento = () => {
                           <Text style={{ width: '100%', textAlign: 'center', paddingVertical: 4, paddingRight: 2, fontSize: 8 }}>{rendimientos?.cc_pepa_calibre[0].precalibre}%</Text>
                         </View>
                       </View>
+
+                      } 
+
+
                     </View>
                   </View>
                 </View>
