@@ -820,7 +820,7 @@ const CCRendimiento = () => {
 
                       <View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', borderTop: '1px solid green' }}>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Total CAT2</Text>
+                          <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green' }}>Total {var_cat2_defectos_internos}</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={{ paddingVertical: 5, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', color: 'white' }}>a</Text>
