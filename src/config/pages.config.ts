@@ -300,12 +300,25 @@ export const appPages = {
 						to: '/pro/produccion/pdf-pre-limpia',
 						icon: 'HeroListBullet',
 					},
+					pdf_patio_p_produccion: {
+						id: 'programa',
+						text: 'Programa Producción',
+						to: '/pro/produccion/pdf-patio',
+						icon: 'HeroListBullet',
+					},
 					pdf_despelonada_p_produccion: {
+						id: 'programa',
+						text: 'Programa Producción',
+						to: '/pro/produccion/pdf-despelonado',
+						icon: 'HeroListBullet',
+					},
+					pdf_descascarado_p_produccion: {
 						id: 'programa',
 						text: 'Programa Producción',
 						to: '/pro/produccion/pdf-descascarado',
 						icon: 'HeroListBullet',
 					},
+
 					pdf_informe_kilos_operario_produccion: {
 						id: 'programa',
 						text: 'Programa Producción',

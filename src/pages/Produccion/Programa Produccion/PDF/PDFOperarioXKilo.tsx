@@ -284,7 +284,15 @@ const PDFOperarioXKilo = () => {
             </View>
 
             <View style={styles.header_info_box_superior}>
+             <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Patio</Text>
+            </View>
+
+            <View style={styles.header_info_box_superior}>
              <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Despelonado</Text>
+            </View>
+
+            <View style={styles.header_info_box_superior}>
+             <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Descascarado</Text>
             </View>
 
             <View style={styles.header_info_box_superior}>
@@ -316,9 +324,17 @@ const PDFOperarioXKilo = () => {
                     <View style={styles.header_info_box_superior}>
                      <Text style={{ fontSize: 10}}>{`$ ${(programa.pre_limpia ?? 0).toLocaleString()}`}</Text>
                     </View>
+
+                    <View style={styles.header_info_box_superior}>
+                     <Text style={{ fontSize: 10}}>{`${programa.ayud_patio > 0 ? '$' : ''} ${(programa.ayud_patio ?? 0).toLocaleString()}`}</Text>
+                    </View>
         
                     <View style={styles.header_info_box_superior}>
                      <Text style={{ fontSize: 10}}>{`${programa.despelonado > 0 ? '$' : ''} ${(programa.despelonado ?? 0).toLocaleString()}`}</Text>
+                    </View>
+
+                    <View style={styles.header_info_box_superior}>
+                     <Text style={{ fontSize: 10}}>{`${programa.descascarado > 0 ? '$' : ''} ${(programa.descascarado ?? 0).toLocaleString()}`}</Text>
                     </View>
         
                     <View style={styles.header_info_box_superior}>

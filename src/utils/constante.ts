@@ -15,6 +15,8 @@ export const TIPOS_OPERARIO = [
   { values: "pesaje", label: "Operario Pesaje" },
   { values: "p_harina", label: "Operario Planta Harina" },
   { values: "sub_prod", label: "Operario Sub Producto" },
+  { values: "ayud_patio", label: "Ayudante Patio"},
+  { values: "op_desca", label: "Operador Descascarado"},
 ];
 
 export const TIPO_ACOPLADO = [
@@ -143,7 +145,9 @@ export const CARGOS_PERFILES = [
 
 export const TIPO_INFORME = [
   {value: 1, label: 'Pre Limpia'},
-  {value: 2, label: 'Descascarado/ Despelonado'}
+  {value: 2, label: 'Despelonado'},
+  {value: 3, label: 'Descascarado'},
+  {value: 4, label: 'Patio'},
 ]
 
 

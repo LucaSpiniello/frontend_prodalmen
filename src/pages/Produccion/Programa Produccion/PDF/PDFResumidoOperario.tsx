@@ -233,9 +233,19 @@ const PDFResumidoOperarios = () => {
             <View style={styles.header_info_box_superior}>
              <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Pre Limpia</Text>
             </View>
+            
+            
+            <View style={styles.header_info_box_superior}>
+             <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Patio</Text>
+            </View>
+
 
             <View style={styles.header_info_box_superior}>
              <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Despelonado</Text>
+            </View>
+
+            <View style={styles.header_info_box_superior}>
+             <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Descascarado</Text>
             </View>
 
             <View style={styles.header_info_box_superior}>
@@ -268,7 +278,15 @@ const PDFResumidoOperarios = () => {
                   </View>
 
                   <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10}}>{`${operario.ayud_patio > 0 ? '$': ''} ${(operario.ayud_patio ?? 0).toLocaleString()}`}</Text>
+                  </View>
+
+                  <View style={styles.header_info_box_superior}>
                     <Text style={{ fontSize: 10}}>{`${operario.despelonado > 0 ? '$': ''} ${(operario.despelonado ?? 0).toLocaleString()}`} </Text>
+                  </View>
+
+                  <View style={styles.header_info_box_superior}>
+                    <Text style={{ fontSize: 10}}>{`${operario.despelonado > 0 ? '$': ''} ${(operario.descascarado ?? 0).toLocaleString()}`} </Text>
                   </View>
       
                   <View style={styles.header_info_box_superior}>

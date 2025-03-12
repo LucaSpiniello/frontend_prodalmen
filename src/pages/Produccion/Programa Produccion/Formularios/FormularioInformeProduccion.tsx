@@ -70,8 +70,15 @@ const FormularioInformeProduccion: FC<IInformeProduccion> = ({ setOpen }) => {
           const data = await res.json()
           if (values.tipo_informe === '1'){
             navigate('/pro/produccion/pdf-pre-limpia/', { state: { pdf_detalle: data, desde: state[0].startDate, hasta: state[0].endDate, pathname: '/produccion'  }})
-          } else {
+          } 
+          else if (values.tipo_informe === '2'){
+            navigate('/pro/produccion/pdf-despelonado/', { state: { key: data, desde: state[0].startDate, hasta: state[0].endDate, pathname: pathname }})
+          }
+          else if (values.tipo_informe === '3'){
             navigate('/pro/produccion/pdf-descascarado/', { state: { key: data, desde: state[0].startDate, hasta: state[0].endDate, pathname: pathname }})
+          }
+          else if (values.tipo_informe === '4'){
+            navigate('/pro/produccion/pdf-patio/', { state: { pdf_detalle: data, desde: state[0].startDate, hasta: state[0].endDate, pathname: '/produccion'  }})
           }
         }
       } catch (error) {

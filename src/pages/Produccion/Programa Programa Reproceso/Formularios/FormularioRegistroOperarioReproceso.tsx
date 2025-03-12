@@ -42,7 +42,7 @@ const FormularioRegistroOperarioReproceso: FC<IFormCamiones> = ({ setOpen }) => 
   const [filtroSkill, setFiltroSkill] = useState<string | undefined>()
 
   useEffect(() => {
-    dispatch(fetchOperariosFiltro({token, verificar_token: verificarToken, nombre: filtroNombre, apellido: filtroApellido, skill: filtroSkill ?? '?skill=p_limpia,despelo'}))
+    dispatch(fetchOperariosFiltro({token, verificar_token: verificarToken, nombre: filtroNombre, apellido: filtroApellido, skill: filtroSkill ?? '?skill=p_limpia,despelo,op_desca,ayud_patio'}))
   }, [filtroNombre, filtroApellido, filtroSkill])
 
   const columns = [
@@ -62,7 +62,7 @@ const FormularioRegistroOperarioReproceso: FC<IFormCamiones> = ({ setOpen }) => 
       cell: (info) => {
         const options: {value: string, label: string}[] = []
         info.row.original.skills.forEach(element => {
-          if (element.tipo_operario === 'p_limpia' || element.tipo_operario === 'despelo')
+          if (element.tipo_operario === 'p_limpia' || element.tipo_operario === 'despelo' || element.tipo_operario === 'op_desca' || element.tipo_operario === 'ayud_patio')
             { options.push({value: element.tipo_operario, label: element.tipo_operario_label})}
         })
         return (
@@ -98,7 +98,7 @@ const FormularioRegistroOperarioReproceso: FC<IFormCamiones> = ({ setOpen }) => 
       cell: (info) => {
         const options: string[] = []
           info.row.original.skills.forEach(element => {
-          if (element.tipo_operario === 'p_limpia' || element.tipo_operario === 'despelo')
+          if (element.tipo_operario === 'p_limpia' || element.tipo_operario === 'despelo' || element.tipo_operario === 'op_desca' || element.tipo_operario === 'ayud_patio')
             { options.push(element.tipo_operario)}
         })
         return (
@@ -186,7 +186,10 @@ const FormularioRegistroOperarioReproceso: FC<IFormCamiones> = ({ setOpen }) => 
                 placeholder="Filtro Skill"
                 options={[
                   {value: 'p_limpia', label: 'Operario Pre Limpia'},
-                  {value: 'despelo', label: 'Operario Despelonado'}
+                  {value: 'despelo', label: 'Operario Despelonado'},
+                  {value: 'op_desca', label: 'Operario Descascarado'},
+                  {value: 'ayud_patio', label: 'Ayudante de Patio'},
+
                 ]}
                 onChange={(e: any) => {
                   if (e === null) {

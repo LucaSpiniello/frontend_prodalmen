@@ -83,7 +83,9 @@ const FormularioRegistroPrograma = lazy(() => import ('../pages/Produccion/Progr
 const PDFOperarioXKilo = lazy(() => import ('../pages/Produccion/Programa Produccion/PDF/PDFOperarioXKilo.tsx'))
 const PDFResumidoOperario = lazy(() => import ('../pages/Produccion/Programa Produccion/PDF/PDFResumidoOperario.tsx'))
 const PDFPreLimpia = lazy(() => import ('../pages/Produccion/Programa Produccion/PDF/PDFPreLimpia.tsx'))
+const PDFPatio = lazy(() => import ('../pages/Produccion/Programa Produccion/PDF/PDFPatio.tsx'))
 const PDFDescascarado = lazy(() => import ('../pages/Produccion/Programa Produccion/PDF/PDFDescascarado.tsx'))
+const PDFDespelonado = lazy(() => import ('../pages/Produccion/Programa Produccion/PDF/PDFDespelonado.tsx'))
 const PDFDocumentoEntrada = lazy(() => import ('../pages/Produccion/Programa Produccion/PDF/PDFDocumentoEntrada.tsx'))
 const PDFDetalleEnvases = lazy(() => import ('../pages/Produccion/Programa Produccion/PDF/PDFDetalleEnvases.tsx'))
 const PDFDocumentoSalidaProduccion = lazy(() => import('../pages/Produccion/Programa Produccion/PDF/PDFDocumentoSalida.tsx'))
@@ -264,7 +266,11 @@ const contentRoutes: RouteProps[] = [
 	{ path: appPages.produccion.subPages.p_produccion.subPages.detalle_p_produccion.to, element: <DetallePrograma />},
 	{ path: appPages.produccion.subPages.p_produccion.subPages.control_rendimiento_p_produccion.to, element: <DetalleControlRendimiento />},
 	{ path: appPages.produccion.subPages.p_produccion.subPages.pdf_pre_limpia_p_produccion.to, element: <PDFPreLimpia />},
-	{ path: appPages.produccion.subPages.p_produccion.subPages.pdf_despelonada_p_produccion.to, element: <PDFDescascarado />},
+	{ path: appPages.produccion.subPages.p_produccion.subPages.pdf_patio_p_produccion.to, element: <PDFPatio />},
+
+	{ path: appPages.produccion.subPages.p_produccion.subPages.pdf_despelonada_p_produccion.to, element: <PDFDespelonado />},
+	{ path: appPages.produccion.subPages.p_produccion.subPages.pdf_descascarado_p_produccion.to, element: <PDFDescascarado />},
+
 	{ path: appPages.produccion.subPages.p_produccion.subPages.pdf_informe_kilos_operario_produccion.to, element: <PDFOperarioXKilo />},
 	{ path: appPages.produccion.subPages.p_produccion.subPages.pdf_informe_kilos_operario_resumido_p_produccion.to, element: <PDFResumidoOperario />},
 	{ path: appPages.produccion.subPages.p_produccion.subPages.pdf_detalle_envase_p_produccion.to, element: <PDFDetalleEnvases />},

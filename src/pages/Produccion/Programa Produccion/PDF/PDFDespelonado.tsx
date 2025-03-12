@@ -189,7 +189,7 @@ const PDFDescascarado = () => {
             </View>
 
             <Text style={{ width: 240, textAlign: 'center', fontSize: 14, position: 'relative', left: 10, top: 10}}>
-              Informe Descascarado
+              Informe Despelonado
               del día {format(state.desde)} Hasta el {format(state.hasta)}
             </Text>
 
