@@ -57,7 +57,6 @@ const columnHelper = createColumnHelper<TControlCalidad>();
 
 interface IControlProps {
 	data: TControlCalidad[] | []
-	refresh: Dispatch<SetStateAction<boolean>>
 }
 
 const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {

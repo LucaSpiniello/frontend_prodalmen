@@ -463,7 +463,7 @@ const FormularioControlCalidadTarja : FC<IFormCC> = ({ id_lote, isOpen, tipo_res
         </div>
 
         {
-          tipo_resultante === 'Borrel'
+          tipo_resultante === 'Borrel' || tipo_resultante === 'Maseto' || tipo_resultante === 'Pepa Huerto'
             ? (
               <div className='md:row-start-6 md:col-span-4'>
                 <Label htmlFor='canuto'>Canuto: </Label>

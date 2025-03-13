@@ -187,12 +187,26 @@ const DetalleCCTarja = () => {
                                     <span>{(control_calidad?.basura ?? 0).toFixed(1)} grs</span>
                                   </div>
                                 </div>
+
+                                {control_calidad?.canuto ? 
                                 <div className='md:row-start-6 md:col-start-3 md:col-span-2 '>
+                                  <Label htmlFor='' className='text-center'>Canuto</Label>
+                                  <div className='flex items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
+                                    <span>{(control_calidad?.canuto ?? 0).toFixed(1)} grs</span>
+                                  </div>
+                                </div>
+                                : 
+                                 null
+                              }
+
+
+                                <div className='md:row-start-6 md:col-span-2'>
                                   <Label htmlFor='' className='text-center'>Pepa Sana</Label>
                                   <div className='flex items-center justify-center dark:bg-green-700 bg-zinc-200 py-2 px-3 rounded-md'>
                                     <span>{(control_calidad?.pepa_sana ?? 0).toFixed(1)} grs</span>
                                   </div>
                                 </div>
+
 
                               </div>
                             </div>

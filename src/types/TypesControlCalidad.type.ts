@@ -276,6 +276,7 @@ export type TControlCalidadTarja = {
   estado_cc_label: string
   codigo_tarja: string
   tipo_resultante_label: string
+  canuto? : number
 }
 
 export type TTarjaResultante = {

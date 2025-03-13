@@ -29,7 +29,7 @@ const ListaControlRendimiento = () => {
 
   return (
     <div className="h-full">
-      <TablaControlRendimiento data={control_calidad} refresh={() => {}} />
+      <TablaControlRendimiento data={control_calidad}  />
     </div>
   )
 }

@@ -220,7 +220,7 @@ const TablaControlCalidad: FC<IControlProps> = ({ data }) => {
 		getSortedRowModel: getSortedRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
 		initialState: {
-			pagination: { pageSize: 5 },
+			pagination: { pageSize: 7 },
 		},
 	})
 
