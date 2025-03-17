@@ -93,7 +93,7 @@ const DefaultAsideTemplate = () => {
 								icon={appPages.controles_calidad.icon}
 							>
 								<NavItem {...appPages.controles_calidad.subPages.produccion.subPages.cc_tarja_produccion} />
-								<NavItem {...appPages.controles_calidad.subPages.produccion.subPages.cc_tarja_reproceso} />
+								{/* <NavItem {...appPages.controles_calidad.subPages.produccion.subPages.cc_tarja_reproceso} /> */}
 							</NavCollapse>
 							<NavCollapse
 								text={appPages.controles_calidad.subPages.seleccion.text}
@@ -123,7 +123,7 @@ const DefaultAsideTemplate = () => {
 							{hasGroup(['jefe-planta', 'dnandres', 'produccion', 'produccion-jefatura', 'pesaje']) && (
 								<>
 									<NavItem {...appPages.produccion.subPages.p_produccion} />
-									<NavItem {...appPages.produccion.subPages.reproceso} />
+									{/* <NavItem {...appPages.produccion.subPages.reproceso} /> */}
 								</>
 							)}
 							{hasGroup(['jefe-planta', 'seleccion', 'seleccion-jefatura', 'dnandres']) && (
@@ -202,6 +202,23 @@ const DefaultAsideTemplate = () => {
 							)
 						: null
 					}
+					
+					
+					{hasGroup(['embalaje'])
+						? (
+								<NavCollapse
+									text={appPages.embalaje.text}
+									to={appPages.embalaje.to}
+									icon={appPages.embalaje.icon}
+								>
+									<NavItem {...appPages.embalaje.subPages.programas_embalaje} />
+									<NavItem {...appPages.embalaje.subPages.tipo_embalajes} />
+									<NavItem {...appPages.embalaje.subPages.etiquetados} />
+								</NavCollapse>
+							)
+						: null
+					}
+
 
 					{
 					hasGroup(['bodega', 'dnandres', 'jefe-planta', 'bode	ga-jefatura', 'produccion-jefatura'])

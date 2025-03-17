@@ -64,11 +64,11 @@ const DetalleProyeccion = () => {
         "Tuca", "Nonpareil", "Sin Especificar", "Padre", "Texas", "Marcona", "Guara",
         "Desmayo", "Ixl", "Thompson", "Drake", "Vesta", "Neplus", "Fritz", "Butte",
         "Mission", "Neplus", "Tipo California", "Mezcla", "Independence", "Avijar",
-        "Isabelona", "Soleta", "Vialfas"
+        "Isabelona", "Soleta", "Vialfas", "Suma"
     ];
 
     const calibres = [
-        "18/20", "20/22", "23/25", "25/27", "27/30", "30/32", "32/34", "34/36", "36/40", "40/mas"
+        "18/20", "20/22", "23/25", "25/27", "27/30", "30/32", "32/34", "34/36", "36/40", "40/mas", "Suma"
     ];
 
     const calidades = [
@@ -104,8 +104,17 @@ const DetalleProyeccion = () => {
                     const kilosSeleccionados = seleccionado ? seleccionado.fruta_resultante : 0;
                     fila[calibre] = (kilosProyectados - kilosSeleccionados).toFixed(2); // Restar seleccionada a proyectada
                 });
+
+                // Calcular la suma de los kilos proyectados por fila y aproximar al primer decimal
+                fila["Suma"] = calibres.reduce((acc, calibre) => acc + Number(fila[calibre]), 0).toFixed(2);
                 return fila;
             });
+            // Calcular la suma de los kilos proyectados por columna y aproximar al primer decimal
+            const sumas: FilaTabla = { variedad: "Suma" };
+            calibres.forEach((calibre) => {
+                sumas[calibre] = datos.reduce((acc, fila) => acc + Number(fila[calibre]), 0).toFixed(2);
+            });
+            datos.push(sumas);
             setDatosProyectados(datos);
         }
     }, [proyecciones, seleccion]);
@@ -121,9 +130,17 @@ const DetalleProyeccion = () => {
                     const kilosSeleccionados = seleccionado ? seleccionado.fruta_resultante : 0;
                     const kilosVendidos = pedido ? pedido?.kilos_solicitados : 0;
                     fila[calibre] = (kilosSeleccionados - kilosVendidos).toFixed(2); // Restar vendida a seleccionada
+                    // Calcular la suma de los kilos seleccionados por fila y aproximar al primer decimal
+                    fila["Suma"] = calibres.reduce((acc, calibre) => acc + Number(fila[calibre]), 0).toFixed(2);
                 });
                 return fila;
             });
+            const sumas: FilaTabla = { variedad: "Suma" };
+            calibres.forEach((calibre) => {
+                sumas[calibre] = datos.reduce((acc, fila) => acc + Number(fila[calibre]), 0).toFixed(2);
+            });
+            datos.push(sumas);
+
             setDatosSeleccionados(datos);
         }
     }, [seleccion, calidadSeleccionada, allpedidos]);
@@ -167,7 +184,7 @@ const DetalleProyeccion = () => {
         getSortedRowModel: getSortedRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         initialState: {
-            pagination: { pageSize: 8 },
+            pagination: { pageSize: 9 },
         },
     });
 
@@ -180,7 +197,7 @@ const DetalleProyeccion = () => {
         getSortedRowModel: getSortedRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         initialState: {
-            pagination: { pageSize: 8 },
+            pagination: { pageSize: 9 },
         },
     });
 
