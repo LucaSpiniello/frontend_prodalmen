@@ -224,9 +224,11 @@ const PDFDocumentoSalida = () => {
                             padding: 5
                             }}>
                                 <View style={styles.header_date_info_box}>
-                                    <Text style={styles.header_date_info_text}>Lotes en Programa: </Text>
-                                    <Text style={styles.header_date_info_text}>{pdf?.numeros_lote.map(numero => numero)}</Text>
-                                </View>
+                                <Text style={styles.header_date_info_text}>Lotes en Programa: </Text>
+                                <Text style={styles.header_date_info_text}>
+                                    {pdf?.numeros_lote.join(', ')}
+                                </Text>
+                            </View>
                             </View>
                         </View>
                     

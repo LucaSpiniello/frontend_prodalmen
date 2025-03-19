@@ -92,7 +92,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 				dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
 			  }
 			else {
-			dispatch(fetchControlesDeCalidad({ token, verificar_token: verificarToken }))
+				dispatch(fetchControlesDeCalidad({ token, verificar_token: verificarToken }))
 			}
 		} else {
 			toast.error('El lote no fue aprobado')

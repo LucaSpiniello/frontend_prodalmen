@@ -115,6 +115,14 @@ const DetalleProyeccion = () => {
                 sumas[calibre] = datos.reduce((acc, fila) => acc + Number(fila[calibre]), 0).toFixed(2);
             });
             datos.push(sumas);
+            // iterar sobre la lista y hacer separacion de miles en cada dato
+            datos.forEach((dato) => {
+                for (const key in dato) {
+                    if (key !== "variedad") {
+                        dato[key] = dato[key].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                    }
+                }
+            });
             setDatosProyectados(datos);
         }
     }, [proyecciones, seleccion]);
@@ -140,6 +148,13 @@ const DetalleProyeccion = () => {
                 sumas[calibre] = datos.reduce((acc, fila) => acc + Number(fila[calibre]), 0).toFixed(2);
             });
             datos.push(sumas);
+            datos.forEach((dato) => {
+                for (const key in dato) {
+                    if (key !== "variedad") {
+                        dato[key] = dato[key].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                    }
+                }
+            });
 
             setDatosSeleccionados(datos);
         }
