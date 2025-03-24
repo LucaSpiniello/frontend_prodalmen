@@ -70,7 +70,7 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 		XLSX.writeFile(wb, 'bodega_g4.xlsx')
 
 	}
-
+	
 
 	const actualizacionCalle = async (codigo_tarja: string, value: string, tipo_binbodega_id: number, id_tarja?: number) => {
 		try {

@@ -69,7 +69,7 @@ const columnHelper = createColumnHelper<TProduccion>();
 		columnHelper.accessor('numero_programa', {
 			cell: (info) => (
 				<div className='font-bold text-center'>
-					{`${info.row.original.numero_programa}`}
+					{`${info.row.original.id}`}
 				</div>
 			),
 			header: 'N° Programa',
@@ -81,6 +81,14 @@ const columnHelper = createColumnHelper<TProduccion>();
 				</div>
 			),
 			header: 'N° Envases',
+		}),
+		columnHelper.accessor('comercializador', {
+			cell: (info) => (
+				<div className='font-bold text-center'>
+					{`${info.row.original.comercializador}`}
+				</div>
+			),
+			header: 'Comercializador',
 		}),
 		columnHelper.display({
 			id: 'lotes_ingresados',

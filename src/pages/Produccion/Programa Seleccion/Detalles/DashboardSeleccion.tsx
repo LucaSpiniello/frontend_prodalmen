@@ -254,7 +254,7 @@ const DashboardSeleccion = () => {
                       : null
                   }
 
-{
+{/* {
                     programa_seleccion?.condicion_cierre && estado === '4'
                       ? (
                         <ModalForm
@@ -287,7 +287,7 @@ const DashboardSeleccion = () => {
                         </ModalForm>
                         )
                       : null
-                  }
+                  } */}
               </div>
           </SubheaderRight>
 				</Subheader>
