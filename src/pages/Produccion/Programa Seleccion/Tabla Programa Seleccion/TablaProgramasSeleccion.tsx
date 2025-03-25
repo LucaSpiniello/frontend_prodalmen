@@ -157,6 +157,15 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 			),
 			header: 'N° Produccion',
 		}),
+		columnHelper.accessor('comercializador', {
+			id: 'comercializador',
+			cell: (info) => (
+				<div className='font-bold '>
+					{`${info.row.original.comercializador}`}
+				</div>
+			),
+			header: 'Comercializador',
+		}),
 		columnHelper.display({
 			id: 'bins_sin_procesar',
 			cell: (info) => (

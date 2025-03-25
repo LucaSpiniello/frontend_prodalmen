@@ -27,6 +27,7 @@ export type TSeleccion = {
   numero_programa: number
   pepa_para_seleccion_length: number
   produccion: number 
+  comercializador?: string
 }
 
 
@@ -185,6 +186,7 @@ export type TBinBodega = {
   tipo_producto: string
   programa_produccion?: string
   productor?: string
+  comercializador?: string
 }
 
 

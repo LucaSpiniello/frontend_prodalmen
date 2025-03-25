@@ -61,7 +61,8 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 			"Calidad": original.calidad,
 			"Variedad": original.variedad,
 			"Calibre": original.calibre,
-			"Calle": original.calle
+			"Calle": original.calle,
+			"Comercializador ": original.comercializador,
 		}))
 
 		const wb = XLSX.utils.book_new()
@@ -133,6 +134,16 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 				// </Tooltip>
 			),
 			header: 'Resultante del Proceso',
+		}),
+		columnHelper.accessor('comercializador', {
+			cell: (info) => (
+				// <Tooltip text={info.row.original.tipo_bodega} className="bg-black text-white text-xl">
+					<div className='font-bold '>
+						{`${info.row.original.comercializador}`}
+						</div>
+				// </Tooltip>
+			),
+			header: 'Comercializador',
 		}),
 		columnHelper.display({
 			id: 'cc_tarja',
