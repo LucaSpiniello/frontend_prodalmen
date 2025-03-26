@@ -32,14 +32,9 @@ function DetallePedido() {
     const [modalConfirmarComposicion, setModalConfirmarComposicion] = useState<boolean>(false)
     const userGroup = useAppSelector((state: RootState) => state.auth.grupos)
     const hasGroup = (groups: any) => userGroup?.groups && groups.some((group: any) => group in userGroup.groups);
-    const [isProdalmen, setIsProdalmen] = useState<boolean>(true)
+    const comercializador = useAppSelector((state: RootState) => state.auth.dataUser?.comercializador)
+    const isProdalmen = comercializador === 'Prodalmen';
     
-    useEffect(() => {
-        if (!hasGroup(['dnandres'])) {
-            setIsProdalmen(false)
-        }
-    }, [userGroup])
-
     useEffect(() => {
         if (token) {
             dispatch(detallePedidoThunk({id_pedido: id, token, verificar_token: verificarToken}))
