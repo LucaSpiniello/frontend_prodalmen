@@ -18,12 +18,13 @@ const ListaControlRendimiento = () => {
   const comercializador = useAppSelector((state: RootState) => state.auth.dataUser?.comercializador)
 
   useEffect(() => {
-    if (comercializador == 'Pacific Nut'){
-      dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
-    }
-    else {
-      dispatch(fetchControlesDeCalidad({ token, verificar_token: verificarToken }))
-    }
+    if (control_calidad.length === 0)
+      if (comercializador == 'Pacific Nut'){
+        dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
+      }
+      else {
+        dispatch(fetchControlesDeCalidad({ token, verificar_token: verificarToken }))
+      }
 
   }, [])
 
