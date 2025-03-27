@@ -274,6 +274,29 @@ export const fetchRendimientoLotes = createAsyncThunk('control-calidad/fetch_ren
   }
 )
 
+export const fetchTodosRendimientoLotes = createAsyncThunk('control-calidad/fetch_rendimiento_lotes', 
+  async (payload: FetchOptions, ThunkAPI) => {
+    const { params, token, verificar_token } = payload
+    //@ts-ignore
+    const { variedad } = params
+
+  try {
+      const token_verificado = await verificar_token(token)
+      if (!token_verificado) throw new Error('Token no verificado')
+
+      const response = await fetchWithTokenPostAction(`api/control-calidad/recepcionmp/rendimiento_lotes/?variedad=${variedad}`, token_verificado)
+      if (response.ok){
+        const data = await response.json()
+        return data
+      } else if (response.status === 400) {
+        return ThunkAPI.rejectWithValue('No se hizo bien la peticion')
+      }
+    } catch (error) {
+      return ThunkAPI.rejectWithValue('No se hizo bien la peticion')
+    }
+  }
+)
+
 export const fetchAllCC = createAsyncThunk('control-calidad/get_all_info_proyecccion', 
   async (payload: any, ThunkAPI) => {
     const { params, token, verificar_token } = payload
@@ -531,7 +554,7 @@ export const ControlCalidad = createSlice({
       })
       .addCase(fetchRendimientoLotes.fulfilled, (state, action) => {
         state.rendimientos_lotes = action.payload
-        if (state.rendimientos_lotes ){
+        if (state.rendimientos_lotes && action.payload ){
           const information = action.payload
           information.id = action.meta.arg.id
           state.todos_los_rendimientos.push(action.payload)

@@ -14,7 +14,7 @@ export type PostOptions = {
 export type FetchOptions = {
   endpoint?: string;
   token: TAuth | null; // Ajuste para aceptar null
-  id?: number | string;
+  id?: any;
   verificar_token: (token: TAuth | null) => Promise<string | false | undefined>; // Ajuste para aceptar null
   params?: Record<string, any>;
   action?: Dispatch<SetStateAction<boolean>>;
