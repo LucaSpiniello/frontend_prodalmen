@@ -232,11 +232,11 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 										color='red'
 										colorIntensity='900'
 										className={`hover:scale-105`}
-										onClick={() => navigate(`/cdc/crmp/pdf-rendimiento/${info.row.original.recepcionmp}`, { state: { pathname: pathname } })}
+										onClick={() => window.open(`/cdc/crmp/pdf-rendimiento/${info.row.original.recepcionmp}`, '_blank')}
 									>
 										<FaFilePdf style={{ fontSize: 28 }}/>
 									</Button>
-									)	
+								)	
 							}
 							</div>
 						)

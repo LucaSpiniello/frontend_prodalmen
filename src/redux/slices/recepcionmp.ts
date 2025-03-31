@@ -6,6 +6,7 @@ import { FetchOptions, PostOptions, PutOptions } from '../../types/fetchTypes.ty
 import { fetchWithToken, fetchWithTokenDelete, fetchWithTokenPatch, fetchWithTokenPost, fetchWithTokenPut } from '../../utils/peticiones.utils'
 import { TAuth, TVerificar } from '../../types/TypesRegistros.types'
 import { FaSearchMinus } from 'react-icons/fa'
+import { object } from 'yup'
 
 
 export const eliminarLoteRecepcionThunk = createAsyncThunk<{},{token: TAuth | null, id_recepcion: string | undefined, id_lote: string | number | undefined, verificar_token: TVerificar}, {rejectValue: string}>(
@@ -93,6 +94,29 @@ export const fetchGuiasdeRecepcion = createAsyncThunk('recepcionmp/fetch_guias',
        }
 
        const response = await fetchWithToken(`api/recepcionmp/`, token_verificado)
+       if (response.ok){
+        const data = await response.json()
+        return data
+       } else if (response.status === 400) {
+        return ThunkApi.rejectWithValue('No se ha logrado realizar la petición')
+       }
+
+    } catch (error) {
+      return ThunkApi.rejectWithValue('No se ha logrado realizar la petición')
+    }
+})
+
+export const fetchKilosRecepcion = createAsyncThunk('recepcionmp/get_all_kilos_lotes_recepcionados/', 
+  async (payload: FetchOptions, ThunkApi) => {
+    const { token, verificar_token } = payload
+    try {
+       const token_verificado = await verificar_token(token)
+      
+       if (!token_verificado){
+          throw new Error('Token no verificado')
+       }
+
+       const response = await fetchWithToken(`api/recepcionmp/get_all_kilos_lotes_recepcionados`, token_verificado)
        if (response.ok){
         const data = await response.json()
         return data
@@ -387,7 +411,7 @@ const initialState = {
   envases_lotes: [] as TEnvaseEnGuia[],
   loading: false,
   error: null as string | null | undefined,
-
+  kilos_recepcion: null as any,
 };
 
 
@@ -455,6 +479,12 @@ export const GuiaRecepcion = createSlice({
         state.guias_recepcion = action.payload
       })
       .addCase(fetchGuiasdeRecepcion.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      .addCase(fetchKilosRecepcion.fulfilled, (state, action) => {
+        state.kilos_recepcion = action.payload
+      })
+      .addCase(fetchKilosRecepcion.rejected, (state, action) => {
         state.error = action.error.message;
       })
       .addCase(eliminarGuiaRecepcion.fulfilled, (state, action) => {

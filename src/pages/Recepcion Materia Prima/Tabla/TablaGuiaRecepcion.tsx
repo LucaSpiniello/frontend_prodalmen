@@ -33,7 +33,6 @@ import { ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import Dropdown, { DropdownItem, DropdownMenu, DropdownToggle } from '../../../components/ui/Dropdown';
 import { HiCheckCircle, HiQuestionMarkCircle, HiXCircle } from 'react-icons/hi';
-
 interface IGuiaProps {
 	data: TGuia[] | []
 	refresh: Dispatch<SetStateAction<boolean>>
@@ -45,6 +44,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 	const hasGroup = (groups: any) => userGroup?.groups && groups.some((group: any) => group in userGroup.groups);
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   	const token = useAppSelector((state: RootState) => state.auth.authTokens)
+	const kilos_recepcion = useAppSelector((state: RootState) => state.recepcionmp.kilos_recepcion);
 	const { verificarToken } = useAuth()
 	const userGroup = useAppSelector((state: RootState) => state.auth.grupos)
 	const comercializador = useAppSelector((state: RootState) => state.auth.dataUser?.comercializador)
@@ -199,7 +199,20 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 							onChange={(e) => setGlobalFilter(e.target.value)}
 						/>
 					</FieldWrap>
+					
 				</SubheaderLeft>
+				<SubheaderRight className='w-full md:w-4/12'>
+				<div className='w-full border-black flex flex-col md:flex-row lg:flex-row gap-2'>
+                <div className='w-full lg:w-auto flex flex-col items-center rounded-md bg-emerald-700'>
+                  <span className='text-lg text-center font-semibold text-white'>{kilos_recepcion?.total_kilos_prodalmen?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} kgs</span>
+                  <label htmlFor="" className='font-semibold text-white text-center text-sm'>Total Recepcionados Prodalmen</label>
+                </div>
+				<div className='w-full lg:w-auto flex flex-col items-center rounded-md bg-emerald-700'>
+                  <span className='text-lg text-center font-semibold text-white'>{kilos_recepcion?.total_kilos_pacificnut?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} kgs</span>
+                  <label htmlFor="" className='font-semibold text-white text-center text-sm'>Total Recepcionados Pacific</label>
+                </div>
+				</div>
+				</SubheaderRight>
 				{ (hasGroup(['recepcion-mp']) && comercializador == "Prodalmen") && ( 
 					<SubheaderRight>
 						<Link to={`/rmp/registro-guia-recepcion/`} state={{ pathname: '/recepcionmp/' }}>
