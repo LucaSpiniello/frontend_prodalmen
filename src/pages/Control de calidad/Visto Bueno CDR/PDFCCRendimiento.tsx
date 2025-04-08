@@ -203,7 +203,7 @@ const CCRendimiento = () => {
   }, [])
 
   useEffect(() => {
-    if (control_calidad && control_calidad?.recepcionmp.toString() === id) {
+    if (control_calidad) {
       // Realiza las solicitudes adicionales solo si el control_calidad es el correcto
       dispatch(fetchGuiaRecepcion({ id: control_calidad?.guia_recepcion, token, verificar_token: verificarToken }))
         .then(() => dispatch(fetchRendimientoLotes({ id: control_calidad.recepcionmp, params: { variedad: 'todas' }, token, verificar_token: verificarToken })))

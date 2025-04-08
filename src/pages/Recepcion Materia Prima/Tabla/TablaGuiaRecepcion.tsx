@@ -138,7 +138,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 							</Link>
 						)}
 
-						{ ((hasGroup(['registros-admin']) || hasGroup(['recepcion-mp'])) && comercializador == "Prodalmen" ) && (
+						{/* { ((hasGroup(['registros-admin']) || hasGroup(['recepcion-mp'])) && comercializador == "Prodalmen" ) && (
 							<Button
 								variant='solid'
 								color='red'
@@ -148,7 +148,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 								}>
 								<HeroXMark style={{ fontSize: 25 }} />
 							</Button>
-						)}
+						)} */}
 					</div>
 				);
 			},
