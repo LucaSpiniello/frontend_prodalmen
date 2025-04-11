@@ -393,6 +393,7 @@ function combinarControles(controles: TRendimiento[]): TRendimiento {
   
   controles.forEach((control, index) => {
     // sumar field aportes_pex
+    console.log("que puta es", control.cc_aportes_pex)
     control.cc_aportes_pex.forEach((aporte, index) => {
       if (!controlCombinado.cc_aportes_pex[index]) {
         controlCombinado.cc_aportes_pex[index] = { ...aporte };
@@ -403,7 +404,6 @@ function combinarControles(controles: TRendimiento[]): TRendimiento {
       }
     });
     // Sumar field cc_calculo_final
-
     Object.keys(controlCombinado.cc_calculo_final).forEach((key : any) => {
       controlCombinado.cc_calculo_final[key] += control.cc_calculo_final[key];
     })
@@ -442,14 +442,14 @@ function combinarControles(controles: TRendimiento[]): TRendimiento {
     
   });
 
-    
+  console.log("el control combinado es", controlCombinado)
   Object.keys(controlCombinado.cc_promedio_porcentaje_muestras).forEach(key => {
     controlCombinado.cc_promedio_porcentaje_muestras[key] = Math.round((controlCombinado.cc_promedio_porcentaje_muestras[key] / controlCombinado.cc_calculo_final.kilos_netos) * 100) / 100;
   });
 
-  const total_pepas_calibradas = controlCombinado.cc_pepa_calibre[0].precalibre + controlCombinado.cc_pepa_calibre[0].calibre_18_20 + controlCombinado.cc_pepa_calibre[0].calibre_20_22 + controlCombinado.cc_pepa_calibre[0].calibre_23_25 + controlCombinado.cc_pepa_calibre[0].calibre_25_27 + controlCombinado.cc_pepa_calibre[0].calibre_27_30 + controlCombinado.cc_pepa_calibre[0].calibre_30_32 + controlCombinado.cc_pepa_calibre[0].calibre_32_34 + controlCombinado.cc_pepa_calibre[0].calibre_34_36 + controlCombinado.cc_pepa_calibre[0].calibre_36_40 + controlCombinado.cc_pepa_calibre[0].calibre_40_mas;
+
   Object.keys(controlCombinado.cc_promedio_porcentaje_cc_pepa_calibradas).forEach((key : any) => {
-    controlCombinado.cc_promedio_porcentaje_cc_pepa_calibradas[key] = Math.round((100 * controlCombinado.cc_pepa_calibre[0][key] / total_pepas_calibradas) * 100) / 100;
+    controlCombinado.cc_promedio_porcentaje_cc_pepa_calibradas[key] = Math.round((100 * controlCombinado.cc_pepa_calibre[0][key] / controlCombinado.cc_calculo_final.final_exp) * 100) / 100;
   });
 
   Object.keys(controlCombinado.cc_promedio_porcentaje_cc_pepa).forEach((key : any) => {
@@ -460,6 +460,7 @@ function combinarControles(controles: TRendimiento[]): TRendimiento {
     controlCombinado.cc_pepa_calibre[0][key] = parseFloat((controlCombinado.cc_pepa_calibre[0][key] * 100 / controlCombinado.cc_calculo_final.final_exp ).toFixed(2) );
   }
   )
+
 
 
 
