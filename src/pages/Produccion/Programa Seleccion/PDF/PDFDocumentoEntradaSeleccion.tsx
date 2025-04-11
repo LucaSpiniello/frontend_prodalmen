@@ -270,7 +270,7 @@ const PDFDocumentoSalida = () => {
             
               <View style={styles.header_date_info_box}>
                 <Text style={styles.header_date_info_text}>Fecha inicio programa: </Text>
-                <Text style={styles.header_date_info_text}>{format(state.seleccion?.fecha_creacion!, { date: 'full', time: 'short' }, 'es' )} </Text>
+                <Text style={styles.header_date_info_text}>{format(pdf_entrada[0]?.fecha_inicio, { date: 'full', time: 'short' }, 'es' )} </Text>
               </View>
 
             </View>

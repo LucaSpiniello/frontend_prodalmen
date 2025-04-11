@@ -308,15 +308,17 @@ export type TPDFEntradaSeleccion = {
   mezcla: number
   color: number
   goma: number
-  pepa: number
+  pepa: number  
   kilos: number
   colectado: boolean
   programa_produccion?: string
+  fecha_inicio?: any
 }
 
 export type TPDFSalidaSeleccion = {
   bines: Bines[],
-  subproductos: Productos[]
+  subproductos: Productos[],
+  fecha_final: any
 }
 
 export type Bines = {
