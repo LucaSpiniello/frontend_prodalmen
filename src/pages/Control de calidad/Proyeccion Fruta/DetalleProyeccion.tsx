@@ -14,7 +14,7 @@ import { RootState } from '../../../redux/store';
 import CardTablaInformativa from './TablaInformativa.card';
 import { OPTIONSPRO, TTabsPro } from '../../../types/TabsDetalleProyeccion.types';
 import { useAuth } from '../../../context/authContext';
-import { fetchControlesDeCalidadVistoBueno, fetchRendimientoLotes } from '../../../redux/slices/controlcalidadSlice';
+import { fetchControlesDeCalidadVistoBueno, fetchRendimientoLotes, } from '../../../redux/slices/controlcalidadSlice';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import Label from '../../../components/form/Label';

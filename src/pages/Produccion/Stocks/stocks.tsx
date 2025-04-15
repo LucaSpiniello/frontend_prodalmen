@@ -84,13 +84,6 @@ const DetalleProyeccion = () => {
         }
     }, [comercializador]);
 
-    useEffect(() => {
-        if (comercializador) {
-            dispatch(fetchAllCC({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }));
-            dispatch(fetchSeleccionesByComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }));
-            dispatch(fetchAllPedidos({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }));
-        }
-    }, [comercializador]);
 
     // Procesar datos proyectados
     useEffect(() => {
@@ -99,9 +92,9 @@ const DetalleProyeccion = () => {
                 const fila: FilaTabla = { variedad };
                 calibres.forEach((calibre) => {
                     const proyeccion = proyecciones.find((p) => p.variedad === variedad && p.calibre === calibre);
-                    const seleccionado = seleccion.find((s : any) => s.variedad === variedad && s.calibre === calibre);
+                    const seleccionados = seleccion.filter((s: any) => s.variedad === variedad && s.calibre === calibre);
                     const kilosProyectados = proyeccion ? proyeccion.kilos_exportables : 0;
-                    const kilosSeleccionados = seleccionado ? seleccionado.fruta_resultante : 0;
+                    const kilosSeleccionados = seleccionados.reduce((acc : any, s : any) => acc + s.fruta_resultante, 0)
                     fila[calibre] = (kilosProyectados - kilosSeleccionados).toFixed(2); // Restar seleccionada a proyectada
                 });
 
