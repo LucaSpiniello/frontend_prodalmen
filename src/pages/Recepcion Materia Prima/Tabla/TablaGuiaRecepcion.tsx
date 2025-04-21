@@ -33,6 +33,8 @@ import { ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import Dropdown, { DropdownItem, DropdownMenu, DropdownToggle } from '../../../components/ui/Dropdown';
 import { HiCheckCircle, HiQuestionMarkCircle, HiXCircle } from 'react-icons/hi';
+import { FaFileExcel } from "react-icons/fa6";
+import * as XLSX from 'xlsx'
 interface IGuiaProps {
 	data: TGuia[] | []
 	refresh: Dispatch<SetStateAction<boolean>>
@@ -156,6 +158,26 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 		}),
 	]
 
+	const exportToExcel = (data: any[]) => {
+			const filteredInfomation = data.map(({ original }) => ({
+				"N° Guia": original.id,
+				"Productor": original.nombre_productor,
+				"Camión": original.nombre_camion,
+				"Lotes": original.lotesrecepcionmp ? original.lotesrecepcionmp.map((element: any) => `Lote N° ${element.numero_lote} : ${element.estado_label}`).join(', ') : '',
+				"Estado": original.estado_recepcion_label,
+				"Fecha Recepción": original.fecha_creacion.split("T")[0],
+				"N° Guia Productor": original.numero_guia_productor,
+				
+
+			}))
+	
+			const wb = XLSX.utils.book_new()
+			const ws = XLSX.utils.json_to_sheet(filteredInfomation)
+			XLSX.utils.book_append_sheet(wb, ws, 'Bodega G1')
+			XLSX.writeFile(wb, 'bodega_g1.xlsx')
+	
+		}
+
 	const table = useReactTable({
 		data,
 		columns,
@@ -223,6 +245,18 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 					</SubheaderRight>
 				)}
 			</Subheader>
+			<CardHeader>
+			<div className="w-full flex	gap-5">
+				<Button
+					variant="solid"
+					onClick={() => exportToExcel(table.getFilteredRowModel().rows)}
+					className="bg-green-600 hover:bg-green-500 border border-green-600 hover:border-green-500 hover:scale-105"
+					>
+					<FaFileExcel style={{ fontSize: 20, color: 'white'}}/>
+					Exportar archivo CSV
+				</Button>
+			</div>
+		</CardHeader>
 			<Container breakpoint={null} className='w-full overflow-auto'>
 				<Card className='h-full w-full'>
 					<CardHeader>

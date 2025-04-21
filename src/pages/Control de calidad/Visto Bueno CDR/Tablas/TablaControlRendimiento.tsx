@@ -52,12 +52,15 @@ import { ThunkDispatch } from "@reduxjs/toolkit"
 import { Provider, useDispatch } from "react-redux"
 import store from '../../../../redux/store';
 import GeneratePdfAndSendMail from '../PDFEnvioProductores';
+import { FaFileExcel } from "react-icons/fa6";
+import * as XLSX from 'xlsx'
 
 const columnHelper = createColumnHelper<TControlCalidad>();
 
 interface IControlProps {
 	data: TControlCalidad[] | []
 }
+
 
 const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
@@ -74,8 +77,87 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 	const token = useAppSelector((state: RootState) => state.auth.authTokens)
 	const { verificarToken } = useAuth()
 	
-
-
+	const exportToExcel = (data: any[]) => {
+		// Campos cuantitativos que queremos incluir del control_rendimiento
+		const quantitativeFields = [
+			'peso_muestra',
+			'basura',
+			'pelon',
+			'cascara',
+			'pepa_huerto',
+			'pepa',
+			'ciega',
+			'peso_muestra_calibre',
+			'muestra_variedad',
+			'daño_insecto',
+			'hongo',
+			'doble',
+			'fuera_color',
+			'vana_deshidratada',
+			'punto_goma',
+			'goma',
+			'pre_calibre',
+			'calibre_18_20',
+			'calibre_20_22',
+			'calibre_23_25',
+			'calibre_25_27',
+			'calibre_27_30',
+			'calibre_30_32',
+			'calibre_32_34',
+			'calibre_34_36',
+			'calibre_36_40',
+			'calibre_40_mas'
+		];
+	
+		const filteredInformation = data.map(({ original }) => {
+			// Información básica del lote
+			const baseInfo = {
+				"N° Lote": original.numero_lote,
+				"N° Guia": original.guia_recepcion,
+				"Productor": original.productor,
+				"Variedad": original.variedad,
+				"Kilos Totales": original.kilos_totales_recepcion,
+				"Humedad": original.humedad,
+				"Presencia Insectos": original.presencia_insectos_selected
+			};
+	
+			// Agregar datos de cada muestra
+			if (original.control_rendimiento && original.control_rendimiento.length > 0) {
+				const samplesData: Record<string, any> = {};
+				
+				original.control_rendimiento.forEach((sample: any, index: number) => {
+					const sampleNumber = index + 1;
+					const prefix = `_muestra_${sampleNumber}`;
+					
+					// Agregar campos del nivel superior de la muestra
+					quantitativeFields.forEach(field => {
+						if (sample.hasOwnProperty(field)) {
+							samplesData[field + prefix] = sample[field];
+						}
+					});
+					
+					// Agregar campos del cc_rendimiento (si existe)
+					if (sample.cc_rendimiento) {
+						quantitativeFields.forEach(field => {
+							if (sample.cc_rendimiento.hasOwnProperty(field)) {
+								samplesData[field + prefix] = sample.cc_rendimiento[field];
+							}
+						});
+					}
+					
+				});
+	
+				return { ...baseInfo, ...samplesData };
+			}
+	
+			return baseInfo;
+		});
+	
+		const wb = XLSX.utils.book_new();
+		const ws = XLSX.utils.json_to_sheet(filteredInformation);
+		XLSX.utils.book_append_sheet(wb, ws, 'Bodega G1');
+		XLSX.writeFile(wb, 'bodega_g1.xlsx');
+	};
 	const handleEstadoJefatura = async (id: number, estado: string) => {
 		const token_verificado = await verificarToken(token!)
 	
@@ -461,6 +543,18 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 						<CardHeaderChild>
 						</CardHeaderChild>
 					</CardHeader>
+					<CardHeader>
+								<div className="w-full flex	gap-5">
+									<Button
+										variant="solid"
+										onClick={() => exportToExcel(table.getFilteredRowModel().rows)}
+										className="bg-green-600 hover:bg-green-500 border border-green-600 hover:border-green-500 hover:scale-105"
+										>
+										<FaFileExcel style={{ fontSize: 20, color: 'white'}}/>
+										Exportar archivo CSV
+									</Button>
+								</div>
+							</CardHeader>
 					<CardBody className='overflow-auto'>
 						<TableTemplate className='table-fixed max-md:min-w-[70rem]' table={table} columnas={columnas}/>
 					</CardBody>
