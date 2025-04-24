@@ -109,6 +109,9 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 			'calibre_40_mas'
 		];
 	
+		// Campos que necesitan cálculo de porcentaje (todos excepto peso_muestra)
+		const fieldsForPercentage = quantitativeFields.filter(field => field !== 'peso_muestra');
+	
 		const filteredInformation = data.map(({ original }) => {
 			// Información básica del lote
 			const baseInfo = {
@@ -129,10 +132,27 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 					const sampleNumber = index + 1;
 					const prefix = `_muestra_${sampleNumber}`;
 					
+					// Obtener el peso_muestra para esta muestra (para calcular porcentajes)
+					let pesoMuestra = 0;
+					if (sample.hasOwnProperty('peso_muestra')) {
+						pesoMuestra = sample.peso_muestra;
+						samplesData['peso_muestra' + prefix] = pesoMuestra;
+					} else if (sample.cc_rendimiento && sample.cc_rendimiento.hasOwnProperty('peso_muestra')) {
+						pesoMuestra = sample.cc_rendimiento.peso_muestra;
+						samplesData['peso_muestra' + prefix] = pesoMuestra;
+					}
+					
 					// Agregar campos del nivel superior de la muestra
 					quantitativeFields.forEach(field => {
 						if (sample.hasOwnProperty(field)) {
+							// Agregar el valor original en kilos
 							samplesData[field + prefix] = sample[field];
+							
+							// Agregar el porcentaje para los campos que lo requieren
+							if (fieldsForPercentage.includes(field) && pesoMuestra > 0) {
+								const percentage = (sample[field] / pesoMuestra) * 100;
+								samplesData[field + '_porcentaje' + prefix] = percentage.toFixed(2) + '%';
+							}
 						}
 					});
 					
@@ -140,11 +160,17 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 					if (sample.cc_rendimiento) {
 						quantitativeFields.forEach(field => {
 							if (sample.cc_rendimiento.hasOwnProperty(field)) {
+								// Agregar el valor original en kilos
 								samplesData[field + prefix] = sample.cc_rendimiento[field];
+								
+								// Agregar el porcentaje para los campos que lo requieren
+								if (fieldsForPercentage.includes(field) && pesoMuestra > 0) {
+									const percentage = (sample.cc_rendimiento[field] / pesoMuestra) * 100;
+									samplesData[field + '_porcentaje' + prefix] = percentage.toFixed(2) + '%';
+								}
 							}
 						});
 					}
-					
 				});
 	
 				return { ...baseInfo, ...samplesData };
@@ -155,9 +181,10 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 	
 		const wb = XLSX.utils.book_new();
 		const ws = XLSX.utils.json_to_sheet(filteredInformation);
-		XLSX.utils.book_append_sheet(wb, ws, 'Bodega G1');
-		XLSX.writeFile(wb, 'bodega_g1.xlsx');
+		XLSX.utils.book_append_sheet(wb, ws, 'Control Rendimiento');
+		XLSX.writeFile(wb, 'control_rendimiento.xlsx');
 	};
+	
 	const handleEstadoJefatura = async (id: number, estado: string) => {
 		const token_verificado = await verificarToken(token!)
 	

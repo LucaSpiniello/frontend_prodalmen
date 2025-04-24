@@ -163,18 +163,23 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 				"N° Guia": original.id,
 				"Productor": original.nombre_productor,
 				"Camión": original.nombre_camion,
-				"Lotes": original.lotesrecepcionmp ? original.lotesrecepcionmp.map((element: any) => `Lote N° ${element.numero_lote} : ${element.estado_label}`).join(', ') : '',
+				"Lotes": original.lotesrecepcionmp ? original.lotesrecepcionmp.map((element: any) => `${element.numero_lote}`).join(', ') : '',
 				"Estado": original.estado_recepcion_label,
 				"Fecha Recepción": original.fecha_creacion.split("T")[0],
 				"N° Guia Productor": original.numero_guia_productor,
-				
-
+				// Calculate kilos netos from lotesrecepcionmp with kilos_brutos_1, kilos_brutos_2, kilos_tara_1 and kilos_tara_2
+				"Kilos Netos": original.lotesrecepcionmp ? original.lotesrecepcionmp.reduce((acc: number, element: any) => {
+					console.log(element.kilos_brutos_1, element.kilos_brutos_2, element.kilos_tara_1, element.kilos_tara_2)
+					if ("kilos_brutos_1" in element && "kilos_brutos_2" in element && "kilos_tara_1" in element && "kilos_tara_2" in element) {
+						return acc + (parseFloat(element.kilos_brutos_1) + parseFloat(element.kilos_brutos_2) - parseFloat(element.kilos_tara_1) - parseFloat(element.kilos_tara_2));
+					}
+					return acc;
+				}, 0) : 0,
 			}))
-	
 			const wb = XLSX.utils.book_new()
 			const ws = XLSX.utils.json_to_sheet(filteredInfomation)
-			XLSX.utils.book_append_sheet(wb, ws, 'Bodega G1')
-			XLSX.writeFile(wb, 'bodega_g1.xlsx')
+			XLSX.utils.book_append_sheet(wb, ws, 'Guias Recepcion')
+			XLSX.writeFile(wb, 'guias_recepcion.xlsx')
 	
 		}
 
@@ -190,7 +195,8 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 		onGlobalFilterChange: setGlobalFilter,
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
-		getSortedRowModel: getSortedRowModel(),
+		getSortedRowModel
+		: getSortedRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
 		initialState: { pagination: { pageSize: 5 } },
 	});
