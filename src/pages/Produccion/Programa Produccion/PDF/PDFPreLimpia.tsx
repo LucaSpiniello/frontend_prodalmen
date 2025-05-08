@@ -238,26 +238,10 @@ const PDFPreLimpia = () => {
               fontWeight: 'bold',
               paddingBottom: 2
               }}>
-
-              <View style={styles.header_info_box_superior}>
-              <Text style={{ fontSize: 10, position: 'relative', top: -5}}>N° Lote</Text>
-              </View>
-
               <View style={styles.header_info_box_superior}>
               <Text style={{ fontSize: 10, position: 'relative', top: -5}}>N° Programa</Text>
               </View>
 
-              <View style={styles.header_info_box_superior}>
-              <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Total Envases</Text>
-              </View>
-
-              <View style={styles.header_info_box_superior}>
-              <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Productor</Text>
-              </View>
-
-              <View style={styles.header_info_box_superior}>
-              <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Variedad</Text>
-              </View>
 
               <View style={styles.header_info_box_superior}>
               <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Kilos</Text>
@@ -274,24 +258,9 @@ const PDFPreLimpia = () => {
                     display: 'flex',
                     flexDirection: 'row',
                   }}>
-                    <View style={styles.header_info_box_superior}>
-                      <Text style={{ fontSize: 10, position: 'relative', top: -5, left: 0}}>{programa.numero_lote}</Text>
-                    </View>
 
                     <View style={styles.header_info_box_superior}>
                       <Text style={{ fontSize: 10, position: 'relative', top: -5, left: 0}}>{programa.numero_programa}</Text>
-                    </View>
-
-                    <View style={styles.header_info_box_superior}>
-                      <Text style={{ fontSize: 10, position: 'relative', top: -5, left: 0}}>{programa.total_envases}</Text>
-                    </View>
-
-                    <View style={styles.header_info_box_superior}>
-                      <Text style={{ fontSize: 10, position: 'relative', top: -5, left: 0}}>{programa.productor}</Text>
-                    </View>
-
-                    <View style={styles.header_info_box_superior}>
-                      <Text style={{ fontSize: 10, position: 'relative', top: -5, left: 0}}>{programa.variedad}</Text>
                     </View>
 
                     <View style={styles.header_info_box_superior}>
