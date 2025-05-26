@@ -209,7 +209,7 @@ const TablaBodegaG1: FC<IBodegaG1Props> = ({ data, refresco, setRefresco }) => {
 								<Label htmlFor="calle">Calle Bodega: </Label>
 								<div className="w-full">
 									<SelectReact
-										options={optionCalleBodega.slice(0,7)}
+										options={optionCalleBodega.slice(0,14)}
 										id='calle_bodega'
 										placeholder='Calle'
 										name='calle_bodega'
@@ -351,7 +351,7 @@ const TablaBodegaG1: FC<IBodegaG1Props> = ({ data, refresco, setRefresco }) => {
 								<div className="w-full flex-col">
                   <Label htmlFor="calle">Calle Bodega: </Label>
                   <SelectReact
-                    options={[{ value: '', label: 'Selecciona una calle' }, ...optionCalleBodega.slice(0,7)]}
+                    options={[{ value: '', label: 'Selecciona una calle' }, ...optionCalleBodega.slice(0,14)]}
                     id='calle_bodega'
                     placeholder='Calle Bodega'
                     name='calle_bodega'
