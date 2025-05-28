@@ -204,7 +204,7 @@ const TablaBinsEmbalaje = () => {
           {
             estado 
               ? (
-                <Tooltip text='Envase Procesado en Selección'>
+                <Tooltip text='Envase en Embalaje'>
                   <Button
                     title='Bin Procesado en Embalaje'
                     variant='solid'
@@ -219,6 +219,7 @@ const TablaBinsEmbalaje = () => {
               : !(programa_embalaje?.estado_embalaje === '0' || programa_embalaje?.estado_embalaje !== '2' && programa_embalaje?.estado_embalaje! <= '3')
                   ? (
                     <Button
+                      title='Procesar Bin'
                       variant='solid'
                       color='amber'
                       colorIntensity='600'
