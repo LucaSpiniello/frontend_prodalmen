@@ -99,6 +99,11 @@ const TablaPedidos = () => {
 
 	const eliminarPedido = async (id: number) => {
 		const token_verificado = await verificarToken(token!)
+		// add a confirmation dialog before deleting
+		if (!window.confirm('¿Estás seguro de que deseas eliminar este pedido? Esta acción no se puede deshacer.')) {
+			return;
+		}
+		
 	
 		if (!token_verificado) throw new Error('Token no verificado')
 
@@ -222,30 +227,8 @@ const TablaPedidos = () => {
 								<HeroEye style={{ fontSize: 25 }}/>
 							</Button>
 						</Link>
-					{/* {
-						hasGroup(['registros-admin', ''])
-								? (
-									<Button
-										title='Eliminar'
-										variant = 'solid'
-										color = 'red'
-										colorIntensity = '600'
-										className='hover:scale-105'
-										onClick={() => {
-											if (['pedidoexportacion', 'pedidomercadointerno'].includes(info.row.original.tipo_guia!)){
-												eliminarPedido(info.row.original.id_pedido)
-											} else {
-												eliminarPedido(info.row.original.id_guia!)
-											}
-										}}
-										>
-											<HeroXMark style={{ fontSize: 25 }} />
-									</Button>
-								)
-							: null
-					} */}
 
-					{
+						{
 							['Pedido Completado', 'Pedido Entregado y Finalizado', 'Completado', 'Completado','Aprobada', 'Completada y entregada'].includes(info.row.original.estado_pedido) 
 								? (
 									<Link to={Object.keys(checkboxSeleccionado)[0] === 'pedidomercadointerno' ?
@@ -265,6 +248,30 @@ const TablaPedidos = () => {
 								: null
 						}
 						<Button variant='solid' color="fuchsia" onClick={() => {navigate(`/ventas/pedidos/detalle/${info.row.original.id}`)}}><HeroEye fontSize={25}/></Button>
+
+											{
+						hasGroup(['registros-admin', ''])
+								? (
+									<Button
+										title='Eliminar'
+										variant = 'solid'
+										color = 'red'
+										colorIntensity = '600'
+										className='hover:scale-105'
+
+										onClick={() => {
+											if (['pedidoexportacion', 'pedidomercadointerno'].includes(info.row.original.tipo_guia!)){
+												eliminarPedido(info.row.original.id_pedido)
+											} else {
+												eliminarPedido(info.row.original.id_guia!)
+											}
+										}}
+										>
+											<HeroXMark style={{ fontSize: 25 }} />
+									</Button>
+								)
+							: null
+					} 
 					</div>
 				);
 			},
