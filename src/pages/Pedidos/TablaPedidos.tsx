@@ -117,7 +117,6 @@ const TablaPedidos = () => {
 		}
 	}
 
-
 	const columnHelper = createColumnHelper<TPedidos>();
 
 	const columns = [

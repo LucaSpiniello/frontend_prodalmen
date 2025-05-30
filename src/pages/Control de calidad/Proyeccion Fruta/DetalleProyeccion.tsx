@@ -443,7 +443,7 @@ function combinarControles(controles: TRendimiento[]): TRendimiento {
 
   console.log("el control combinado es", controlCombinado)
   Object.keys(controlCombinado.cc_promedio_porcentaje_muestras).forEach(key => {
-    controlCombinado.cc_promedio_porcentaje_muestras[key] = (controlCombinado.cc_promedio_porcentaje_muestras[key] / controlCombinado.cc_calculo_final.kilos_netos * 100) / 100;
+    controlCombinado.cc_promedio_porcentaje_muestras[key] = (controlCombinado.cc_promedio_porcentaje_muestras[key] / controlCombinado.cc_calculo_final.kilos_brutos * 100) / 100;
   });
 
 
