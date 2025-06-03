@@ -370,6 +370,7 @@ export const NOMBRE_PRODUCTO = [
   { value: '1', label: 'Almendras'},
   { value: '2', label: 'Granillo'},
   { value: '3', label: 'Harina'},
+  { value: '4', label: 'Almendras Laminadas'},
 ]
 
 
