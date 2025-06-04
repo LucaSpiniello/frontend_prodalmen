@@ -258,4 +258,5 @@ export type PDFSalidaTarjasCC = {
   punto_goma: number
   vana_deshidratada: number
   cc_registrado_por: string
+  get_calibre: string
 }

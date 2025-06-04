@@ -343,7 +343,7 @@ const PDFDocumentoSalida = () => {
                                     </View>
                         
                                     <View style={styles.header_info_box_superior}>
-                                        <Text style={{ fontSize: 9}}>{cc.cc_info.calibre}</Text>
+                                        <Text style={{ fontSize: 9}}>{cc.cc_info.get_calibre}</Text>
                                     </View>
 
                                     <View style={styles.header_info_box_superior}>
