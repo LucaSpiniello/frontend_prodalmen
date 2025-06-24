@@ -427,12 +427,11 @@ const GuiaRecepcionPDF = () => {
 
                                     {/* TBODY - Iteramos sobre cada envase del lote */}
 
-                                      {lote?.envases?.map((envaseItem, envaseIndex) => {
+                                      {lote?.envases?.map((envaseItem) => {
                                           // Calculamos el peso neto para este envase específico
+
                                           // const pesoNetoEnvase = (envaseItem.cantidad_envases * (envases?.find((e : any) => e.id === envaseItem.envase)?.peso || 0)).toFixed(2);
                                           // get the pesoNetoEnvase from kilos_fruta_neta_final and divide it by the cantidad_envases
-                                          const pesoNetoEnvase = (kilo_fruta_neta_final / envaseItem.cantidad_envases).toFixed(2);
-                                          
                                           return (
                                               <View key={`envase-${envaseItem.id}`} style={{ 
                                                   width: '100%',
@@ -448,7 +447,7 @@ const GuiaRecepcionPDF = () => {
                                                   
                                                   <View style={styles.header_info_box_superior}>
                                                       <Text style={{ fontSize: 10}}>
-                                                          {envase_lote.find((e : any) => e.id === envaseItem.envase)?.nombre || 'N/A'}
+                                                          {envases.find((e : any) => e.id === envaseItem.envase)?.nombre || 'N/A'}
                                                       </Text>
                                                   </View>
                                                   
@@ -458,7 +457,7 @@ const GuiaRecepcionPDF = () => {
                                                   
                                                   <View style={styles.header_info_box_superior}>
                                                       <Text style={{ fontSize: 10}}>
-                                                          {envase_lote.find((e: any) => e.id === envaseItem.envase)?.peso || '0'} kgs
+                                                          {envases.find((e: any) => e.id === envaseItem.envase)?.peso || '0'} kgs
                                                       </Text>
                                                   </View>
                                                   
