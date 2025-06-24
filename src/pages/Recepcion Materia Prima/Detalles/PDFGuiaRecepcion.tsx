@@ -429,9 +429,6 @@ const GuiaRecepcionPDF = () => {
 
                                       {lote?.envases?.map((envaseItem, envaseIndex) => {
                                           // Calculamos el peso neto para este envase específico
-                                          console.log(lote)
-                                          console.log(envaseItem)
-                                          console.log(envases)
                                           // const pesoNetoEnvase = (envaseItem.cantidad_envases * (envases?.find((e : any) => e.id === envaseItem.envase)?.peso || 0)).toFixed(2);
                                           // get the pesoNetoEnvase from kilos_fruta_neta_final and divide it by the cantidad_envases
                                           const pesoNetoEnvase = (kilo_fruta_neta_final / envaseItem.cantidad_envases).toFixed(2);
