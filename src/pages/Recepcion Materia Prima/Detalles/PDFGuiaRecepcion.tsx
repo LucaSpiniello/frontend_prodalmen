@@ -16,6 +16,7 @@ import { fetchConductor } from '../../../redux/slices/conductoresSlice';
 import { fetchCamion } from '../../../redux/slices/camionesSlice';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
+import { sum } from 'lodash';
 
 
 const styles = StyleSheet.create({
@@ -208,35 +209,6 @@ const GuiaRecepcionPDF = () => {
     dispatch(fetchCamion({ id: state.guia?.camion, token, verificar_token: verificarToken }))
   }, [])
 
-
-//   const kilos_brutos_1 = state.guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-//     return lote.kilos_brutos_1
-//   })
-//   const kilos_brutos_2 = state.guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-//     return lote.kilos_brutos_2
-//   })
-//   const kilos_tara_1 = state.guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-//     return lote.kilos_tara_1
-//   })
-//   const kilos_tara_2 = state.guia?.lotesrecepcionmp.map((lote: TLoteGuia) => {
-//     return lote.kilos_tara_2
-//   })
-
-  
-//   const kilos_fruta = state.guia?.lotesrecepcionmp.map((row: TLoteGuia) => {
-//     const kilos_total_envases = 
-//       row.envases.map((envase_lote) => {
-//       const envaseTotal = envases?.
-//       filter((envase) => envase.id === envase_lote.envase).
-//       reduce((acumulador, envase) => acumulador + (envase_lote.cantidad_envases * envase.peso), 0)
-//       return envaseTotal;
-//       })
-
-//       return kilos_total_envases[0]
-//   })
-
-//   
-//
   console.log(state)
 
   return (
@@ -357,8 +329,7 @@ const GuiaRecepcionPDF = () => {
                                 reduce((acumulador, envase) => acumulador + (envase_lote.cantidad_envases * envase.peso), 0)
                                 return envaseTotal;
                             })
-                            const kilo_fruta_neta_final = (Number(lote.kilos_brutos_1) + Number(lote.kilos_brutos_2)) - (Number(lote.kilos_tara_1) + Number(lote.kilos_tara_2)) - Number(kilos_total_envases)
-
+                            const kilo_fruta_neta_final = (Number(lote.kilos_brutos_1) + Number(lote.kilos_brutos_2)) - (Number(lote.kilos_tara_1) + Number(lote.kilos_tara_2)) - Number(sum(kilos_total_envases))
                             const kilos_brutos = Number(lote.kilos_brutos_1) + Number(lote.kilos_brutos_2)
                             const kilos_tara = Number(lote.kilos_tara_1) + Number(lote.kilos_tara_2) 
                             
@@ -415,7 +386,8 @@ const GuiaRecepcionPDF = () => {
                                         
                                         </View>
                                     </View>
-
+                                    
+                                    {/* PRODUCTOS / VARIEDADES */}
                                     <Text style={{ textAlign: 'center', fontSize: 12, fontWeight: 'bold', marginTop: '1%', marginBottom: '1%' }}>Productos / Variedades</Text>
                                     
                                     {/* THEADER */}
@@ -447,48 +419,60 @@ const GuiaRecepcionPDF = () => {
                                         <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Peso X Envase</Text>
                                         </View>
 
-                                        <View style={styles.header_info_box_superior}>
-                                        <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Kilo Fruta Neto</Text>
-                                        </View>
 
                                         <View style={styles.header_info_box_superior}>
                                         <Text style={{ fontSize: 10, position: 'relative', top: -5}}>Variedad</Text>
                                         </View>
                                     </View>
 
-                                    {/* TBODY */}
-                                    <View style={{ 
-                                        width: '100%',
-                                        height: 30,
-                                        borderRadius: '1px', 
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                    }} wrap={false}>
-                        
-                                        <View style={styles.header_info_box_superior}>
-                                            <Text style={{ fontSize: 10}}>{lote.numero_lote}</Text>
-                                        </View>
-                            
-                                        <View style={styles.header_info_box_superior}>
-                                            <Text style={{ fontSize: 10}}>{envase_lote.map((envase) => envase?.nombre)}</Text>
-                                        </View>
-                            
-                                        <View style={styles.header_info_box_superior}>
-                                            <Text style={{ fontSize: 10}}>{cantidad}</Text>
-                                        </View>
-                            
-                                        <View style={styles.header_info_box_superior}>
-                                            <Text style={{ fontSize: 10}}>{envase_lote.map(envase => envase?.peso)} kgs</Text>
-                                        </View>
-                            
-                                        <View style={styles.header_info_box_superior}>
-                                            <Text style={{ fontSize: 10}}> {(kilo_fruta_neta_final ?? 0).toFixed(2)} kgs</Text>
-                                        </View>
-                            
-                                        <View style={styles.header_info_box_superior}>
-                                            <Text style={{ fontSize: 10}}>{variedad_lote}</Text>
-                                        </View>
-                                    </View>
+                                    {/* TBODY - Iteramos sobre cada envase del lote */}
+
+                                      {lote?.envases?.map((envaseItem, envaseIndex) => {
+                                          // Calculamos el peso neto para este envase específico
+                                          console.log(lote)
+                                          console.log(envaseItem)
+                                          console.log(envases)
+                                          // const pesoNetoEnvase = (envaseItem.cantidad_envases * (envases?.find((e : any) => e.id === envaseItem.envase)?.peso || 0)).toFixed(2);
+                                          // get the pesoNetoEnvase from kilos_fruta_neta_final and divide it by the cantidad_envases
+                                          const pesoNetoEnvase = (kilo_fruta_neta_final / envaseItem.cantidad_envases).toFixed(2);
+                                          
+                                          return (
+                                              <View key={`envase-${envaseItem.id}`} style={{ 
+                                                  width: '100%',
+                                                  height: 30,
+                                                  borderRadius: '1px', 
+                                                  display: 'flex',
+                                                  flexDirection: 'row',
+                                              }} wrap={false}>
+                                                  {/* Mostramos el número de lote solo en la primera fila */}
+                                                  <View style={styles.header_info_box_superior}>
+                                                      <Text style={{ fontSize: 10}}>{lote.numero_lote}</Text>
+                                                  </View>
+                                                  
+                                                  <View style={styles.header_info_box_superior}>
+                                                      <Text style={{ fontSize: 10}}>
+                                                          {envase_lote.find((e : any) => e.id === envaseItem.envase)?.nombre || 'N/A'}
+                                                      </Text>
+                                                  </View>
+                                                  
+                                                  <View style={styles.header_info_box_superior}>
+                                                      <Text style={{ fontSize: 10}}>{envaseItem.cantidad_envases}</Text>
+                                                  </View>
+                                                  
+                                                  <View style={styles.header_info_box_superior}>
+                                                      <Text style={{ fontSize: 10}}>
+                                                          {envase_lote.find((e: any) => e.id === envaseItem.envase)?.peso || '0'} kgs
+                                                      </Text>
+                                                  </View>
+                                                  
+
+                                                  
+                                                  <View style={styles.header_info_box_superior}>
+                                                      <Text style={{ fontSize: 10}}>{envaseItem.variedad || variedad_lote}</Text>
+                                                  </View>
+                                              </View>
+                                          );
+                                      })}
 
                                     <View style={{width: '100%', borderTop: '1px #0000 solid', alignSelf: 'center', marginVertical: '1%'}}></View>
                                 
