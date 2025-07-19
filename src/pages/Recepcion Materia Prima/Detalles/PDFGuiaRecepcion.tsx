@@ -426,7 +426,7 @@ const GuiaRecepcionPDF = () => {
                                     </View>
 
                                     {/* TBODY - Iteramos sobre cada envase del lote */}
-
+                                        
                                       {lote?.envases?.map((envaseItem) => {
                                           // Calculamos el peso neto para este envase específico
 

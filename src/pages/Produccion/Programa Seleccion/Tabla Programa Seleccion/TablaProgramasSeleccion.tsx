@@ -39,7 +39,7 @@ import { useAuth } from '../../../../context/authContext';
 import { fetchWithToken, fetchWithTokenPost, fetchWithTokenPut } from '../../../../utils/peticiones.utils';
 import { TSeleccion } from '../../../../types/TypesSeleccion.type';
 import { format } from '@formkit/tempo';
-import { fetchProgramasDeSeleccion, fetchRendimientoSeleccion } from '../../../../redux/slices/seleccionSlice';
+import { fetchProgramasDeSeleccion, fetchProgramasDeSeleccionPaginados, fetchRendimientoSeleccion } from '../../../../redux/slices/seleccionSlice';
 import FormularioInformeSeleccion from '../Formularios/Formulario PDF\'s/FormularioInformeSeleccion';
 import FormularioInformeKilosXOperario from '../Formularios/Formulario PDF\'s/FormularioInformeKilosXOperario';
 import FormularioInformeOperariosResumido from '../Formularios/Formulario PDF\'s/FormularioInformeOperarioResumido';
@@ -53,12 +53,28 @@ import { fetchProgramasProduccion } from '../../../../redux/slices/produccionSli
 
 interface IProduccionProps {
 	data: TSeleccion[] | []
+	paginationMetadata?: {
+		total_count: number
+		desde: number
+		hasta: number
+		has_next: boolean
+		has_previous: boolean
+	}
+	currentPage?: number
+	onPageChange?: (newPage: number) => void
+	pageSize?: number
 }
 
 
 
 
-const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
+const TablaProgramasSeleccion: FC<IProduccionProps> = ({ 
+	data, 
+	paginationMetadata, 
+	currentPage = 0, 
+	onPageChange, 
+	pageSize = 10 
+}) => {
 	const navigate = useNavigate()
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
@@ -78,6 +94,13 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 
 	const[programaProduccion, setProgramaProduccion] = useState<string | null>(null)
 
+	console.log('TablaProgramasSeleccion render:', {
+		dataLength: data?.length || 0,
+		paginationMetadata,
+		currentPage,
+		pageSize
+	})
+
 
 	const actualizarEstadoProduccion = async (id: number, estado: string) => {
 
@@ -92,7 +115,12 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 			if (response_estado.ok){
 				const data: TSeleccion = await response_estado.json()
 				toast.success(`El programa esta en ${data.estado_programa_label}`)
-				dispatch(fetchProgramasDeSeleccion({ token, verificar_token: verificarToken }))
+				// Refresh current page data
+				dispatch(fetchProgramasDeSeleccionPaginados({ 
+					token, 
+					verificar_token: verificarToken,
+					params: { desde: currentPage * pageSize, hasta: (currentPage * pageSize) + pageSize - 1 }
+				}))
 			}
 		} catch (error) {
 			toast.error('Error en la peticion')
@@ -205,31 +233,6 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 				)
 			},	
 			header: 'Envases en Proc.',
-		}),
-		columnHelper.display({
-			id:'rendimientos',
-			cell: (info) => {
-				const diferencia_rendimiento = info.row.original.diferencia_rendimiento
-
-				return (			
-					<div className='font-bold mx-auto'>
-							<Link to={`/pro/seleccion/programa-seleccion/proyeccion-rendimiento-cc/${info.row.original.id}/`} state={{ pathname: '/programa-seleccion' }}>
-								<Button variant='default' className={`w-full flex justify-between  border ${diferencia_rendimiento < 0 ? '!bg-red-600' : diferencia_rendimiento === 0 ? '!bg-[#7d99a3]' : '!bg-emerald-400'} `}>
-									{
-										diferencia_rendimiento < 0
-											? <HiOutlineTrendingDown style={{ fontSize: 28 }}/>
-											: diferencia_rendimiento === 0
-												? <TbEqual style={{ fontSize: 28, color: '!white' }}/>
-												: <HiOutlineTrendingUp style={{ fontSize: 28 }}/>
-									}
-									<span className='m-0 text-xl text-white'>{(info.row.original?.diferencia_rendimiento! ?? 0).toFixed(2)}</span>
-								</Button>
-							</Link>
-					</div>
-	
-				)
-			},
-			header: 'Rendimiento Programa',
 		}),
 		columnHelper.display({
 			id: 'acciones',
@@ -367,10 +370,11 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getSortedRowModel: getSortedRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		initialState: {
-			pagination: { pageSize: 5 },
-		},
+		// Disable built-in pagination since we're using server-side pagination
+		// getPaginationRowModel: getPaginationRowModel(),
+		// initialState: {
+		// 	pagination: { pageSize: 5 },
+		// },
 	})
 
 	const columnas: TableColumn[] = [
@@ -488,7 +492,7 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 								variant='outline'
 								className='border-transparent px-4'
 								rounded='rounded-full'>
-								{table.getFilteredRowModel().rows.length} registros
+								{paginationMetadata?.total_count || table.getFilteredRowModel().rows.length} registros
 							</Badge>
 						</CardHeaderChild>
 
@@ -557,7 +561,36 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 					<CardBody className='overflow-x-auto'>
 						<TableTemplate className='table-fixed max-md:min-w-[70rem]' table={table} columnas={columnas}/>
 					</CardBody>
-					<TableCardFooterTemplate table={table} />
+					{paginationMetadata && onPageChange && (
+						<div className="flex items-center justify-between px-6 py-3 border-t border-gray-200">
+							<div className="flex items-center gap-2">
+								<span className="text-sm text-gray-700">
+									Mostrando {paginationMetadata.desde + 1} a {Math.min(paginationMetadata.hasta + 1, paginationMetadata.total_count)} de {paginationMetadata.total_count} registros
+								</span>
+							</div>
+							<div className="flex items-center gap-2">
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={() => onPageChange(currentPage - 1)}
+									isDisable={!paginationMetadata.has_previous}
+								>
+									Anterior
+								</Button>
+								<span className="text-sm text-gray-700">
+									Página {currentPage + 1} de {Math.ceil(paginationMetadata.total_count / pageSize)}
+								</span>
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={() => onPageChange(currentPage + 1)}
+									isDisable={!paginationMetadata.has_next}
+								>
+									Siguiente
+								</Button>
+							</div>
+						</div>
+					)}
 				</Card>
 			</Container>
 		</PageWrapper>
