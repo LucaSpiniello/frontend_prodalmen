@@ -530,6 +530,7 @@ const initialState = {
     has_next: false,
     has_previous: false
   },
+  loading_pagination: false,
   programa_seleccion_individual: null as TSeleccion | null,
   tarjas_seleccionadas: [] as TTarjaSeleccionada[],
   tarja_seleccionada_individual: null as TTarjaSeleccionada | null,
@@ -620,12 +621,13 @@ export const SeleccionSlice = createSlice({
         state.programas_seleccion = action.payload
       })
       .addCase(fetchProgramasDeSeleccionPaginados.pending, (state) => {
-        state.loading = true
+        console.log('fetchProgramasDeSeleccionPaginados.pending')
+        state.loading_pagination = true
         state.error = null
       })
       .addCase(fetchProgramasDeSeleccionPaginados.fulfilled, (state, action) => {
         console.log('fetchProgramasDeSeleccionPaginados.fulfilled payload:', action.payload)
-        state.loading = false
+        state.loading_pagination = false
         
         // Backend returns: { resultados: TSeleccion[], rango: { desde, hasta, total_programas, programas_en_rango } }
         if (action.payload && action.payload.resultados && action.payload.rango) {
@@ -652,9 +654,9 @@ export const SeleccionSlice = createSlice({
         })
       })
       .addCase(fetchProgramasDeSeleccionPaginados.rejected, (state, action) => {
-        state.loading = false
+        console.log('fetchProgramasDeSeleccionPaginados.rejected:', action.payload)
+        state.loading_pagination = false
         state.error = action.payload as string
-        console.error('fetchProgramasDeSeleccionPaginados.rejected:', action.payload)
       })
       .addCase(fetchProgramaSeleccion.fulfilled, (state, action) => {
         state.programa_seleccion_individual = action.payload

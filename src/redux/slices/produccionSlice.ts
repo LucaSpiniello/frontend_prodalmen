@@ -651,8 +651,19 @@ export const ProduccionSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+    .addCase(fetchProgramasProduccion.pending, (state) => {
+      console.log('fetchProgramasProduccion.pending')
+      state.loading = true
+    })
     .addCase(fetchProgramasProduccion.fulfilled, (state, action) => {
+      console.log('fetchProgramasProduccion.fulfilled:', action.payload)
       state.programas_produccion = action.payload
+      state.loading = false
+    })
+    .addCase(fetchProgramasProduccion.rejected, (state, action) => {
+      console.log('fetchProgramasProduccion.rejected:', action.error)
+      state.loading = false
+      state.error = action.error.message
     })
     .addCase(fetchProgramaProduccion.fulfilled, (state, action) => {
       state.programa = action.payload

@@ -63,6 +63,7 @@ interface IProduccionProps {
 	currentPage?: number
 	onPageChange?: (newPage: number) => void
 	pageSize?: number
+	loadingPagination?: boolean
 }
 
 
@@ -73,7 +74,8 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 	paginationMetadata, 
 	currentPage = 0, 
 	onPageChange, 
-	pageSize = 10 
+	pageSize = 5,
+	loadingPagination = false
 }) => {
 	const navigate = useNavigate()
 	const [sorting, setSorting] = useState<SortingState>([]);
@@ -93,13 +95,6 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 	const [disabledModal, setDisabledModal] = useState(false);
 
 	const[programaProduccion, setProgramaProduccion] = useState<string | null>(null)
-
-	console.log('TablaProgramasSeleccion render:', {
-		dataLength: data?.length || 0,
-		paginationMetadata,
-		currentPage,
-		pageSize
-	})
 
 
 	const actualizarEstadoProduccion = async (id: number, estado: string) => {
@@ -146,7 +141,6 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 				toast.success(`El programa fue creado exitosamente`)
 				navigate(`/pro/seleccion/programa-seleccion/registro-programa/${data.id}`, { state: { pathname: '/programa-seleccion' }})
 			} else {
-				console.log("nop no lo logre")
 				setDisabled(false)
 			}
 		} catch (error) {
@@ -387,6 +381,8 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 		
 	]
 
+	
+
 	useEffect(() => {
 		if (programas_produccion.length === 0){
 			dispatch(fetchProgramasProduccion({ token, verificar_token: verificarToken }))
@@ -492,7 +488,14 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 								variant='outline'
 								className='border-transparent px-4'
 								rounded='rounded-full'>
-								{paginationMetadata?.total_count || table.getFilteredRowModel().rows.length} registros
+								{loadingPagination ? (
+									<div className="flex items-center gap-1">
+										<div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+										Cargando...
+									</div>
+								) : (
+									`${paginationMetadata?.total_count || table.getFilteredRowModel().rows.length} registros`
+								)}
 							</Badge>
 						</CardHeaderChild>
 
@@ -559,7 +562,16 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 						</CardHeaderChild>
 					</CardHeader>
 					<CardBody className='overflow-x-auto'>
-						<TableTemplate className='table-fixed max-md:min-w-[70rem]' table={table} columnas={columnas}/>
+						{loadingPagination ? (
+							<div className="flex items-center justify-center py-8">
+								<div className="flex items-center gap-2">
+									<div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+									<span className="text-gray-600">Cargando programas...</span>
+								</div>
+							</div>
+						) : (
+							<TableTemplate className='table-fixed max-md:min-w-[70rem]' table={table} columnas={columnas}/>
+						)}
 					</CardBody>
 					{paginationMetadata && onPageChange && (
 						<div className="flex items-center justify-between px-6 py-3 border-t border-gray-200">
@@ -573,9 +585,16 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 									variant="outline"
 									size="sm"
 									onClick={() => onPageChange(currentPage - 1)}
-									isDisable={!paginationMetadata.has_previous}
+									isDisable={!paginationMetadata.has_previous || loadingPagination}
 								>
-									Anterior
+									{loadingPagination ? (
+										<div className="flex items-center gap-1">
+											<div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+											Cargando...
+										</div>
+									) : (
+										'Anterior'
+									)}
 								</Button>
 								<span className="text-sm text-gray-700">
 									Página {currentPage + 1} de {Math.ceil(paginationMetadata.total_count / pageSize)}
@@ -584,9 +603,16 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 									variant="outline"
 									size="sm"
 									onClick={() => onPageChange(currentPage + 1)}
-									isDisable={!paginationMetadata.has_next}
+									isDisable={!paginationMetadata.has_next || loadingPagination}
 								>
-									Siguiente
+									{loadingPagination ? (
+										<div className="flex items-center gap-1">
+											<div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+											Cargando...
+										</div>
+									) : (
+										'Siguiente'
+									)}
 								</Button>
 							</div>
 						</div>

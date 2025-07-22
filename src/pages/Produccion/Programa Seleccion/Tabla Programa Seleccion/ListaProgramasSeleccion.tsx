@@ -11,12 +11,15 @@ const ListaProgramasSeleccion = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
   const programas_seleccion_paginados = useAppSelector((state: RootState) => state.seleccion.programas_seleccion_paginados)
   const pagination_metadata = useAppSelector((state: RootState) => state.seleccion.pagination_metadata)
+  const loading_pagination = useAppSelector((state: RootState) => state.seleccion.loading_pagination)
   const token = useAppSelector((state: RootState) => state.auth.authTokens)
   const { verificarToken } = useAuth()
   const [currentPage, setCurrentPage] = useState(0)
   const pageSize = 5
 
   useEffect(() => {
+    if (!token) return
+    
     const desde = currentPage * pageSize
     const hasta = (currentPage * pageSize) + pageSize - 1
     console.log('Dispatching paginated fetch:', { currentPage, pageSize, desde, hasta })
@@ -27,7 +30,7 @@ const ListaProgramasSeleccion = () => {
       verificar_token: verificarToken,
       params: { desde, hasta }
     }))
-  }, [currentPage])
+  }, [currentPage, token, verificarToken, dispatch, pageSize])
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage)
@@ -47,6 +50,7 @@ const ListaProgramasSeleccion = () => {
         currentPage={currentPage}
         onPageChange={handlePageChange}
         pageSize={pageSize}
+        loadingPagination={loading_pagination}
       />
     </div>
   )
