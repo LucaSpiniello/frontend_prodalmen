@@ -35,6 +35,7 @@ interface InfoControlesCalidad {
 
 const DetalleProyeccion = () => {
   const control_calidad = useAppSelector((state: RootState) => state.control_calidad.controles_calidad_visto_bueno)
+  const loadingControles = useAppSelector((state: RootState) => state.control_calidad.loading_controles_visto_bueno)
 	const [activeTab, setActiveTab] = useState<TTabsPro>(OPTIONSPRO.MC);
   
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
@@ -189,22 +190,40 @@ const DetalleProyeccion = () => {
         <div className='mb-2 inline-block w-full cursor-pointer text-xl content-center'>Informacion de proyeccion comercializador {comercializador} 
         </div>
 					<SubheaderLeft className='w-auto'>
-						<ButtonsTabsProyeccion activeTab={activeTab} setActiveTab={setActiveTab} />
+						<ButtonsTabsProyeccion activeTab={activeTab} setActiveTab={setActiveTab} disabled={loadingControles} />
 					</SubheaderLeft>
           <SubheaderRight className='w-full md:w-4/12'>
               <div className='w-full border-black flex flex-col md:flex-row lg:flex-row gap-2'>
                 <div className='w-full lg:w-auto flex flex-col items-center rounded-md bg-emerald-700'>
-                  <span className='text-lg text-center font-semibold text-white'>{rendimientosCombinados?.cc_calculo_final.kilos_netos.toFixed(1)} kgs</span>
+                  <span className='text-lg text-center font-semibold text-white'>
+                    {loadingControles ? (
+                      <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white'></div>
+                    ) : (
+                      `${rendimientosCombinados?.cc_calculo_final.kilos_netos.toFixed(1) || '0.0'} kgs`
+                    )}
+                  </span>
                   <label htmlFor="" className='font-semibold text-white text-center text-sm'>Total Recepcionados</label>
                 </div>
 
                 <div className='w-full lg:w-auto flex flex-col items-center rounded-md bg-emerald-700'>
-                  <span className='text-lg text-center font-semibold text-white'>{rendimientosCombinados?.cc_calculo_final.kilos_brutos.toFixed(1)} kgs</span>
+                  <span className='text-lg text-center font-semibold text-white'>
+                    {loadingControles ? (
+                      <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white'></div>
+                    ) : (
+                      `${rendimientosCombinados?.cc_calculo_final.kilos_brutos.toFixed(1) || '0.0'} kgs`
+                    )}
+                  </span>
                   <label htmlFor="" className='font-semibold text-white text-sm text-center'>Total Pepa Bruta</label>
                 </div>
 
                 <div className='w-full lg:w-auto flex flex-col items-center rounded-md bg-emerald-700'>
-                  <span className='text-lg text-center font-semibold text-white'>{rendimientosCombinados?.cc_calculo_final.final_exp.toFixed(1)} kgs</span>
+                  <span className='text-lg text-center font-semibold text-white'>
+                    {loadingControles ? (
+                      <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white'></div>
+                    ) : (
+                      `${rendimientosCombinados?.cc_calculo_final.final_exp.toFixed(1) || '0.0'} kgs`
+                    )}
+                  </span>
                   <label htmlFor="" className='font-semibold text-white text-center text-sm'>Total Pepa Exportable</label>
                 </div>
               </div>
@@ -219,6 +238,7 @@ const DetalleProyeccion = () => {
                 placeholder='Todas las variedades'
                 name='variedad'
                 className='w-full py-2'
+                disabled={loadingControles}
                 onChange={(value: any) => {
                   setFiltroVariedad(value.value)
                   if (value.label=="Todas las variedades"){
@@ -238,6 +258,7 @@ const DetalleProyeccion = () => {
               placeholder='Todos los Productores'
               name='productor'
               className='w-full py-2'
+              disabled={loadingControles}
               onChange={(value: any) => {
                 setSelectedProductor(value.value)
                 if (value.label=="Todos los Productores"){
@@ -255,13 +276,14 @@ const DetalleProyeccion = () => {
             <Label htmlFor="numero_guia">Número de Guía: </Label>
             <SelectReact
               options={[{ value: '', label: 'Todos los Números de Guía' }, 
-                ...Array.from(new Set(control_calidad.map((programa: any) => programa.guia_recepcion)))
+                ...Array.from(new Set(control_calidad?.map((programa: any) => programa.guia_recepcion) || []))
                   .map((numeroGuia: any) => ({ value: String(numeroGuia), label: String(numeroGuia) }))
               ]}
               id='numero_guia'
               placeholder='Todos los Números de Guía'
               name='numero_guia'
               className='w-full py-2'
+              disabled={loadingControles}
               onChange={(value: any) => {
                 setSelectedNumeroGuia(value.value);
                 if (value.label === "Todos los Números de Guía") {
@@ -274,7 +296,14 @@ const DetalleProyeccion = () => {
           </div>
         </Subheader>
 				<Container breakpoint={null} className='w-full h-full'>
-          { rendimientosCombinados ?
+          {loadingControles ? (
+            <div className='flex justify-center items-center h-96'>
+              <div className='flex flex-col items-center'>
+                <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-700 mb-4'></div>
+                <span className='text-xl font-semibold text-gray-500'>Cargando controles de calidad...</span>
+              </div>
+            </div>
+          ) : rendimientosCombinados ? (
 					<div className='border'>
               {
                 activeTab.text === 'Muestra Control'
@@ -288,9 +317,11 @@ const DetalleProyeccion = () => {
                         : null
               }
 					</div>
-           : <div className='flex justify-center items-center h-96'>
+           ) : (
+            <div className='flex justify-center items-center h-96'>
               <span className='text-xl font-semibold text-gray-500'>No hay datos para mostrar</span>
-              </div>}
+            </div>
+          )}
                 {rendimientosCombinados && 
                   <PDFProyeccion controlCombinado={rendimientosCombinados} variedad={filtroVariedadLabel} productor={selectedProductor} isPacificNut={isPacificNut} />
                 }

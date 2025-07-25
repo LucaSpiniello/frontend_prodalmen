@@ -56,6 +56,25 @@ import GeneratePdfAndSendMail from '../PDFEnvioProductores';
 import { FaFileExcel } from "react-icons/fa6";
 import * as XLSX from 'xlsx'
 
+// Loading Modal Component
+const LoadingModal: FC<{ isOpen: boolean }> = ({ isOpen }) => {
+	if (!isOpen) return null;
+	
+	return (
+		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+			<div className="bg-white dark:bg-gray-800 rounded-lg p-8 flex flex-col items-center gap-4">
+				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+				<div className="text-lg font-semibold text-gray-700 dark:text-gray-300">
+					Exportando archivo Excel...
+				</div>
+				<div className="text-sm text-gray-500 dark:text-gray-400">
+					Obteniendo datos de controles de calidad
+				</div>
+			</div>
+		</div>
+	);
+};
+
 const columnHelper = createColumnHelper<TControlCalidad>();
 
 interface IControlProps {
@@ -84,6 +103,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 }) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
+	const [isExporting, setIsExporting] = useState<boolean>(false)
 	const navigate = useNavigate()
 
 	const { isDarkTheme } = useDarkMode()
@@ -97,6 +117,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 	const { verificarToken } = useAuth()
 	
 	const exportToExcel = async () => {
+		setIsExporting(true)
 		try {
 			// Para la exportación, necesitamos obtener todos los datos
 			const token_verificado = await verificarToken(token!)
@@ -119,6 +140,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 			
 			if (allData.length === 0) {
 				toast.error('No hay datos para exportar')
+				setIsExporting(false)
 				return
 			}
 		// Campos cuantitativos que queremos incluir del control_rendimiento
@@ -252,9 +274,12 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 		const ws = XLSX.utils.json_to_sheet(filteredInformation);
 		XLSX.utils.book_append_sheet(wb, ws, 'Control Rendimiento');
 		XLSX.writeFile(wb, 'control_rendimiento.xlsx');
+		toast.success('Archivo exportado exitosamente')
 	} catch (error) {
 		console.error('Error exporting to Excel:', error)
 		toast.error('Error al exportar el archivo')
+	} finally {
+		setIsExporting(false)
 	}
 	};
 	const handleEstadoJefatura = async (id: number, estado: string) => {
@@ -273,7 +298,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 			dispatch(fetchControlesDeCalidadPaginados({ 
 				token, 
 				verificar_token: verificarToken,
-				params: { desde: currentPage * pageSize, hasta: (currentPage * pageSize) + pageSize - 1 }
+				params: { desde: currentPage * pageSize, hasta: (currentPage * pageSize) + pageSize - 1, comercializador }
 			}))
 		} else {
 			toast.error('El lote no fue aprobado')
@@ -297,7 +322,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 			dispatch(fetchControlesDeCalidadPaginados({ 
 				token, 
 				verificar_token: verificarToken,
-				params: { desde: currentPage * pageSize, hasta: (currentPage * pageSize) + pageSize - 1 }
+				params: { desde: currentPage * pageSize, hasta: (currentPage * pageSize) + pageSize - 1, comercializador }
 			}))
 			setPosted(true)
 
@@ -323,7 +348,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 			dispatch(fetchControlesDeCalidadPaginados({ 
 				token, 
 				verificar_token: verificarToken,
-				params: { desde: currentPage * pageSize, hasta: (currentPage * pageSize) + pageSize - 1 }
+				params: { desde: currentPage * pageSize, hasta: (currentPage * pageSize) + pageSize - 1, comercializador }
 			}))
 			setPosted(true)
 
@@ -600,8 +625,9 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 
 
 	return (
-
-		<PageWrapper name='Lista Control Rendimiento'>
+		<>
+			<LoadingModal isOpen={isExporting} />
+			<PageWrapper name='Lista Control Rendimiento'>
 			<Subheader>
 				<SubheaderLeft>
 					<FieldWrap
@@ -721,7 +747,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 				</Card>
 			</Container>
 		</PageWrapper>
-
+		</>
 	);
 };
 

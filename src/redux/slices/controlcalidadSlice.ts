@@ -455,7 +455,7 @@ export const fetchCalibracionTarjaReprocesoIndividual = createAsyncThunk('contro
 )
 
 export const fetchControlesDeCalidadPaginados = createAsyncThunk('control-calidad/fetch_controles_paginados', 
-  async (payload: FetchOptions, thunkAPI) => {
+  async (payload: any, thunkAPI) => {
     const { token, verificar_token, params } = payload
     
     // Ensure we have valid pagination parameters
@@ -463,14 +463,20 @@ export const fetchControlesDeCalidadPaginados = createAsyncThunk('control-calida
       return thunkAPI.rejectWithValue('Parámetros de paginación inválidos')
     }
     
-    const { desde, hasta } = params
+    const { desde, hasta, comercializador } = params
 
     try {
       const token_verificado = await verificar_token(token)
     
       if (!token_verificado) throw new Error('Token no verificado')
-      console.log('Fetching paginated control data:', { desde, hasta })
-      const response = await fetchWithToken(`api/control-calidad/recepcionmp/controles-paginados/?desde=${desde}&hasta=${hasta}`, token_verificado)
+      console.log('Fetching paginated control data:', { desde, hasta, comercializador })
+      
+      let url = `api/control-calidad/recepcionmp/controles-paginados/?desde=${desde}&hasta=${hasta}`
+      if (comercializador) {
+        url += `&comercializador=${comercializador}`
+      }
+      
+      const response = await fetchWithToken(url, token_verificado)
       if(response.ok){
         const data = await response.json()
         return data
@@ -495,6 +501,7 @@ const initialState = {
     has_previous: false
   },
   loading_pagination: false,
+  loading_controles_visto_bueno: false,
   control_calidad: null as TControlCalidad | null,
   controles_calidad_visto_bueno: [] as TControlCalidad[],
   fotos_cc: [] as TFotosCC[],
@@ -569,11 +576,17 @@ export const ControlCalidad = createSlice({
       .addCase(fetchMuestrasCalibradasControlDeCalidadDetalle.rejected, (state, action) => {
         state.error = action.error.message;
       })
+      .addCase(fetchControlesDeCalidadVistoBueno.pending, (state) => {
+        state.loading_controles_visto_bueno = true;
+        state.error = null;
+      })
       .addCase(fetchControlesDeCalidadVistoBueno.fulfilled, (state, action) => {
         state.controles_calidad_visto_bueno = action.payload;
+        state.loading_controles_visto_bueno = false;
       })
       .addCase(fetchControlesDeCalidadVistoBueno.rejected, (state, action) => {
         state.error = action.error.message;
+        state.loading_controles_visto_bueno = false;
       })
       .addCase(fetchCalibracionTarjasSeleccionadas.fulfilled, (state, action) => {
         state.cc_calibracion_tarjaseleccionada = action.payload

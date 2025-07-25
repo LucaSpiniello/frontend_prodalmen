@@ -26,15 +26,15 @@ const ListaControlRendimiento = () => {
     
     const desde = currentPage * pageSize
     const hasta = (currentPage * pageSize) + pageSize - 1
-    console.log('Dispatching paginated fetch:', { currentPage, pageSize, desde, hasta })
+    console.log('Dispatching paginated fetch:', { currentPage, pageSize, desde, hasta, comercializador })
     
     //@ts-ignore
     dispatch(fetchControlesDeCalidadPaginados({ 
       token, 
       verificar_token: verificarToken,
-      params: { desde, hasta }
+      params: { desde, hasta, comercializador }
     }))
-  }, [currentPage, token, verificarToken, dispatch, pageSize])
+  }, [currentPage, token, verificarToken, dispatch, pageSize, comercializador])
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage)

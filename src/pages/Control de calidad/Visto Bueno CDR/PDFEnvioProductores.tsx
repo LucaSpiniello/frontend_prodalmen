@@ -16,7 +16,7 @@ import { fetchWithTokenPostFile } from "../../../utils/peticiones.utils"
 import { IoMailOutline } from "react-icons/io5";
 import Button from '../../../components/ui/Button';
 import { fetchWithToken, fetchWithTokenPostAction } from "../../../utils/peticiones.utils"
-import { fetchControlesDeCalidadPorComercializador, fetchControlesDeCalidad } from '../../../redux/slices/controlcalidadSlice';
+import { fetchControlesDeCalidadPorComercializador, fetchControlesDeCalidad, fetchControlesDeCalidadPaginados } from '../../../redux/slices/controlcalidadSlice';
 const styles = StyleSheet.create({
   page: {
     width: '100%',
@@ -1160,12 +1160,14 @@ const GeneratePdfAndSendMail: FC<{ id : any, mailEnviado : any }> = ({ id, mailE
     setIsSending(false);
     if (res.ok) {
       alert('Correo enviado correctamente a ' + email_destinatario)
-      if (comercializador == 'Pacific Nut'){
-        dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
-      }
-      else {
-        dispatch(fetchControlesDeCalidad({ token, verificar_token: verificarToken }))
-      }
+      // Refresh data using paginated endpoint for better performance
+      const desde = 0
+      const hasta = 9
+      dispatch(fetchControlesDeCalidadPaginados({ 
+        token, 
+        verificar_token: verificarToken,
+        params: { desde, hasta, comercializador }
+      }))
       
     } else {
       alert('Error al enviar el correo')
