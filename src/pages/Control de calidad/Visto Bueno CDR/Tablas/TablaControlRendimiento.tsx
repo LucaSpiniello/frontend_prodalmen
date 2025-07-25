@@ -96,7 +96,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 	const token = useAppSelector((state: RootState) => state.auth.authTokens)
 	const { verificarToken } = useAuth()
 	
-	const exportToExcel = async (data: any[]) => {
+	const exportToExcel = async () => {
 		try {
 			// Para la exportación, necesitamos obtener todos los datos
 			const token_verificado = await verificarToken(token!)
@@ -654,7 +654,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 								<div className="w-full flex	gap-5">
 									<Button
 										variant="solid"
-										onClick={() => exportToExcel(table.getFilteredRowModel().rows)}
+										onClick={() => exportToExcel()}
 										className="bg-green-600 hover:bg-green-500 border border-green-600 hover:border-green-500 hover:scale-105"
 										>
 										<FaFileExcel style={{ fontSize: 20, color: 'white'}}/>
