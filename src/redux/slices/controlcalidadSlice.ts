@@ -454,9 +454,47 @@ export const fetchCalibracionTarjaReprocesoIndividual = createAsyncThunk('contro
   }
 )
 
+export const fetchControlesDeCalidadPaginados = createAsyncThunk('control-calidad/fetch_controles_paginados', 
+  async (payload: FetchOptions, thunkAPI) => {
+    const { token, verificar_token, params } = payload
+    
+    // Ensure we have valid pagination parameters
+    if (!params || typeof params.desde !== 'number' || typeof params.hasta !== 'number') {
+      return thunkAPI.rejectWithValue('Parámetros de paginación inválidos')
+    }
+    
+    const { desde, hasta } = params
+
+    try {
+      const token_verificado = await verificar_token(token)
+    
+      if (!token_verificado) throw new Error('Token no verificado')
+      console.log('Fetching paginated control data:', { desde, hasta })
+      const response = await fetchWithToken(`api/control-calidad/recepcionmp/controles-paginados/?desde=${desde}&hasta=${hasta}`, token_verificado)
+      if(response.ok){
+        const data = await response.json()
+        return data
+      } else if (response.status === 400){
+        return thunkAPI.rejectWithValue(`No se pudo hacer la petición`)
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue(`No se pudo hacer la petición`)
+    }
+  }
+)
+
 
 const initialState = {
   controles_calidad: [] as TControlCalidad[],
+  controles_calidad_paginados: [] as TControlCalidad[],
+  pagination_metadata: {
+    total_count: 0,
+    desde: 0,
+    hasta: 9,
+    has_next: false,
+    has_previous: false
+  },
+  loading_pagination: false,
   control_calidad: null as TControlCalidad | null,
   controles_calidad_visto_bueno: [] as TControlCalidad[],
   fotos_cc: [] as TFotosCC[],
@@ -548,6 +586,44 @@ export const ControlCalidad = createSlice({
       })
       .addCase(fetchCalibracionTarjaReprocesoIndividual.fulfilled, (state, action) => {
         state.cc_calibracion_tarja_reproceso_individual = action.payload
+      })
+      .addCase(fetchControlesDeCalidadPaginados.pending, (state) => {
+        console.log('fetchControlesDeCalidadPaginados.pending')
+        state.loading_pagination = true
+        state.error = null
+      })
+      .addCase(fetchControlesDeCalidadPaginados.fulfilled, (state, action) => {
+        console.log('fetchControlesDeCalidadPaginados.fulfilled payload:', action.payload)
+        state.loading_pagination = false
+        
+        // Backend returns: { resultados: TControlCalidad[], rango: { desde, hasta, total_controles, controles_en_rango } }
+        if (action.payload && action.payload.resultados && action.payload.rango) {
+          state.controles_calidad_paginados = action.payload.resultados
+          state.pagination_metadata = {
+            total_count: action.payload.rango.total_controles || 0,
+            desde: action.payload.rango.desde || 0,
+            hasta: action.payload.rango.hasta || 9,
+            has_next: (action.payload.rango.hasta + 1) < action.payload.rango.total_controles,
+            has_previous: action.payload.rango.desde > 0
+          }
+        } else if (Array.isArray(action.payload)) {
+          // Fallback if the API returns just the array
+          state.controles_calidad_paginados = action.payload
+          // Keep existing pagination metadata or set defaults
+        } else {
+          console.error('Unexpected payload format:', action.payload)
+          state.controles_calidad_paginados = []
+        }
+        
+        console.log('Updated state:', {
+          controles_calidad_paginados: state.controles_calidad_paginados.length,
+          pagination_metadata: state.pagination_metadata
+        })
+      })
+      .addCase(fetchControlesDeCalidadPaginados.rejected, (state, action) => {
+        console.log('fetchControlesDeCalidadPaginados.rejected:', action.payload)
+        state.loading_pagination = false
+        state.error = action.payload as string
       })
       .addCase(fetchRendimientosLotesPorIds.fulfilled, (state, action) => {
         state.rendimientos_lotes_por_ids = action.payload

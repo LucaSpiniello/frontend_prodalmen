@@ -41,7 +41,8 @@ import { TControlCalidad } from '../../../../types/TypesControlCalidad.type';
 import Tooltip from '../../../../components/ui/Tooltip';
 import { useAuth } from '../../../../context/authContext';
 import { fetchWithTokenPatch } from '../../../../utils/peticiones.utils';
-import { fetchControlesDeCalidadPorComercializador, fetchControlesDeCalidad } from '../../../../redux/slices/controlcalidadSlice';
+import { fetchControlesDeCalidadPorComercializador, fetchControlesDeCalidad, fetchControlesDeCalidadPaginados } from '../../../../redux/slices/controlcalidadSlice';
+import { fetchWithToken } from '../../../../utils/peticiones.utils';
 import { BiCheckDouble } from 'react-icons/bi';
 import toast from 'react-hot-toast';
 import ModalConfirmacion from '../../../../components/ModalConfirmacion';
@@ -59,10 +60,28 @@ const columnHelper = createColumnHelper<TControlCalidad>();
 
 interface IControlProps {
 	data: TControlCalidad[] | []
+	paginationMetadata?: {
+		total_count: number
+		desde: number
+		hasta: number
+		has_next: boolean
+		has_previous: boolean
+	}
+	currentPage?: number
+	onPageChange?: (newPage: number) => void
+	pageSize?: number
+	loadingPagination?: boolean
 }
 
 
-const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
+const TablaControlRendimiento: FC<IControlProps> = ({ 
+	data, 
+	paginationMetadata, 
+	currentPage = 0, 
+	onPageChange, 
+	pageSize = 10,
+	loadingPagination = false
+}) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const navigate = useNavigate()
@@ -77,7 +96,31 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 	const token = useAppSelector((state: RootState) => state.auth.authTokens)
 	const { verificarToken } = useAuth()
 	
-	const exportToExcel = (data: any[]) => {
+	const exportToExcel = async (data: any[]) => {
+		try {
+			// Para la exportación, necesitamos obtener todos los datos
+			const token_verificado = await verificarToken(token!)
+			
+			if (!token_verificado) throw new Error('Token no verificado')
+			
+			let allData: TControlCalidad[] = []
+			
+			if (comercializador == 'Pacific Nut'){
+				const response = await fetchWithToken(`api/control-calidad/recepcionmp/get_by_comercializador/?comercializador=${comercializador}`, token_verificado)
+				if (response.ok) {
+					allData = await response.json()
+				}
+			} else {
+				const response = await fetchWithToken(`api/control-calidad/recepcionmp/`, token_verificado)
+				if (response.ok) {
+					allData = await response.json()
+				}
+			}
+			
+			if (allData.length === 0) {
+				toast.error('No hay datos para exportar')
+				return
+			}
 		// Campos cuantitativos que queremos incluir del control_rendimiento
 		const quantitativeFields = [
 			'peso_muestra',
@@ -96,6 +139,9 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 			'vana_deshidratada',
 			'punto_goma',
 			'goma',
+		];
+
+		const calibreFields = [
 			'pre_calibre',
 			'calibre_18_20',
 			'calibre_20_22',
@@ -106,29 +152,30 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 			'calibre_32_34',
 			'calibre_34_36',
 			'calibre_36_40',
-			'calibre_40_mas'
+			'calibre_40_mas',
 		];
 	
 		// Campos que necesitan cálculo de porcentaje (todos excepto peso_muestra)
 		const fieldsForPercentage = quantitativeFields.filter(field => field !== 'peso_muestra');
 	
-		const filteredInformation = data.map(({ original }) => {
+		const filteredInformation = allData.map((item) => {
 			// Información básica del lote
-			const baseInfo = {
-				"N° Lote": original.numero_lote,
-				"N° Guia": original.guia_recepcion,
-				"Productor": original.productor,
-				"Variedad": original.variedad,
-				"Kilos Totales": original.kilos_totales_recepcion,
-				"Humedad": original.humedad,
-				"Presencia Insectos": original.presencia_insectos_selected
+			const baseInfo: Record<string, any> = {
+				"N° Lote": item.numero_lote,
+				"N° Guia": item.guia_recepcion,
+				"Productor": item.productor,
+				"Variedad": item.variedad,
+				"Kilos Totales": item.kilos_totales_recepcion,
+				"Humedad": item.humedad,
+				"Presencia Insectos": item.presencia_insectos_selected
 			};
 	
 			// Agregar datos de cada muestra
-			if (original.control_rendimiento && original.control_rendimiento.length > 0) {
+			if (item.control_rendimiento && item.control_rendimiento.length > 0) {
 				const samplesData: Record<string, any> = {};
+				let calibreSampleFound = false;
 				
-				original.control_rendimiento.forEach((sample: any, index: number) => {
+				item.control_rendimiento.forEach((sample: any, index: number) => {
 					const sampleNumber = index + 1;
 					const prefix = `_muestra_${sampleNumber}`;
 					
@@ -170,6 +217,28 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 								}
 							}
 						});
+
+						// Lógica para calibres
+						if (sample.cc_calibrespepaok && !calibreSampleFound) {
+							calibreSampleFound = true;
+							const pesoMuestraCalibre = sample.cc_rendimiento.peso_muestra_calibre || 0;
+							const desviacion = sample.cc_rendimiento.desviacion || 0;
+							const divisor = pesoMuestraCalibre - desviacion;
+
+							calibreFields.forEach(field => {
+								if (sample.cc_rendimiento.hasOwnProperty(field)) {
+									// Nombre de columna consolidado
+									const consolidatedFieldName = field.replace('calibre_', 'Calibre_');
+									samplesData[consolidatedFieldName] = sample.cc_rendimiento[field];
+
+									// Cálculo de porcentaje de calibre
+									if (divisor > 0) {
+										const percentage = (sample.cc_rendimiento[field] / divisor) * 100;
+										samplesData[consolidatedFieldName + '_porcentaje'] = percentage.toFixed(2) + '%';
+									}
+								}
+							});
+						}
 					}
 				});
 	
@@ -183,8 +252,11 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 		const ws = XLSX.utils.json_to_sheet(filteredInformation);
 		XLSX.utils.book_append_sheet(wb, ws, 'Control Rendimiento');
 		XLSX.writeFile(wb, 'control_rendimiento.xlsx');
+	} catch (error) {
+		console.error('Error exporting to Excel:', error)
+		toast.error('Error al exportar el archivo')
+	}
 	};
-	
 	const handleEstadoJefatura = async (id: number, estado: string) => {
 		const token_verificado = await verificarToken(token!)
 	
@@ -197,12 +269,12 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 		)
 		if (response.ok) {
 			toast.success('El lote fue aprobado')
-			if (comercializador == 'Pacific Nut'){
-				dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
-			  }
-			else {
-				dispatch(fetchControlesDeCalidad({ token, verificar_token: verificarToken }))
-			}
+			// Refresh current page data
+			dispatch(fetchControlesDeCalidadPaginados({ 
+				token, 
+				verificar_token: verificarToken,
+				params: { desde: currentPage * pageSize, hasta: (currentPage * pageSize) + pageSize - 1 }
+			}))
 		} else {
 			toast.error('El lote no fue aprobado')
 		}
@@ -221,12 +293,12 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 
 		if (response.ok) {
 			toast.success('Fue solicitada una Contra Muestra')
-			if (comercializador == 'Pacific Nut'){
-				dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
-			  }
-			  else {
-				dispatch(fetchControlesDeCalidad({ token, verificar_token: verificarToken }))
-			  }
+			// Refresh current page data
+			dispatch(fetchControlesDeCalidadPaginados({ 
+				token, 
+				verificar_token: verificarToken,
+				params: { desde: currentPage * pageSize, hasta: (currentPage * pageSize) + pageSize - 1 }
+			}))
 			setPosted(true)
 
 		} else {
@@ -247,12 +319,12 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 
 		if (response.ok) {
 			toast.success('Fue solicitada una Contra Muestra')
-			if (comercializador == 'Pacific Nut'){
-				dispatch(fetchControlesDeCalidadPorComercializador({ params: { search: `?comercializador=${comercializador}` }, token, verificar_token: verificarToken }))
-			  }
-			  else {
-				dispatch(fetchControlesDeCalidad({ token, verificar_token: verificarToken }))
-			  }
+			// Refresh current page data
+			dispatch(fetchControlesDeCalidadPaginados({ 
+				token, 
+				verificar_token: verificarToken,
+				params: { desde: currentPage * pageSize, hasta: (currentPage * pageSize) + pageSize - 1 }
+			}))
 			setPosted(true)
 
 		} else {
@@ -501,7 +573,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 	];
 
 	const table = useReactTable({
-		data,
+		data: data ? data : [],
 		columns,
 		state: {
 			sorting,
@@ -513,10 +585,11 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getSortedRowModel: getSortedRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		initialState: {
-			pagination: { pageSize: 10 },
-		},
+		// Disable built-in pagination since we're using server-side pagination
+		// getPaginationRowModel: getPaginationRowModel(),
+		// initialState: {
+		// 	pagination: { pageSize: 10 },
+		// },
 	});
 
 	const columnas: TableColumn[] = [
@@ -564,7 +637,14 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 								variant='outline'
 								className='border-transparent px-4'
 								rounded='rounded-full'>
-								{table.getFilteredRowModel().rows.length} registros
+								{loadingPagination ? (
+									<div className="flex items-center gap-1">
+										<div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+										Cargando...
+									</div>
+								) : (
+									`${paginationMetadata?.total_count || table.getFilteredRowModel().rows.length} registros`
+								)}
 							</Badge>
 						</CardHeaderChild>
 						<CardHeaderChild>
@@ -582,10 +662,62 @@ const TablaControlRendimiento: FC<IControlProps> = ({ data }) => {
 									</Button>
 								</div>
 							</CardHeader>
-					<CardBody className='overflow-auto'>
-						<TableTemplate className='table-fixed max-md:min-w-[70rem]' table={table} columnas={columnas}/>
+					<CardBody className='overflow-x-auto'>
+						{loadingPagination ? (
+							<div className="flex items-center justify-center py-8">
+								<div className="flex items-center gap-2">
+									<div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+									<span className="text-gray-600">Cargando controles...</span>
+								</div>
+							</div>
+						) : (
+							<TableTemplate className='table-fixed max-md:min-w-[70rem]' table={table} columnas={columnas}/>
+						)}
 					</CardBody>
-					<TableCardFooterTemplate table={table} />
+					{paginationMetadata && onPageChange && (
+						<div className="flex items-center justify-between px-6 py-3 border-t border-gray-200">
+							<div className="flex items-center gap-2">
+								<span className="text-sm text-gray-700">
+									Mostrando {paginationMetadata.desde + 1} a {Math.min(paginationMetadata.hasta + 1, paginationMetadata.total_count)} de {paginationMetadata.total_count} registros
+								</span>
+							</div>
+							<div className="flex items-center gap-2">
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={() => onPageChange(currentPage - 1)}
+									isDisable={!paginationMetadata.has_previous || loadingPagination}
+								>
+									{loadingPagination ? (
+										<div className="flex items-center gap-1">
+											<div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+											Cargando...
+										</div>
+									) : (
+										'Anterior'
+									)}
+								</Button>
+								<span className="text-sm text-gray-700">
+									Página {currentPage + 1} de {Math.ceil(paginationMetadata.total_count / pageSize)}
+								</span>
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={() => onPageChange(currentPage + 1)}
+									isDisable={!paginationMetadata.has_next || loadingPagination}
+								>
+									{loadingPagination ? (
+										<div className="flex items-center gap-1">
+											<div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+											Cargando...
+										</div>
+									) : (
+										'Siguiente'
+									)}
+								</Button>
+							</div>
+						</div>
+					)}
 				</Card>
 			</Container>
 		</PageWrapper>
