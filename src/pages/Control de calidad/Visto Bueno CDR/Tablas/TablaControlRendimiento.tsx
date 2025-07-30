@@ -116,6 +116,14 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 	const token = useAppSelector((state: RootState) => state.auth.authTokens)
 	const { verificarToken } = useAuth()
 	
+	// Helper function to convert numbers to string with comma as decimal separator
+	const convertNumberToCommaString = (value: any): any => {
+		if (value !== null && value !== undefined && typeof value === 'number') {
+			return value.toString().replace('.', ',');
+		}
+		return value;
+	};
+
 	const exportToExcel = async () => {
 		setIsExporting(true)
 		try {
@@ -187,8 +195,8 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 				"N° Guia": item.guia_recepcion,
 				"Productor": item.productor,
 				"Variedad": item.variedad,
-				"Kilos Totales": item.kilos_totales_recepcion,
-				"Humedad": item.humedad,
+				"Kilos Totales": convertNumberToCommaString(item.kilos_totales_recepcion),
+				"Humedad": convertNumberToCommaString(item.humedad),
 				"Presencia Insectos": item.presencia_insectos_selected
 			};
 	
@@ -214,13 +222,13 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 					// Agregar campos del nivel superior de la muestra
 					quantitativeFields.forEach(field => {
 						if (sample.hasOwnProperty(field)) {
-							// Agregar el valor original en kilos
-							samplesData[field + prefix] = sample[field];
+							// Agregar el valor original en kilos (convertir puntos a comas)
+							samplesData[field + prefix] = convertNumberToCommaString(sample[field]);
 							
 							// Agregar el porcentaje para los campos que lo requieren
 							if (fieldsForPercentage.includes(field) && pesoMuestra > 0) {
 								const percentage = (sample[field] / pesoMuestra) * 100;
-								samplesData[field + '_porcentaje' + prefix] = percentage.toFixed(2) + '%';
+								samplesData[field + '_porcentaje' + prefix] = percentage.toFixed(2).replace('.', ',') + '%';
 							}
 						}
 					});
@@ -229,13 +237,13 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 					if (sample.cc_rendimiento) {
 						quantitativeFields.forEach(field => {
 							if (sample.cc_rendimiento.hasOwnProperty(field)) {
-								// Agregar el valor original en kilos
-								samplesData[field + prefix] = sample.cc_rendimiento[field];
+								// Agregar el valor original en kilos (convertir puntos a comas)
+								samplesData[field + prefix] = convertNumberToCommaString(sample.cc_rendimiento[field]);
 								
 								// Agregar el porcentaje para los campos que lo requieren
 								if (fieldsForPercentage.includes(field) && pesoMuestra > 0) {
 									const percentage = (sample.cc_rendimiento[field] / pesoMuestra) * 100;
-									samplesData[field + '_porcentaje' + prefix] = percentage.toFixed(2) + '%';
+									samplesData[field + '_porcentaje' + prefix] = percentage.toFixed(2).replace('.', ',') + '%';
 								}
 							}
 						});
@@ -251,12 +259,12 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 								if (sample.cc_rendimiento.hasOwnProperty(field)) {
 									// Nombre de columna consolidado
 									const consolidatedFieldName = field.replace('calibre_', 'Calibre_');
-									samplesData[consolidatedFieldName] = sample.cc_rendimiento[field];
+									samplesData[consolidatedFieldName] = convertNumberToCommaString(sample.cc_rendimiento[field]);
 
 									// Cálculo de porcentaje de calibre
 									if (divisor > 0) {
 										const percentage = (sample.cc_rendimiento[field] / divisor) * 100;
-										samplesData[consolidatedFieldName + '_porcentaje'] = percentage.toFixed(2) + '%';
+										samplesData[consolidatedFieldName + '_porcentaje'] = percentage.toFixed(2).replace('.', ',') + '%';
 									}
 								}
 							});
