@@ -432,9 +432,9 @@ const table = useReactTable({
 			<Container breakpoint={null} className={`w-full md:overflow-x-scroll py-1`}>
 				<Card className='h-full w-full py-0'>
 				<CardHeader className="flex items-center flex-wrap">
-						<div className='w-full flex gap-5'>
+						<div className='w-full flex gap-8'>
                 
-                <div className="w-2/5 flex-col">
+                <div className="flex-shrink-0 flex-col" style={{minWidth: '400px', width: '400px'}}>
                   <Label htmlFor="codigo_tarja">Código Tarja: </Label>
                   <div className="flex gap-2">
                     <Input
@@ -443,7 +443,8 @@ const table = useReactTable({
                       placeholder='Ingrese código de tarja...'
                       value={codigoTarjaInput}
                       onChange={(e) => setCodigoTarjaInput(e.target.value)}
-                      className='w-64 h-14 py-2'
+                      className='flex-1 h-14 py-2'
+                      style={{minWidth: '250px'}}
                     />
                     <Button
                       variant="solid"
@@ -457,7 +458,7 @@ const table = useReactTable({
                           setFilteredData(filtered)
                         }
                       }}
-                      className="bg-blue-600 hover:bg-blue-500 border border-blue-600 hover:border-blue-500 hover:scale-105 h-14 px-4 whitespace-nowrap"
+                      className="bg-blue-600 hover:bg-blue-500 border border-blue-600 hover:border-blue-500 hover:scale-105 h-14 px-4 whitespace-nowrap flex-shrink-0"
                     >
                       Filtrar
                     </Button>
@@ -467,7 +468,7 @@ const table = useReactTable({
                         setCodigoTarjaInput('')
                         setFilteredData(data)
                       }}
-                      className="border-gray-300 hover:bg-gray-50 h-14 px-4 whitespace-nowrap"
+                      className="border-gray-300 hover:bg-gray-50 h-14 px-4 whitespace-nowrap flex-shrink-0"
                     >
                       Limpiar
                     </Button>
@@ -533,25 +534,7 @@ const table = useReactTable({
                   />
                 </div>
 
-				<div className="w-full flex-col">
-                  <Label htmlFor="calle">Calle Bodega: </Label>
-                  <SelectReact
-                    options={[{ value: '', label: 'Selecciona una calle' }, ...optionCalleBodega.slice(0,14)]}
-                    id='calle'
-                    placeholder='Calle'
-                    name='calle'
-                    className='w-full h-14 py-2'
-                    onChange={(selectedOption: any) => {
-                     setGlobalFilter((prev : any) => (
-							{
-								...prev,
-								calle: selectedOption?.label != "Selecciona una calle" ? selectedOption?.label : ''
-							}
-						)
-						)
-                    }}
-                  />
-							</div>
+
 
 						</div>
 					</CardHeader>
