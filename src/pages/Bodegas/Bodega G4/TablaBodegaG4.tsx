@@ -1,7 +1,7 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import useDarkMode from "../../../hooks/useDarkMode";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { fetchWithTokenPatch, fetchWithTokenPut } from "../../../utils/peticiones.utils";
+import { fetchWithTokenPatch, fetchWithTokenPut, fetchWithTokenPost , fetchWithTokenDelete, fetchWithTokenDeleteAction} from "../../../utils/peticiones.utils";
 import { Row, SortingState, createColumnHelper, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 import { RootState } from "../../../redux/store";
 import { useAuth } from "../../../context/authContext";
@@ -44,12 +44,20 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 		variedad: '',
 		calibre: '',
 		calidad: '',
-		calle: ''
+		calle: '',
+		codigo_tarja: ''
 	})
+	const [codigoTarjaInput, setCodigoTarjaInput] = useState('')
+	const [filteredData, setFilteredData] = useState<TBinBodega[]>(data)
 
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 	const token = useAppSelector((state: RootState) => state.auth.authTokens)
 	const { verificarToken } = useAuth()
+
+	// Actualizar filteredData cuando cambie data
+	useEffect(() => {
+		setFilteredData(data)
+	}, [data])
 
 	const exportToExcel = (data: Row<TBinBodega>[]) => {
 		const filteredInfomation = data.map(({ original }) => ({
@@ -100,6 +108,28 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 			}
 		} catch (error) {
 			console.log('Error al cambiar la calle')
+		}
+	}
+
+	const eliminarTarja = async (seleccion: number, codigo_tarja: string) => {
+		try {
+			const token_verificado = await verificarToken(token!)
+		
+			if (!token_verificado) throw new Error('Token no verificado')
+			
+			const response = await fetchWithTokenDeleteAction(`api/seleccion/35/tarjaseleccionada/eliminar_tarja_completa`, {codigo_tarja: codigo_tarja}, token_verificado)
+			if (response.ok){
+				toast.success(`Tarja eliminada correctamente!`)
+				setRefresco(!refresco)
+			} else if (response.status === 400) {
+				const errorData = await response.json()
+				toast.error(`${Object.entries(errorData)}`)
+			} else {
+				toast.error('Error al eliminar la tarja')
+			}
+		} catch (error) {
+			console.log('Error al eliminar la tarja')
+			toast.error('Error al eliminar la tarja')
 		}
 	} 
  
@@ -247,6 +277,55 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 			)},
 			header: 'Calle Bodega',
 		}),
+		columnHelper.display({
+			id: 'acciones',
+			cell: (info) => {
+				const [deleteModal, setDeleteModal] = useState(false)
+
+				return (
+					<div className='w-full flex justify-center'>
+						<ModalForm
+							title="Confirmar Eliminación"
+							variant="solid"
+							open={deleteModal}
+							setOpen={setDeleteModal}
+							width="w-96"
+							textButton="Eliminar"
+							color="red"
+							colorIntensity="600"
+						>
+							<div className="w-full flex flex-col items-center gap-4">
+								<div className="text-center">
+									<p className="text-lg font-semibold mb-2">¿Está seguro que desea eliminar esta tarja?</p>
+									<p className="text-gray-600">Código: <span className="font-bold">{info.row.original.binbodega}</span></p>
+									<p className="text-gray-600">Esta acción no se puede deshacer.</p>
+								</div>
+								<div className="flex gap-3">
+									<Button
+										variant="outline"
+										onClick={() => setDeleteModal(false)}
+										className="border-gray-300 hover:bg-gray-50"
+									>
+										Cancelar
+									</Button>
+									<Button
+										variant="solid"
+										onClick={() => {
+											eliminarTarja(info.row.original.id_binbodega, info.row.original.binbodega)
+											setDeleteModal(false)
+										}}
+										className="bg-red-600 hover:bg-red-500 border border-red-600 hover:border-red-500"
+									>
+										Confirmar Eliminación
+									</Button>
+								</div>
+							</div>
+						</ModalForm>
+					</div>
+				)
+			},
+			header: 'Acciones',
+		}),
 	];
 
 
@@ -267,7 +346,7 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 // filtered data by the filed estado_binbodega 
 
 const table = useReactTable({
-	data,
+	data: filteredData,
   	columns,
   	state: {
     globalFilter,
@@ -282,14 +361,15 @@ const table = useReactTable({
   },
   globalFilterFn: (row, filterValue : any) => {
     // Desestructuramos los filtros de globalFilter
-    const { productor, variedad, calibre, calidad, calle } = filterValue;
+    const { productor, variedad, calibre, calidad, calle, codigo_tarja } = filterValue;
 
     // Aplicamos los filtros solo si tienen valor
     return (
       (!calle || row.original.calle === calle) &&
       (!variedad || row.original.variedad === variedad) &&
       (!calibre || row.original.calibre === calibre) &&
-      (!calidad || row.original.calidad === calidad) 
+      (!calidad || row.original.calidad === calidad) &&
+      (!codigo_tarja || row.original.binbodega.toLowerCase().includes(codigo_tarja.toLowerCase()))
     );
   },
 });
@@ -346,8 +426,48 @@ const table = useReactTable({
 			<Container breakpoint={null} className={`w-full md:overflow-x-scroll py-1`}>
 				<Card className='h-full w-full py-0'>
 				<CardHeader className="flex items-center flex-wrap">
-						<div className='w-8/12 flex gap-5'>
+						<div className='w-full flex gap-5'>
                 
+                <div className="w-2/5 flex-col">
+                  <Label htmlFor="codigo_tarja">Código Tarja: </Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id='codigo_tarja'
+                      name='codigo_tarja'
+                      placeholder='Ingrese código de tarja...'
+                      value={codigoTarjaInput}
+                      onChange={(e) => setCodigoTarjaInput(e.target.value)}
+                      className='w-64 h-14 py-2'
+                    />
+                    <Button
+                      variant="solid"
+                      onClick={() => {
+                        if (codigoTarjaInput.trim() === '') {
+                          setFilteredData(data)
+                        } else {
+                          const filtered = data.filter((item: TBinBodega) => 
+                            item.binbodega.toLowerCase().includes(codigoTarjaInput.toLowerCase())
+                          )
+                          setFilteredData(filtered)
+                        }
+                      }}
+                      className="bg-blue-600 hover:bg-blue-500 border border-blue-600 hover:border-blue-500 hover:scale-105 h-14 px-4 whitespace-nowrap"
+                    >
+                      Filtrar
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setCodigoTarjaInput('')
+                        setFilteredData(data)
+                      }}
+                      className="border-gray-300 hover:bg-gray-50 h-14 px-4 whitespace-nowrap"
+                    >
+                      Limpiar
+                    </Button>
+                  </div>
+                </div>
+
                 <div className="w-full flex-col">
                   <Label htmlFor="calle">Variedad: </Label>
                   <SelectReact
