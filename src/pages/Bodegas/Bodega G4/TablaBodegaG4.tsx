@@ -111,13 +111,19 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 		}
 	}
 
-	const eliminarTarja = async (seleccion: number, codigo_tarja: string) => {
+	const eliminarTarja = async (seleccion: string, codigo_tarja: string) => {
 		try {
 			const token_verificado = await verificarToken(token!)
 		
 			if (!token_verificado) throw new Error('Token no verificado')
+			// Extract number from "Programa Selección N° X" format
+			const seleccionNumber = seleccion.match(/\d+/)?.[0]
+			if (!seleccionNumber) {
+				throw new Error('No se pudo extraer el número del programa de selección')
+			}
+			seleccion = seleccionNumber
 			
-			const response = await fetchWithTokenDeleteAction(`api/seleccion/35/tarjaseleccionada/eliminar_tarja_completa`, {codigo_tarja: codigo_tarja}, token_verificado)
+			const response = await fetchWithTokenDeleteAction(`api/seleccion/${seleccion}/tarjaseleccionada/eliminar_tarja_completa`, {codigo_tarja: codigo_tarja}, token_verificado)
 			if (response.ok){
 				toast.success(`Tarja eliminada correctamente!`)
 				setRefresco(!refresco)
@@ -311,7 +317,7 @@ const TablaBodegaG4: FC<IBodegaG4Props> = ({ data, refresco, setRefresco }) => {
 									<Button
 										variant="solid"
 										onClick={() => {
-											eliminarTarja(info.row.original.id_binbodega, info.row.original.binbodega)
+											eliminarTarja(info.row.original.programa, info.row.original.binbodega)
 											setDeleteModal(false)
 										}}
 										className="bg-red-600 hover:bg-red-500 border border-red-600 hover:border-red-500"
