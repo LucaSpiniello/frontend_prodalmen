@@ -10,8 +10,8 @@ import { useAuth } from "../../../../context/authContext";
 import { useAuthenticatedFetch } from "../../../../hooks/useAuthenticatedFetch";
 import { TControlCalidad } from "../../../../types/TypesControlCalidad.type";
 import { useFormik } from "formik";
-import { fetchWithTokenPatch } from "../../../../utils/peticiones.utils";
-import { TConductor } from "../../../../types/TypesRegistros.types";
+import { fetchWithTokenPatch, fetchWithTokenPost } from "../../../../utils/peticiones.utils";
+import { TConductor, TProductor } from "../../../../types/TypesRegistros.types";
 import SelectReact, { TSelectOptions } from "../../../../components/form/SelectReact";
 import Button from "../../../../components/ui/Button";
 import Validation from "../../../../components/form/Validation";
@@ -32,6 +32,7 @@ import { fetchConductores } from "../../../../redux/slices/conductoresSlice";
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import { fetchCamiones } from "../../../../redux/slices/camionesSlice";
+import { fetchProductores } from "../../../../redux/slices/productoresSlice";
 
 
 const optionsRadio = [
@@ -54,6 +55,7 @@ const DetalleGuia = () => {
   const perfilData = useAppSelector((state: RootState) => state.auth.dataUser)
   const conductores = useAppSelector((state: RootState) => state.conductores.conductores)
   const envases = useAppSelector((state: RootState) => state.envasesmp.envases)
+  const productores = useAppSelector((state: RootState) => state.productores.productores)
 
   const hasGroup = (groups: any) => userGroup?.groups && groups.some((group: any) => group in userGroup.groups)
 
@@ -97,6 +99,12 @@ const DetalleGuia = () => {
     }
   }, [conductores])
 
+  useEffect(() => {
+    if (productores.length < 1) {
+      dispatch(fetchProductores({ token, verificar_token: verificarToken }))
+    }
+  }, [productores])
+
 
   const { data: control_calidad } = useAuthenticatedFetch<TControlCalidad[]>(
     `api/control-calidad/recepcionmp`
@@ -125,7 +133,24 @@ const DetalleGuia = () => {
             throw new Error('Token no verificado')
          }
 
-        const res = await fetchWithTokenPatch(`api/recepcionmp/${id}/`, { ...values }, token_verificado)
+        // Check if productor has changed
+        if (values.productor && values.productor !== guia_recepcion?.productor) {
+          // Send producer update to specific endpoint
+          const resProductor = await fetchWithTokenPost(`api/recepcionmp/editar_productor/`, { 
+            guia_id: id,
+            productor_id: values.productor 
+          }, token_verificado)
+          
+          if (!resProductor.ok) {
+            toast.error("No se pudo actualizar el productor")
+            return
+          }
+        }
+
+        // Remove productor from values before sending to main endpoint
+        const { productor, ...valuesWithoutProductor } = values
+
+        const res = await fetchWithTokenPatch(`api/recepcionmp/${id}/`, { ...valuesWithoutProductor }, token_verificado)
         if (res.ok) {
           const data = await res.json()
           setGuiaID(data.id)
@@ -206,6 +231,11 @@ const DetalleGuia = () => {
     label: conductor.nombre + ' ' + conductor.apellido
   })) ?? []
 
+  const optionsProductor: TSelectOptions = productores?.map((productor: TProductor) => ({
+    value: String(productor.id),
+    label: productor.nombre
+  })) ?? []
+
 
   return (
     <Container breakpoint={null} className="w-full h-full">
@@ -220,55 +250,77 @@ const DetalleGuia = () => {
 
               <article className="flex flex-col md:grid mt-5 md:grid-cols-6 gap-5 dark:bg-inherit bg-zinc-50 px-5 py-2 rounded-md relative">
               {
-              hasGroup(['recepcion-mp']) && guia_recepcion?.estado_recepcion !== '4'
-                ? (
-                  <>
-                    {
-                      !editar 
-                        ? (
-                          <Button
-                            color='blue'
-                            variant='solid'
-                            className='absolute -top-5 right-5'
-                            onClick={() => setEditar(true)}>
-                            Editar
-                          </Button>
-                        )
-                        : (
-                          <>
-                            <Button
-                              variant='solid'
-                              className='absolute bg-red-700 hover:bg-red-600 border-red-700 hover:border-red-600 -top-5 right-5'
-                              onClick={() => setEditar(false)}
-                              >
-                              Cancelar
-                            </Button>
+                !editar 
+                  ? (
+                    <Button
+                      color='blue'
+                      variant='solid'
+                      className='absolute -top-5 right-5'
+                      onClick={() => setEditar(true)}>
+                      Editar
+                    </Button>
+                  )
+                  : (
+                    <>
+                      <Button
+                        variant='solid'
+                        className='absolute bg-red-700 hover:bg-red-600 border-red-700 hover:border-red-600 -top-5 right-5'
+                        onClick={() => setEditar(false)}
+                        >
+                        Cancelar
+                      </Button>
 
-                            <Button
-                              color='blue'
-                              variant='solid'
-                              className='absolute -top-5 right-36'
-                              onClick={() => {
-                                formik.handleSubmit()
-                                setEditar(false)
-                                // setRefresh(true)
-                              }}
-                              >
-                              Guardar
-                            </Button>
-                          </>
-
-                        )
-                    }
-                  </>
-                )
-                : null
-            } 
+                      <Button
+                        color='blue'
+                        variant='solid'
+                        className='absolute -top-5 right-36'
+                        onClick={() => {
+                          formik.handleSubmit()
+                          setEditar(false)
+                          // setRefresh(true)
+                        }}
+                        >
+                        Guardar
+                      </Button>
+                    </>
+                  )
+              } 
                 <div className='md:col-span-2 md:flex-col items-center'>
                   <label htmlFor="productor">Productor: </label>
-                  <div className={`dark:bg-[#27272A] dark:border dark:border-gray-600 bg-[#F4F4F5] border border-blue-100 p-2 flex items-center h-12 rounded-md`}>
-                    <span>{guia_recepcion?.nombre_productor}</span>
-                  </div>
+                  {
+                    editar
+                      ? (
+                        <>
+                          <Validation
+                            isValid={formik.isValid}
+                            isTouched={formik.touched.productor ? true : undefined}
+                            invalidFeedback={formik.errors.productor ? String(formik.errors.productor) : undefined}
+                          >
+                            <FieldWrap>
+                              <SelectReact
+                                options={optionsProductor}
+                                id='productor'
+                                name='productor'
+                                placeholder='Selecciona un productor'
+                                className='h-12'
+                                onBlur={formik.handleBlur}
+                                value={optionsProductor.find(prod => prod?.value === String(formik.values.productor))}
+                                onChange={(value: any) => {
+                                  formik.setFieldValue('productor', value.value)
+                                }}
+                              />
+                            </FieldWrap>
+                          </Validation>
+                        </>
+                        )
+                      : (
+                        <>
+                          <div className={`dark:bg-[#27272A] dark:border dark:border-gray-600 bg-[#F4F4F5] border border-blue-100 p-2 flex items-center h-12 rounded-md`}>
+                            <span>{guia_recepcion?.nombre_productor}</span>
+                          </div>
+                        </>
+                        )
+                  }
                 </div>
 
                 <div className='md:col-span-2 md:col-start-3 md:flex-col items-center'>
