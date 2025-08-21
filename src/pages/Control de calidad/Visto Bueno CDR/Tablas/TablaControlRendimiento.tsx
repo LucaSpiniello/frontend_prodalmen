@@ -116,10 +116,21 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 	const token = useAppSelector((state: RootState) => state.auth.authTokens)
 	const { verificarToken } = useAuth()
 	
-	// Helper function to convert numbers to string with comma as decimal separator
-	const convertNumberToCommaString = (value: any): any => {
+	// Helper function to convert numbers to string with comma as decimal separator for display
+	const convertNumberToCommaString = (value: any, decimalPlaces: number = 4): any => {
 		if (value !== null && value !== undefined && typeof value === 'number') {
-			return value.toString().replace('.', ',');
+			// Round to specified decimal places to avoid floating point precision issues
+			const roundedValue = Math.round(value * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces);
+			return roundedValue.toString().replace('.', ',');
+		}
+		return value;
+	};
+
+	// Helper function to round numbers for Excel export (keeps as number type)
+	const roundNumberForExcel = (value: any, decimalPlaces: number = 4): any => {
+		if (value !== null && value !== undefined && typeof value === 'number') {
+			// Round to specified decimal places to avoid floating point precision issues
+			return Math.round(value * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces);
 		}
 		return value;
 	};
@@ -195,8 +206,8 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 				"N° Guia": item.guia_recepcion,
 				"Productor": item.productor,
 				"Variedad": item.variedad,
-				"Kilos Totales": convertNumberToCommaString(item.kilos_totales_recepcion),
-				"Humedad": convertNumberToCommaString(item.humedad),
+				"Kilos Totales": roundNumberForExcel(item.kilos_totales_recepcion, 2),
+				"Humedad": roundNumberForExcel(item.humedad, 2),
 				"Presencia Insectos": item.presencia_insectos_selected
 			};
 	
@@ -222,8 +233,8 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 					// Agregar campos del nivel superior de la muestra
 					quantitativeFields.forEach(field => {
 						if (sample.hasOwnProperty(field)) {
-							// Agregar el valor original en kilos (convertir puntos a comas)
-							samplesData[field + prefix] = convertNumberToCommaString(sample[field]);
+							// Agregar el valor original en kilos (redondeado para Excel)
+							samplesData[field + prefix] = roundNumberForExcel(sample[field], 4);
 							
 							// Agregar el porcentaje para los campos que lo requieren
 							if (fieldsForPercentage.includes(field) && pesoMuestra > 0) {
@@ -237,8 +248,8 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 					if (sample.cc_rendimiento) {
 						quantitativeFields.forEach(field => {
 							if (sample.cc_rendimiento.hasOwnProperty(field)) {
-								// Agregar el valor original en kilos (convertir puntos a comas)
-								samplesData[field + prefix] = convertNumberToCommaString(sample.cc_rendimiento[field]);
+								// Agregar el valor original en kilos (redondeado para Excel)
+								samplesData[field + prefix] = roundNumberForExcel(sample.cc_rendimiento[field], 4);
 								
 								// Agregar el porcentaje para los campos que lo requieren
 								if (fieldsForPercentage.includes(field) && pesoMuestra > 0) {
@@ -259,7 +270,7 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 								if (sample.cc_rendimiento.hasOwnProperty(field)) {
 									// Nombre de columna consolidado
 									const consolidatedFieldName = field.replace('calibre_', 'Calibre_');
-									samplesData[consolidatedFieldName] = convertNumberToCommaString(sample.cc_rendimiento[field]);
+									samplesData[consolidatedFieldName] = roundNumberForExcel(sample.cc_rendimiento[field], 4);
 
 									// Cálculo de porcentaje de calibre
 									if (divisor > 0) {
