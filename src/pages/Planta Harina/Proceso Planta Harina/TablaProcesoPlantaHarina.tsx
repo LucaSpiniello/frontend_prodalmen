@@ -271,24 +271,19 @@ const TablaProcesoPlantaHarina = () => {
 					</FieldWrap>
 				</SubheaderLeft>
 
-				{
-					procesos_planta_harina?.length <= 1 || procesos_planta_harina?.slice(2).every((bin) => bin.estado_proceso === '5')
-						? (
-							<SubheaderRight>
-								<ModalForm
-									title='Registro Proceso Planta Harina'
-									variant='solid'
-									open={openModal}
-									setOpen={setOpenModal}
-									textButton='Registro Proceso Planta Harina'
-									size={800}
-									>
-										<FormularioRegistroProcesoPlantaHarina />
-								</ModalForm>
-							</SubheaderRight>
-							)	
-						: null 
-				}
+				<SubheaderRight>
+					<ModalForm
+						title='Registro Proceso Planta Harina'
+						variant='solid'
+						open={openModal}
+						setOpen={setOpenModal}
+						textButton='Registro Proceso Planta Harina'
+						size={800}
+						>
+							<FormularioRegistroProcesoPlantaHarina />
+					</ModalForm>
+				</SubheaderRight>
+											
 			</Subheader>
 			<Container breakpoint={null} className='w-full overflow-auto'>
 				<Card className='h-full w-full'>
