@@ -164,16 +164,14 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 				"Productor": original.nombre_productor,
 				"Camión": original.nombre_camion,
 				"Lotes": original.lotesrecepcionmp ? original.lotesrecepcionmp.map((element: any) => `${element.numero_lote}`).join(', ') : '',
+				"Variedad": original.lotesrecepcionmp ? original.lotesrecepcionmp.map((element: any) => element.variedad || '').filter((v: string) => v).join(', ') : '',
 				"Estado": original.estado_recepcion_label,
 				"Fecha Recepción": original.fecha_creacion.split("T")[0],
 				"N° Guia Productor": original.numero_guia_productor,
-				// Calculate kilos netos from lotesrecepcionmp with kilos_brutos_1, kilos_brutos_2, kilos_tara_1 and kilos_tara_2
+				"comercializador": original.nombre_comercializador,
+				// Calculate kilos netos using kilos_neto_fruta which includes: kilos_brutos - kilos_tara - kilos_envases
 				"Kilos Netos": original.lotesrecepcionmp ? original.lotesrecepcionmp.reduce((acc: number, element: any) => {
-					console.log(element.kilos_brutos_1, element.kilos_brutos_2, element.kilos_tara_1, element.kilos_tara_2)
-					if ("kilos_brutos_1" in element && "kilos_brutos_2" in element && "kilos_tara_1" in element && "kilos_tara_2" in element) {
-						return acc + (parseFloat(element.kilos_brutos_1) + parseFloat(element.kilos_brutos_2) - parseFloat(element.kilos_tara_1) - parseFloat(element.kilos_tara_2));
-					}
-					return acc;
+					return acc + (element.kilos_neto_fruta ?? 0);
 				}, 0) : 0,
 			}))
 			const wb = XLSX.utils.book_new()
