@@ -34,56 +34,56 @@ const CardFrutaCalibrada: FC<ICardFrutaCalibradaProps> = ({ rendimiento }) => {
                     <Label htmlFor='' className='text-center'>Mezcla Variedad</Label>
                     <div className='flex gap-2 items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
                       <span>{(rendimiento?.cc_promedio_porcentaje_cc_pepa?.mezcla! * rendimiento?.cc_calculo_final?.kilos_brutos! / 100).toFixed(1)} kgs =</span>
-                      <span>{rendimiento?.cc_promedio_porcentaje_cc_pepa.mezcla}%</span>
+                      <span>{rendimiento?.cc_promedio_porcentaje_cc_pepa.mezcla?.toFixed(4)}%</span>
                     </div>
                   </div>
                   <div className='md:col-start-3 md:col-span-2 '>
                     <Label htmlFor='' className='text-center'>Daño Insecto</Label>
                     <div className='flex gap-2 items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
                       <span>{(rendimiento?.cc_promedio_porcentaje_cc_pepa?.insecto! * rendimiento?.cc_calculo_final?.kilos_brutos! / 100).toFixed(1)} kgs  =</span>
-                      <span>{rendimiento?.cc_promedio_porcentaje_cc_pepa.insecto}%</span>
+                      <span>{rendimiento?.cc_promedio_porcentaje_cc_pepa.insecto?.toFixed(4)}%</span>
                     </div>
                   </div>
                   <div className='md:row-start-2 md:col-span-2 '>
                     <Label htmlFor='' className='text-center'>Hongo</Label>
                     <div className='flex gap-2 items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
                       <span>{(rendimiento?.cc_promedio_porcentaje_cc_pepa?.hongo! * rendimiento?.cc_calculo_final.kilos_brutos! / 100).toFixed(1)} kgs =</span>
-                      <span>{rendimiento?.cc_promedio_porcentaje_cc_pepa.hongo}%</span>
+                      <span>{rendimiento?.cc_promedio_porcentaje_cc_pepa.hongo?.toFixed(4)}%</span>
                     </div>
                   </div>
                   <div className='md:row-start-2 md:col-start-3 md:col-span-2 '>
                     <Label htmlFor='' className='text-center'>Dobles</Label>
                     <div className='flex gap-2 items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
                       <span>{(rendimiento?.cc_promedio_porcentaje_cc_pepa?.dobles! * rendimiento?.cc_calculo_final.kilos_brutos!/ 100).toFixed(1)} kgs =</span>
-                      <span>{rendimiento?.cc_promedio_porcentaje_cc_pepa.dobles}%</span>
+                      <span>{rendimiento?.cc_promedio_porcentaje_cc_pepa.dobles?.toFixed(4)}%</span>
                     </div>
                   </div>
                   <div className='md:row-start-3 md:col-span-2 '>
                     <Label htmlFor='' className='text-center'>Fuera Color</Label>
                     <div className='flex gap-2 items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
                       <span>{(rendimiento?.cc_promedio_porcentaje_cc_pepa?.color! * rendimiento?.cc_calculo_final.kilos_brutos!/ 100).toFixed(1)} kgs =</span>
-                      <span>{rendimiento?.cc_promedio_porcentaje_cc_pepa.color}%</span>
+                      <span>{rendimiento?.cc_promedio_porcentaje_cc_pepa.color?.toFixed(4)}%</span>
                     </div>
                   </div>
                   <div className='md:row-start-3 md:col-start-3 md:col-span-2 '>
                     <Label htmlFor='' className='text-center'>Vana Deshidratada</Label>
                     <div className='flex gap-2 items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
                       <span>{(rendimiento?.cc_promedio_porcentaje_cc_pepa?.vana! * rendimiento?.cc_calculo_final.kilos_brutos!/ 100).toFixed(1)} kgs =</span>
-                      <span>{rendimiento?.cc_promedio_porcentaje_cc_pepa.vana}%</span>
+                      <span>{rendimiento?.cc_promedio_porcentaje_cc_pepa.vana?.toFixed(4)}%</span>
                     </div>
                   </div>
                   <div className='md:row-start-4 md:col-span-2 '>
                     <Label htmlFor='' className='text-center'>Punto Goma</Label>
                     <div className='flex gap-2 items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
                       <span>{(rendimiento?.cc_promedio_porcentaje_cc_pepa?.pgoma! * rendimiento?.cc_calculo_final.kilos_brutos!/ 100).toFixed(1)} kgs =</span>
-                      <span>{rendimiento?.cc_promedio_porcentaje_cc_pepa.pgoma}%</span>
+                      <span>{rendimiento?.cc_promedio_porcentaje_cc_pepa.pgoma?.toFixed(4)}%</span>
                     </div>
                   </div>
                   <div className='md:row-start-4 md:col-start-3 md:col-span-2 '>
                     <Label htmlFor='' className='text-center'>Goma</Label>
                     <div className='flex gap-2 items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
                       <span>{(rendimiento?.cc_promedio_porcentaje_cc_pepa?.goma! * rendimiento?.cc_calculo_final.kilos_brutos!/ 100).toFixed(1)} kgs =</span>
-                      <span>{rendimiento?.cc_promedio_porcentaje_cc_pepa.goma}%</span>
+                      <span>{rendimiento?.cc_promedio_porcentaje_cc_pepa.goma?.toFixed(4)}%</span>
                     </div>
                   </div>
                 </div>

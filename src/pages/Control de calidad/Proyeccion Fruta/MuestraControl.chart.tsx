@@ -37,7 +37,7 @@ const CardFrutaCalibrada: FC<ICardFrutaCalibradaProps> = ({ rendimiento }) => {
                         <Label htmlFor='' className='text-center'>Basura</Label>
                         <div className='flex gap-2 items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
                           <span>{(rendimiento?.cc_promedio_porcentaje_muestras?.basura! * rendimiento?.cc_calculo_final?.kilos_netos! / 100).toFixed(1)} kgs =</span>
-                          <span>{rendimiento?.cc_promedio_porcentaje_muestras.basura}%</span>
+                          <span>{rendimiento?.cc_promedio_porcentaje_muestras.basura?.toFixed(2)}%</span>
                         </div>
                       </div>
 
@@ -45,7 +45,7 @@ const CardFrutaCalibrada: FC<ICardFrutaCalibradaProps> = ({ rendimiento }) => {
                         <Label htmlFor='' className='text-center'>Cascara</Label>
                         <div className='flex gap-2 items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
                           <span>{(rendimiento?.cc_promedio_porcentaje_muestras?.cascara * rendimiento?.cc_calculo_final?.kilos_netos / 100).toFixed(1)} kgs =</span>
-                          <span>{rendimiento?.cc_promedio_porcentaje_muestras.cascara}%</span>
+                          <span>{rendimiento?.cc_promedio_porcentaje_muestras.cascara?.toFixed(2)}%</span>
                         </div>
                       </div>
                       
@@ -54,9 +54,9 @@ const CardFrutaCalibrada: FC<ICardFrutaCalibradaProps> = ({ rendimiento }) => {
                     <article className="w-full flex flex-col md:flex-row lg:flex-row gap-2">
                       <div className='w-full'>
                         <Label htmlFor='' className='text-center'>Ciega</Label>
-                        <div className='flex gap-2 items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'> 
+                        <div className='flex gap-2 items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
                           <span>{(rendimiento?.cc_promedio_porcentaje_muestras?.ciega * rendimiento?.cc_calculo_final?.kilos_netos / 100).toFixed(1)} kgs =</span>
-                          <span>{rendimiento?.cc_promedio_porcentaje_muestras.ciega}%</span>
+                          <span>{rendimiento?.cc_promedio_porcentaje_muestras.ciega?.toFixed(2)}%</span>
                         </div>
                       </div>
 
@@ -64,10 +64,10 @@ const CardFrutaCalibrada: FC<ICardFrutaCalibradaProps> = ({ rendimiento }) => {
                         <Label htmlFor='' className='text-center'>Pelon</Label>
                         <div className='flex gap-2 items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
                           <span>{(rendimiento?.cc_promedio_porcentaje_muestras?.pelon * rendimiento?.cc_calculo_final?.kilos_netos / 100).toFixed(1)} kgs =</span>
-                          <span>{rendimiento?.cc_promedio_porcentaje_muestras.pelon}%</span>
+                          <span>{rendimiento?.cc_promedio_porcentaje_muestras.pelon?.toFixed(2)}%</span>
                         </div>
                       </div>
-                      
+
                     </article>
 
                     <article className="w-full flex flex-col md:flex-row lg:flex-row gap-2">
@@ -75,14 +75,14 @@ const CardFrutaCalibrada: FC<ICardFrutaCalibradaProps> = ({ rendimiento }) => {
                         <Label htmlFor='' className='text-center'>Huerto</Label>
                         <div className='flex gap-2 items-center justify-center dark:bg-zinc-700 bg-zinc-200 py-2 px-3 rounded-md'>
                           <span>{(rendimiento?.cc_promedio_porcentaje_muestras?.pepa_huerto * rendimiento?.cc_calculo_final?.kilos_netos / 100).toFixed(1)} kgs =</span>
-                          <span>{rendimiento?.cc_promedio_porcentaje_muestras.pepa_huerto}%</span>
+                          <span>{rendimiento?.cc_promedio_porcentaje_muestras.pepa_huerto?.toFixed(2)}%</span>
                         </div>
                       </div>
                       <div className='w-full'>
                         <Label htmlFor='' className='text-center'>Pepa Bruta</Label>
                         <div className='flex gap-2 items-center justify-center bg-green-700 py-2 px-3 rounded-md text-white'>
                           <span>{(rendimiento?.cc_promedio_porcentaje_muestras?.pepa_bruta * rendimiento?.cc_calculo_final?.kilos_netos / 100).toFixed(1)} kgs =</span>
-                          <span>{rendimiento?.cc_promedio_porcentaje_muestras?.pepa_bruta!}%</span>
+                          <span>{rendimiento?.cc_promedio_porcentaje_muestras?.pepa_bruta?.toFixed(2)}%</span>
                         </div>
                       </div>
                     </article>

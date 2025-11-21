@@ -230,11 +230,11 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 				<SubheaderRight className='w-full md:w-4/12'>
 				<div className='w-full border-black flex flex-col md:flex-row lg:flex-row gap-2'>
                 <div className='w-full lg:w-auto flex flex-col items-center rounded-md bg-emerald-700'>
-                  <span className='text-lg text-center font-semibold text-white'>{kilos_recepcion?.total_kilos_prodalmen?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} kgs</span>
+                  <span className='text-lg text-center font-semibold text-white'>{Math.round(kilos_recepcion?.total_kilos_prodalmen ?? 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} kgs</span>
                   <label htmlFor="" className='font-semibold text-white text-center text-sm'>Total Recepcionados Prodalmen</label>
                 </div>
 				<div className='w-full lg:w-auto flex flex-col items-center rounded-md bg-emerald-700'>
-                  <span className='text-lg text-center font-semibold text-white'>{kilos_recepcion?.total_kilos_pacificnut?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} kgs</span>
+                  <span className='text-lg text-center font-semibold text-white'>{Math.round(kilos_recepcion?.total_kilos_pacificnut ?? 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} kgs</span>
                   <label htmlFor="" className='font-semibold text-white text-center text-sm'>Total Recepcionados Pacific</label>
                 </div>
 				</div>
