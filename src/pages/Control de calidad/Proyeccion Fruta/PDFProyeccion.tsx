@@ -924,11 +924,11 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
 
                             { isPacificNut ?
                             <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
-                              <Text style={{ fontSize: 8 }}>{controlCombinado?.cc_calculo_final.kilos_brutos} kgs</Text>
+                              <Text style={{ fontSize: 8 }}>{controlCombinado?.cc_calculo_final.kilos_brutos.toFixed(2)} kgs</Text>
                             </View>
                             :
                             <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
-                              <Text style={{ fontSize: 8 }}>{controlCombinado?.cc_calculo_final.final_exp} kgs</Text>
+                              <Text style={{ fontSize: 8 }}>{controlCombinado?.cc_calculo_final.final_exp.toFixed(2)} kgs</Text>
                             </View>
                             } 
                       </View>

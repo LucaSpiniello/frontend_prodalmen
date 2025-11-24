@@ -449,7 +449,7 @@ const DetalleCC = () => {
             <div className='flex items-center justify-between px-8'>
               <div className='w-72'>
                 {
-                  cc_rendimiento?.length! >= 0 && control_calidad?.esta_contramuestra === '0' && ('controlcalidad' in userGroup?.groups!) && !cc_rendimiento?.some(muestra => muestra?.cc_calibrespepaok === true) && control_calidad.estado_cc != '2' && lote && (lote.estado_recepcion === '5' || lote.estado_recepcion === '6') && comercializador == "Prodalmen"
+                  lote && (lote.estado_recepcion === '5' || lote.estado_recepcion === '6') && comercializador == "Prodalmen"
                     ? (
                         <ModalForm
                           open={openModalRegistro}
