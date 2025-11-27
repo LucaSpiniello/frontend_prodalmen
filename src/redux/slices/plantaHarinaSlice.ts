@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TBinParaProgramaPlantaHarina, TBinResultantePlantaHarina, TControlCalidadBinResultantePlantaHarina, TMetricasRechazoPlantaHarina, TOperarioPlantaHarina, TOperarioPlantaHarinaDiario, TPDFDocumentoEntradaPlantaHarina, TPDFDocumentoSalidaPlantaHarina, TProgramaPlantaHarina, TRechazosPlantaHarina, TVariablePlantaHarina } from "../../types/typesPlantaHarina";
 import { FetchOptions, PostOptions } from "../../types/fetchTypes.types";
 import { fetchWithToken, fetchWithTokenDelete, fetchWithTokenDeleteAction, fetchWithTokenPatch, fetchWithTokenPost, fetchWithTokenPut } from "../../utils/peticiones.utils";
@@ -816,7 +816,14 @@ const initialState = {
   control_calidad_resultante_planta_harina: null as TControlCalidadBinResultantePlantaHarina | null,
 
   loading: false,
-  error: null as string | null | undefined
+  error: null as string | null | undefined,
+
+  // Estado de la tabla para persistencia
+  tabla_programas_pharina_state: {
+    pageIndex: 0,
+    pageSize: 5,
+    globalFilter: '',
+  }
 };
 
 
@@ -832,6 +839,17 @@ export const plantaHarinaSlices = createSlice({
     },
     LIMPIAR_BINS_PARA_PLANTA_HARINA: state => {
       state.bins_para_planta_harina = []
+    },
+
+    GUARDAR_ESTADO_TABLA_PROGRAMAS_PHARINA: (state, action: PayloadAction<{ pageIndex: number; pageSize: number; globalFilter: string }>) => {
+      state.tabla_programas_pharina_state = action.payload;
+    },
+    RESETEAR_ESTADO_TABLA_PROGRAMAS_PHARINA: (state) => {
+      state.tabla_programas_pharina_state = {
+        pageIndex: 0,
+        pageSize: 5,
+        globalFilter: '',
+      };
     }
 
   },
@@ -904,7 +922,10 @@ export const plantaHarinaSlices = createSlice({
 export const {
   AGREGAR_BIN_PARA_PLANTA_HARINA,
   QUITAR_BIN_PARA_PLANTA_HARINA,
-  LIMPIAR_BINS_PARA_PLANTA_HARINA
+  LIMPIAR_BINS_PARA_PLANTA_HARINA,
+
+  GUARDAR_ESTADO_TABLA_PROGRAMAS_PHARINA,
+  RESETEAR_ESTADO_TABLA_PROGRAMAS_PHARINA
  } = plantaHarinaSlices.actions
 
 export default plantaHarinaSlices.reducer

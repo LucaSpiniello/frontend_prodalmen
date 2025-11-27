@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks"
 import { RootState } from "../../../../redux/store"
 import { useAuth } from "../../../../context/authContext"
-import { fetchProgramasDeSeleccionPaginados } from "../../../../redux/slices/seleccionSlice"
+import { fetchProgramasDeSeleccionPaginados, GUARDAR_ESTADO_TABLA_PROGRAMAS_SELECCION } from "../../../../redux/slices/seleccionSlice"
 import TablaProgramasSeleccion from "./TablaProgramasSeleccion"
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
@@ -14,7 +14,11 @@ const ListaProgramasSeleccion = () => {
   const loading_pagination = useAppSelector((state: RootState) => state.seleccion.loading_pagination)
   const token = useAppSelector((state: RootState) => state.auth.authTokens)
   const { verificarToken } = useAuth()
-  const [currentPage, setCurrentPage] = useState(0)
+
+  // Leer el estado guardado de Redux
+  const tabla_state = useAppSelector((state: RootState) => state.seleccion.tabla_programas_seleccion_state)
+
+  const [currentPage, setCurrentPage] = useState(tabla_state.pageIndex)
   const pageSize = 5
 
   useEffect(() => {
@@ -34,6 +38,12 @@ const ListaProgramasSeleccion = () => {
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage)
+    // Guardar el estado en Redux
+    dispatch(GUARDAR_ESTADO_TABLA_PROGRAMAS_SELECCION({
+      pageIndex: newPage,
+      pageSize: pageSize,
+      globalFilter: tabla_state.globalFilter,
+    }))
   }
 
   console.log('ListaProgramasSeleccion render:', {

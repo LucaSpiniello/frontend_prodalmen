@@ -1,5 +1,5 @@
 // productorSlice.js
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PDFEntradaEmbalaje, PDFSalidaEmbalaje, TBinEnEmbalaje, TEmbalaje, TEtiquetado, THistoricoPalletProductoTerminado, TOperarioEmbalajeDiario, TOperarioEnEmbalaje, TPalletProductoTerminado, TPalletProductoTerminadoMIN } from '../../types/TypesEmbalaje.type'
 import { FetchOptions, PostOptions } from '../../types/fetchTypes.types';
 import { fetchWithToken, fetchWithTokenPost } from '../../utils/peticiones.utils';
@@ -419,6 +419,13 @@ const initialState = {
 
   loading: false,
   error: null as string | null | undefined,
+
+  // Estado de la tabla para persistencia
+  tabla_programas_embalaje_state: {
+    pageIndex: 0,
+    pageSize: 5,
+    globalFilter: '',
+  }
 };
 
 
@@ -434,6 +441,17 @@ export const EmbalajeSlice = createSlice({
     },
     VACIAR_BINS_EMBALAJE: state => {
       state.nuevos_bin_para_embalar = []
+    },
+
+    GUARDAR_ESTADO_TABLA_PROGRAMAS_EMBALAJE: (state, action: PayloadAction<{ pageIndex: number; pageSize: number; globalFilter: string }>) => {
+      state.tabla_programas_embalaje_state = action.payload;
+    },
+    RESETEAR_ESTADO_TABLA_PROGRAMAS_EMBALAJE: (state) => {
+      state.tabla_programas_embalaje_state = {
+        pageIndex: 0,
+        pageSize: 5,
+        globalFilter: '',
+      };
     }
   },
   extraReducers: (builder) => {
@@ -496,10 +514,13 @@ export const EmbalajeSlice = createSlice({
   }
 });
 
-export const { 
+export const {
   GUARDAR_BIN_EMBALAJE,
   QUITAR_BIN_EMBALAJE,
   VACIAR_BINS_EMBALAJE,
+
+  GUARDAR_ESTADO_TABLA_PROGRAMAS_EMBALAJE,
+  RESETEAR_ESTADO_TABLA_PROGRAMAS_EMBALAJE
 } = EmbalajeSlice.actions
 
 

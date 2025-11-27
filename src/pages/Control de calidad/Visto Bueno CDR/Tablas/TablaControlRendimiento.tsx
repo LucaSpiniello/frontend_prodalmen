@@ -41,7 +41,7 @@ import { TControlCalidad } from '../../../../types/TypesControlCalidad.type';
 import Tooltip from '../../../../components/ui/Tooltip';
 import { useAuth } from '../../../../context/authContext';
 import { fetchWithTokenPatch } from '../../../../utils/peticiones.utils';
-import { fetchControlesDeCalidadPorComercializador, fetchControlesDeCalidad, fetchControlesDeCalidadPaginados } from '../../../../redux/slices/controlcalidadSlice';
+import { fetchControlesDeCalidadPorComercializador, fetchControlesDeCalidad, fetchControlesDeCalidadPaginados, GUARDAR_ESTADO_TABLA_CC } from '../../../../redux/slices/controlcalidadSlice';
 import { fetchWithToken } from '../../../../utils/peticiones.utils';
 import { BiCheckDouble } from 'react-icons/bi';
 import toast from 'react-hot-toast';
@@ -93,16 +93,24 @@ interface IControlProps {
 }
 
 
-const TablaControlRendimiento: FC<IControlProps> = ({ 
-	data, 
-	paginationMetadata, 
-	currentPage = 0, 
-	onPageChange, 
+const TablaControlRendimiento: FC<IControlProps> = ({
+	data,
+	paginationMetadata,
+	currentPage = 0,
+	onPageChange,
 	pageSize = 10,
 	loadingPagination = false
 }) => {
+	// Obtener el estado guardado de Redux
+	const tabla_state = useAppSelector((state: RootState) => state.control_calidad.tabla_cc_state);
+
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [globalFilter, setGlobalFilter] = useState<string>('')
+	const [globalFilter, setGlobalFilter] = useState<string>(tabla_state.globalFilter)
+	// Para paginación del servidor, pageIndex local siempre es 0 (los datos ya vienen paginados)
+	const [pagination, setPagination] = useState({
+		pageIndex: 0,
+		pageSize: tabla_state.pageSize,
+	});
 	const [isExporting, setIsExporting] = useState<boolean>(false)
 	const navigate = useNavigate()
 
@@ -622,19 +630,33 @@ const TablaControlRendimiento: FC<IControlProps> = ({
 		state: {
 			sorting,
 			globalFilter,
+			pagination,
 		},
 		onSortingChange: setSorting,
 		enableGlobalFilter: true,
 		onGlobalFilterChange: setGlobalFilter,
+		onPaginationChange: setPagination,
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getSortedRowModel: getSortedRowModel(),
-		// Disable built-in pagination since we're using server-side pagination
-		// getPaginationRowModel: getPaginationRowModel(),
-		// initialState: {
-		// 	pagination: { pageSize: 10 },
-		// },
+		getPaginationRowModel: getPaginationRowModel(),
+		// Configuración para paginación del servidor
+		manualPagination: true,
+		pageCount: paginationMetadata ? Math.ceil(paginationMetadata.total_count / pageSize) : -1,
+		autoResetPageIndex: false,
 	});
+
+	// Para tablas con paginación del servidor, el estado se guarda en el componente padre (ListaControlRendimiento)
+	// Solo guardamos el filtro global cuando cambia
+	useEffect(() => {
+		if (globalFilter !== tabla_state.globalFilter) {
+			dispatch(GUARDAR_ESTADO_TABLA_CC({
+				pageIndex: tabla_state.pageIndex,
+				pageSize: tabla_state.pageSize,
+				globalFilter: globalFilter,
+			}));
+		}
+	}, [globalFilter, dispatch]);
 
 	const columnas: TableColumn[] = [
     { id: 'numero_lote', header: '', className: 'w-24'},

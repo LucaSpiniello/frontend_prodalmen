@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TCCPepaSerializer, TControlCalidad, TControlCalidadTarja, TFotosCC, TMuestraSerializer, TPepaMuestra, TRendimiento, TRendimientoMuestra } from "../../types/TypesControlCalidad.type";
 import { FetchOptions } from "../../types/fetchTypes.types";
 import { fetchWithToken, fetchWithTokenPostAction, fetchWithTokenPostWithBody } from "../../utils/peticiones.utils";
@@ -523,7 +523,14 @@ const initialState = {
   allcc: [],
 
   loading: false,
-  error: null as string | null | undefined
+  error: null as string | null | undefined,
+
+  // Estado de la tabla para persistencia
+  tabla_cc_state: {
+    pageIndex: 0,
+    pageSize: 5,
+    globalFilter: '',
+  },
 };
 
 
@@ -531,6 +538,16 @@ export const ControlCalidad = createSlice({
   name: 'control_calidad',
   initialState,
   reducers: {
+    GUARDAR_ESTADO_TABLA_CC: (state, action: PayloadAction<{ pageIndex: number; pageSize: number; globalFilter: string }>) => {
+      state.tabla_cc_state = action.payload;
+    },
+    RESETEAR_ESTADO_TABLA_CC: (state) => {
+      state.tabla_cc_state = {
+        pageIndex: 0,
+        pageSize: 5,
+        globalFilter: '',
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -666,6 +683,6 @@ export const ControlCalidad = createSlice({
   }
 })
 
-export const { } = ControlCalidad.actions
+export const { GUARDAR_ESTADO_TABLA_CC, RESETEAR_ESTADO_TABLA_CC } = ControlCalidad.actions
 
 export default ControlCalidad.reducer;

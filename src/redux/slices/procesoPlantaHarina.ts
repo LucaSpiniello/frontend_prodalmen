@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TBinParaProcesoPlantaHarina, TBinResultanteProcesoPlantaHarina, TControlCalidadBinResultanteProcesoPlantaHarina, TMetricasRechazoPlantaHarina, TMetricasRechazoProcesoPlantaHarina, TOperarioProcesoPlantaHarina, TOperarioProcesoPlantaHarinaDiario, TPDFDocumentoEntradaPlantaHarina, TPDFDocumentoEntradaProcesoPlantaHarina, TPDFDocumentoSalidaPlantaHarina, TPDFDocumentoSalidaProcesoPlantaHarina, TProcesoPlantaHarina, TRechazosProcesoPlantaHarina, TVariableProcesoPlantaHarina } from "../../types/typesPlantaHarina";
 import { FetchOptions, PostOptions } from "../../types/fetchTypes.types";
 import { fetchWithToken, fetchWithTokenDelete, fetchWithTokenDeleteAction, fetchWithTokenPatch, fetchWithTokenPost, fetchWithTokenPut } from "../../utils/peticiones.utils";
@@ -844,7 +844,14 @@ const initialState = {
   mensajeCierreProcesoPH: null as TMensajeCierreProduccion | null,
 
   loading: false,
-  error: null as string | null | undefined
+  error: null as string | null | undefined,
+
+  // Estado de la tabla para persistencia
+  tabla_procesos_pharina_state: {
+    pageIndex: 0,
+    pageSize: 5,
+    globalFilter: '',
+  }
 };
 
 
@@ -860,6 +867,17 @@ export const procesoPlantaHarinaSlice = createSlice({
     },
     LIMPIAR_BINS_PARA_PROCESO_PLANTA_HARINA: state => {
       state.bins_para_proceso_planta_harina = []
+    },
+
+    GUARDAR_ESTADO_TABLA_PROCESOS_PHARINA: (state, action: PayloadAction<{ pageIndex: number; pageSize: number; globalFilter: string }>) => {
+      state.tabla_procesos_pharina_state = action.payload;
+    },
+    RESETEAR_ESTADO_TABLA_PROCESOS_PHARINA: (state) => {
+      state.tabla_procesos_pharina_state = {
+        pageIndex: 0,
+        pageSize: 5,
+        globalFilter: '',
+      };
     }
 
   },
@@ -936,7 +954,10 @@ export const procesoPlantaHarinaSlice = createSlice({
 export const {
   AGREGAR_BIN_PARA_PROCESO_PLANTA_HARINA,
   QUITAR_BIN_PARA_PROCESO_PLANTA_HARINA,
-  LIMPIAR_BINS_PARA_PROCESO_PLANTA_HARINA
+  LIMPIAR_BINS_PARA_PROCESO_PLANTA_HARINA,
+
+  GUARDAR_ESTADO_TABLA_PROCESOS_PHARINA,
+  RESETEAR_ESTADO_TABLA_PROCESOS_PHARINA
  } = procesoPlantaHarinaSlice.actions
 
 export default procesoPlantaHarinaSlice.reducer

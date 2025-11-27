@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { FetchOptions, PostOptions } from '../../types/fetchTypes.types';
 import { fetchWithToken, fetchWithTokenDelete, fetchWithTokenPatch, fetchWithTokenPost } from '../../utils/peticiones.utils';
 import { TDespacho, TDolar, TFrutaDespacho, TFrutaEnPedido, TFrutaPedido, TPDFGuiaSalida, TPDFPedidoExportacion, TPDFPedidoInterno, TPedido, TPedidoExportacion, TPedidoInterno, TPedidos, TPPTParaPedido, TTipoEmbalaje } from '../../types/TypesPedidos.types';
@@ -514,7 +514,14 @@ const initialState = {
 
     dolar: null as TDolar | null,
     loading: false,
-    error: null as string | null | undefined
+    error: null as string | null | undefined,
+
+    // Estado de la tabla para persistencia
+    tabla_pedidos_state: {
+      pageIndex: 0,
+      pageSize: 5,
+      globalFilter: '',
+    }
   };
 
 
@@ -548,6 +555,17 @@ export const pedidosSlices = createSlice({
       },
       DETALLE_PEDIDO: (state, action) => {
         state.pedido = action.payload
+      },
+
+      GUARDAR_ESTADO_TABLA_PEDIDOS: (state, action: PayloadAction<{ pageIndex: number; pageSize: number; globalFilter: string }>) => {
+        state.tabla_pedidos_state = action.payload;
+      },
+      RESETEAR_ESTADO_TABLA_PEDIDOS: (state) => {
+        state.tabla_pedidos_state = {
+          pageIndex: 0,
+          pageSize: 5,
+          globalFilter: '',
+        };
       }
     },
     extraReducers: (builder) => {
@@ -631,7 +649,10 @@ export const {
   AÑADADIR_PALLET_FRUTA_EN_PEDIDO,
   QUITAR_PALLE_FRUTA_EN_PEDIDO,
   LIMPIAR_PALLET_FRUTA_EN_PEDIDO,
-  DETALLE_PEDIDO
+  DETALLE_PEDIDO,
+
+  GUARDAR_ESTADO_TABLA_PEDIDOS,
+  RESETEAR_ESTADO_TABLA_PEDIDOS
  } = pedidosSlices.actions
 
 export default pedidosSlices.reducer

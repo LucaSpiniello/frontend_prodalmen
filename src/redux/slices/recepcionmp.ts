@@ -412,6 +412,13 @@ const initialState = {
   loading: false,
   error: null as string | null | undefined,
   kilos_recepcion: null as any,
+
+  // Estado de la tabla para persistencia
+  tabla_guias_state: {
+    pageIndex: 0,
+    pageSize: 5,
+    globalFilter: '',
+  },
 };
 
 
@@ -453,6 +460,18 @@ export const GuiaRecepcion = createSlice({
           [key]: value,
         };
       }
+    },
+
+    // Acciones para persistir el estado de la tabla
+    GUARDAR_ESTADO_TABLA_GUIAS: (state, action: PayloadAction<{ pageIndex: number; pageSize: number; globalFilter: string }>) => {
+      state.tabla_guias_state = action.payload;
+    },
+    RESETEAR_ESTADO_TABLA_GUIAS: (state) => {
+      state.tabla_guias_state = {
+        pageIndex: 0,
+        pageSize: 5,
+        globalFilter: '',
+      };
     },
   },
   extraReducers: (builder) => {
@@ -542,8 +561,8 @@ export const GuiaRecepcion = createSlice({
 });
 
 
-export const { 
-  GUARDAR_GUIA_RECEPCION, 
+export const {
+  GUARDAR_GUIA_RECEPCION,
   GUARDAR_LOTES_EN_GUIA,
   GUARDAR_GUIA_ACTUALIZADA,
 
@@ -554,7 +573,10 @@ export const {
 
   AGREGAR_FILA_ENVASES_LOTE,
   ELIMINAR_FILA_ENVASES_LOTE,
-  ACTUALIZAR_FILA_ENVASES_LOTE
+  ACTUALIZAR_FILA_ENVASES_LOTE,
+
+  GUARDAR_ESTADO_TABLA_GUIAS,
+  RESETEAR_ESTADO_TABLA_GUIAS
 } = GuiaRecepcion.actions
 
 export default GuiaRecepcion.reducer;

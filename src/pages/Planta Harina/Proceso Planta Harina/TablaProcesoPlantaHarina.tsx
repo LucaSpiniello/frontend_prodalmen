@@ -38,7 +38,7 @@ import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { TProcesoPlantaHarina } from '../../../types/typesPlantaHarina';
 import FormularioRegistroProgramaPlantaHarina from './Formularios/FormularioRegistroProcesoPlantaHarina';
-import { actualizar_proceso_planta_harina, fetchProcesosPlantaHarina } from '../../../redux/slices/procesoPlantaHarina';
+import { actualizar_proceso_planta_harina, fetchProcesosPlantaHarina, GUARDAR_ESTADO_TABLA_PROCESOS_PHARINA } from '../../../redux/slices/procesoPlantaHarina';
 import FormularioRegistroProcesoPlantaHarina from './Formularios/FormularioRegistroProcesoPlantaHarina';
 
 import FormularioInformeProcesoHarina from './Formularios/Formulario PDF/FormularioInformeProcesoHarina';
@@ -50,9 +50,16 @@ import FormularioInformeOperariosResumido from './Formularios/Formulario PDF/For
 
 
 const TablaProcesoPlantaHarina = () => {
+	// Obtener el estado guardado de Redux
+	const tabla_state = useAppSelector((state: RootState) => state.proceso_planta_harina.tabla_procesos_pharina_state);
+
 	const { pathname } = useLocation()
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [globalFilter, setGlobalFilter] = useState<string>('')
+	const [globalFilter, setGlobalFilter] = useState<string>(tabla_state.globalFilter)
+	const [pagination, setPagination] = useState({
+		pageIndex: tabla_state.pageIndex,
+		pageSize: tabla_state.pageSize,
+	});
 	const [informePro, setInformePro] = useState<boolean>(false)
 	const [informeKgOp, setInformeinformeKgOp] = useState<boolean>(false)
 	const [informeResOp, setInformeinformeResOp] = useState<boolean>(false)
@@ -230,18 +237,28 @@ const TablaProcesoPlantaHarina = () => {
 		state: {
 			sorting,
 			globalFilter,
+			pagination,
 		},
 		onSortingChange: setSorting,
 		enableGlobalFilter: true,
 		onGlobalFilterChange: setGlobalFilter,
+		onPaginationChange: setPagination,
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
-		initialState: {
-			pagination: { pageSize: 5 },
-		},
+		// Evitar que la tabla resetee la paginación cuando cambian los datos
+		autoResetPageIndex: false,
 	});
+
+	// Guardar el estado de la tabla en Redux cuando cambie
+	useEffect(() => {
+		dispatch(GUARDAR_ESTADO_TABLA_PROCESOS_PHARINA({
+			pageIndex: pagination.pageIndex,
+			pageSize: pagination.pageSize,
+			globalFilter: globalFilter,
+		}));
+	}, [pagination.pageIndex, pagination.pageSize, globalFilter, dispatch]);
 
 	return (
 		<PageWrapper name='Lista Procesos Planta Harina'>

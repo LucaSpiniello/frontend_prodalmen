@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useState, useEffect } from 'react';
 import {
 	createColumnHelper,
 	getCoreRowModel,
@@ -27,7 +27,7 @@ import Tooltip from '../../../components/ui/Tooltip';
 import { FaFilePdf } from 'react-icons/fa';
 import { TGuia } from '../../../types/TypesRecepcionMP.types';
 import { useAuth } from '../../../context/authContext';
-import { eliminarGuiaRecepcion } from '../../../redux/slices/recepcionmp';
+import { eliminarGuiaRecepcion, GUARDAR_ESTADO_TABLA_GUIAS } from '../../../redux/slices/recepcionmp';
 import { FetchOptions } from '../../../types/fetchTypes.types';
 import { ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
@@ -41,8 +41,16 @@ interface IGuiaProps {
 }
 
 const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
+	// Obtener el estado guardado de Redux
+	const tabla_state = useAppSelector((state: RootState) => state.recepcionmp.tabla_guias_state);
+
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [globalFilter, setGlobalFilter] = useState<string>('')
+	const [globalFilter, setGlobalFilter] = useState<string>(tabla_state.globalFilter)
+	const [pagination, setPagination] = useState({
+		pageIndex: tabla_state.pageIndex,
+		pageSize: tabla_state.pageSize,
+	});
+
 	const hasGroup = (groups: any) => userGroup?.groups && groups.some((group: any) => group in userGroup.groups);
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   	const token = useAppSelector((state: RootState) => state.auth.authTokens)
@@ -187,17 +195,28 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 		state: {
 			sorting,
 			globalFilter,
+			pagination,
 		},
 		onSortingChange: setSorting,
 		enableGlobalFilter: true,
 		onGlobalFilterChange: setGlobalFilter,
+		onPaginationChange: setPagination,
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
-		getSortedRowModel
-		: getSortedRowModel(),
+		getSortedRowModel: getSortedRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
-		initialState: { pagination: { pageSize: 5 } },
+		// Evitar que la tabla resetee la paginación cuando cambian los datos
+		autoResetPageIndex: false,
 	});
+
+	// Guardar el estado de la tabla en Redux cuando cambie
+	useEffect(() => {
+		dispatch(GUARDAR_ESTADO_TABLA_GUIAS({
+			pageIndex: pagination.pageIndex,
+			pageSize: pagination.pageSize,
+			globalFilter: globalFilter,
+		}));
+	}, [pagination.pageIndex, pagination.pageSize, globalFilter, dispatch]);
 
 	return (
 		<PageWrapper name='Lista Guia Recepcion Materia Prima'>
@@ -250,7 +269,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 				)}
 			</Subheader>
 			<CardHeader>
-			<div className="w-full flex	gap-5">
+			<div className="w-full flex gap-5">
 				<Button
 					variant="solid"
 					onClick={() => exportToExcel(table.getFilteredRowModel().rows)}

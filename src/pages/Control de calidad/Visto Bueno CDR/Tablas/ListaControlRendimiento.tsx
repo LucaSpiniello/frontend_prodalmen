@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks"
 import { RootState } from "../../../../redux/store"
 import { TControlCalidad } from "../../../../types/TypesControlCalidad.type"
 import TablaControlRendimiento from "./TablaControlRendimiento"
-import { fetchControlesDeCalidad, fetchControlesDeCalidadPorComercializador, fetchControlesDeCalidadPaginados } from "../../../../redux/slices/controlcalidadSlice"
+import { fetchControlesDeCalidad, fetchControlesDeCalidadPorComercializador, fetchControlesDeCalidadPaginados, GUARDAR_ESTADO_TABLA_CC } from "../../../../redux/slices/controlcalidadSlice"
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 
@@ -18,19 +18,23 @@ const ListaControlRendimiento = () => {
   const token = useAppSelector((state: RootState) => state.auth.authTokens)
   const { verificarToken } = useAuth()
   const comercializador = useAppSelector((state: RootState) => state.auth.dataUser?.comercializador)
-  const [currentPage, setCurrentPage] = useState(0)
+
+  // Leer el estado guardado de Redux
+  const tabla_state = useAppSelector((state: RootState) => state.control_calidad.tabla_cc_state)
+  const [currentPage, setCurrentPage] = useState(tabla_state.pageIndex)
   const pageSize = 10
 
+  // Efecto principal que se ejecuta al montar y cuando cambia currentPage
   useEffect(() => {
     if (!token) return
-    
+
     const desde = currentPage * pageSize
     const hasta = (currentPage * pageSize) + pageSize - 1
     console.log('Dispatching paginated fetch:', { currentPage, pageSize, desde, hasta, comercializador })
-    
+
     //@ts-ignore
-    dispatch(fetchControlesDeCalidadPaginados({ 
-      token, 
+    dispatch(fetchControlesDeCalidadPaginados({
+      token,
       verificar_token: verificarToken,
       params: { desde, hasta, comercializador }
     }))
@@ -38,6 +42,12 @@ const ListaControlRendimiento = () => {
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage)
+    // Guardar el estado en Redux
+    dispatch(GUARDAR_ESTADO_TABLA_CC({
+      pageIndex: newPage,
+      pageSize: pageSize,
+      globalFilter: tabla_state.globalFilter,
+    }))
   }
 
   console.log('ListaControlRendimiento render:', {

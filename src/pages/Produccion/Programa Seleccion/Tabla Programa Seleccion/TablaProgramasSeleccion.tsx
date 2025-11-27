@@ -39,7 +39,7 @@ import { useAuth } from '../../../../context/authContext';
 import { fetchWithToken, fetchWithTokenPost, fetchWithTokenPut } from '../../../../utils/peticiones.utils';
 import { TSeleccion } from '../../../../types/TypesSeleccion.type';
 import { format } from '@formkit/tempo';
-import { fetchProgramasDeSeleccion, fetchProgramasDeSeleccionPaginados, fetchRendimientoSeleccion } from '../../../../redux/slices/seleccionSlice';
+import { fetchProgramasDeSeleccion, fetchProgramasDeSeleccionPaginados, fetchRendimientoSeleccion, GUARDAR_ESTADO_TABLA_PROGRAMAS_SELECCION } from '../../../../redux/slices/seleccionSlice';
 import FormularioInformeSeleccion from '../Formularios/Formulario PDF\'s/FormularioInformeSeleccion';
 import FormularioInformeKilosXOperario from '../Formularios/Formulario PDF\'s/FormularioInformeKilosXOperario';
 import FormularioInformeOperariosResumido from '../Formularios/Formulario PDF\'s/FormularioInformeOperarioResumido';
@@ -69,17 +69,25 @@ interface IProduccionProps {
 
 
 
-const TablaProgramasSeleccion: FC<IProduccionProps> = ({ 
-	data, 
-	paginationMetadata, 
-	currentPage = 0, 
-	onPageChange, 
+const TablaProgramasSeleccion: FC<IProduccionProps> = ({
+	data,
+	paginationMetadata,
+	currentPage = 0,
+	onPageChange,
 	pageSize = 5,
 	loadingPagination = false
 }) => {
+	// Obtener el estado guardado de Redux
+	const tabla_state = useAppSelector((state: RootState) => state.seleccion.tabla_programas_seleccion_state);
+
 	const navigate = useNavigate()
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [globalFilter, setGlobalFilter] = useState<string>('')
+	const [globalFilter, setGlobalFilter] = useState<string>(tabla_state.globalFilter)
+	// Para paginación del servidor, pageIndex local siempre es 0 (los datos ya vienen paginados)
+	const [pagination, setPagination] = useState({
+		pageIndex: 0,
+		pageSize: tabla_state.pageSize,
+	});
 	const [informePro, setInformePro] = useState<boolean>(false)
 	const [informeKgOp, setInformeinformeKgOp] = useState<boolean>(false)
 	const [informeResOp, setInformeinformeResOp] = useState<boolean>(false)
@@ -357,19 +365,34 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 		state: {
 			sorting,
 			globalFilter,
+			pagination,
 		},
 		onSortingChange: setSorting,
 		enableGlobalFilter: true,
 		onGlobalFilterChange: setGlobalFilter,
+		onPaginationChange: setPagination,
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getSortedRowModel: getSortedRowModel(),
-		// Disable built-in pagination since we're using server-side pagination
-		// getPaginationRowModel: getPaginationRowModel(),
-		// initialState: {
-		// 	pagination: { pageSize: 5 },
-		// },
+		getPaginationRowModel: getPaginationRowModel(),
+		// Configuración para paginación del servidor
+		manualPagination: true,
+		pageCount: paginationMetadata ? Math.ceil(paginationMetadata.total_count / pageSize) : -1,
+		// Evitar que la tabla resetee la paginación cuando cambian los datos
+		autoResetPageIndex: false,
 	})
+
+	// Para tablas con paginación del servidor, el estado se guarda en el componente padre (ListaProgramasSeleccion)
+	// Solo guardamos el filtro global cuando cambia
+	useEffect(() => {
+		if (globalFilter !== tabla_state.globalFilter) {
+			dispatch(GUARDAR_ESTADO_TABLA_PROGRAMAS_SELECCION({
+				pageIndex: tabla_state.pageIndex,
+				pageSize: tabla_state.pageSize,
+				globalFilter: globalFilter,
+			}));
+		}
+	}, [globalFilter, dispatch]);
 
 	const columnas: TableColumn[] = [
 		{id: 'numero_programa', className: 'w-32'},

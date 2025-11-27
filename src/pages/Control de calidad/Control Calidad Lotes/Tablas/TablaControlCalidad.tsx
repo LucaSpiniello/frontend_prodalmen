@@ -1,4 +1,4 @@
-import { FC, useState, Dispatch, SetStateAction } from 'react';
+import { FC, useState, Dispatch, SetStateAction, useEffect } from 'react';
 import {
 	createColumnHelper,
 	getCoreRowModel,
@@ -46,7 +46,7 @@ import { ThunkDispatch } from "@reduxjs/toolkit"
 import { useDispatch } from "react-redux"
 import { DuoDoubleCheck } from '../../../../components/icon/duotone';
 import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal';
-import { fetchControlesDeCalidadPaginados } from '../../../../redux/slices/controlcalidadSlice';
+import { fetchControlesDeCalidadPaginados, GUARDAR_ESTADO_TABLA_CC } from '../../../../redux/slices/controlcalidadSlice';
 
 
 const columnHelper = createColumnHelper<TControlCalidad>();
@@ -67,16 +67,25 @@ interface IControlProps {
 	loadingPagination?: boolean
 }
 
-const TablaControlCalidad: FC<IControlProps> = ({ 
-	data, 
-	paginationMetadata, 
-	currentPage = 0, 
-	onPageChange, 
+const TablaControlCalidad: FC<IControlProps> = ({
+	data,
+	paginationMetadata,
+	currentPage = 0,
+	onPageChange,
 	pageSize = 10,
-	loadingPagination = false 
+	loadingPagination = false
 }) => {
+	// Obtener el estado guardado de Redux
+	const tabla_state = useAppSelector((state: RootState) => state.control_calidad.tabla_cc_state);
+
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [globalFilter, setGlobalFilter] = useState<string>('')
+	const [globalFilter, setGlobalFilter] = useState<string>(tabla_state.globalFilter)
+	// Para paginación del servidor, pageIndex local siempre es 0 (los datos ya vienen paginados)
+	const [pagination, setPagination] = useState({
+		pageIndex: 0,
+		pageSize: tabla_state.pageSize,
+	});
+
 	const token = useAppSelector((state: RootState) => state.auth.authTokens)
 	const userGroup = useAppSelector((state: RootState) => state.auth.grupos)
 
@@ -231,19 +240,31 @@ const TablaControlCalidad: FC<IControlProps> = ({
 		state: {
 			sorting,
 			globalFilter,
+			pagination,
 		},
 		onSortingChange: setSorting,
 		enableGlobalFilter: true,
 		onGlobalFilterChange: setGlobalFilter,
+		onPaginationChange: setPagination,
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getSortedRowModel: getSortedRowModel(),
-		// Disable built-in pagination since we're using server-side pagination
-		// getPaginationRowModel: getPaginationRowModel(),
-		// initialState: {
-		// 	pagination: { pageSize: 7 },
-		// },
+		getPaginationRowModel: getPaginationRowModel(),
+		// Evitar que la tabla resetee la paginación cuando cambian los datos
+		autoResetPageIndex: false,
 	})
+
+	// Para tablas con paginación del servidor, el estado se guarda en el componente padre (ListaControlCalidad)
+	// Solo guardamos el filtro global cuando cambia
+	useEffect(() => {
+		if (globalFilter !== tabla_state.globalFilter) {
+			dispatch(GUARDAR_ESTADO_TABLA_CC({
+				pageIndex: tabla_state.pageIndex,
+				pageSize: tabla_state.pageSize,
+				globalFilter: globalFilter,
+			}));
+		}
+	}, [globalFilter, dispatch]);
 
 
 	const columnas: TableColumn[] = [

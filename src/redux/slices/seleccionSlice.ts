@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FetchOptions, PostOptions } from "../../types/fetchTypes.types";
 import { fetchWithToken, fetchWithTokenPost } from "../../utils/peticiones.utils";
 import { TBinBodega, TBinSubProducto, THistoricoBinSubProducto, TOperarioEnSeleccion, TOperarioSeleccion, TPDFEntradaSeleccion, TPDFSalidaSeleccion, TPepaParaSeleccion, TRendimientoSeleccion, TSeleccion, TSubproducto, TTarjaSeleccionada, TSubProductoMetrica } from "../../types/TypesSeleccion.type";
@@ -577,7 +577,14 @@ const initialState = {
   operarios_seleccion: [] as TOperarioEnSeleccion[],
   operario_seleccion_individual: [] as TOperarioSeleccion[],
   mensajeTerminoSeleccion: null as TMensajeTerminoProduccion | null,
-  mensajeCierreSeleccion: null as TMensajeCierreProduccion | null
+  mensajeCierreSeleccion: null as TMensajeCierreProduccion | null,
+
+  // Estado de la tabla para persistencia
+  tabla_programas_seleccion_state: {
+    pageIndex: 0,
+    pageSize: 5,
+    globalFilter: '',
+  }
 };
 
 export const SeleccionSlice = createSlice({
@@ -612,6 +619,17 @@ export const SeleccionSlice = createSlice({
     },
     VACIAR_AGRUPACION: state => {
       state.subproductos_para_agrupar = []
+    },
+
+    GUARDAR_ESTADO_TABLA_PROGRAMAS_SELECCION: (state, action: PayloadAction<{ pageIndex: number; pageSize: number; globalFilter: string }>) => {
+      state.tabla_programas_seleccion_state = action.payload;
+    },
+    RESETEAR_ESTADO_TABLA_PROGRAMAS_SELECCION: (state) => {
+      state.tabla_programas_seleccion_state = {
+        pageIndex: 0,
+        pageSize: 5,
+        globalFilter: '',
+      };
     }
 
   },
@@ -738,7 +756,7 @@ export const SeleccionSlice = createSlice({
   }
 });
 
-export const { 
+export const {
   GUARDAR_BIN_SELECCION,
   QUITAR_BIN_SELECCION,
   VACIAR_TABLA,
@@ -747,7 +765,10 @@ export const {
   QUITAR_SUBPRODUCTO_EN_AGRUPACION,
   QUITAR_SUBPRODUCTO_EN_LISTA,
   GUARDAR_SUBPRODUCTO_EN_LISTA,
-  VACIAR_AGRUPACION
+  VACIAR_AGRUPACION,
+
+  GUARDAR_ESTADO_TABLA_PROGRAMAS_SELECCION,
+  RESETEAR_ESTADO_TABLA_PROGRAMAS_SELECCION
 } = SeleccionSlice.actions
 
 export default SeleccionSlice.reducer

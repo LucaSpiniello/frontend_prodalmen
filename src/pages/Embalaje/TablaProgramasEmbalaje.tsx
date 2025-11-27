@@ -45,7 +45,7 @@ import { format } from '@formkit/tempo';
 import { HiOutlineTrendingDown, HiOutlineTrendingUp } from "react-icons/hi";
 import { TbEqual } from "react-icons/tb";
 import { TEmbalaje } from '../../types/TypesEmbalaje.type';
-import { fetchProgramasEmbalaje } from '../../redux/slices/embalajeSlice';
+import { fetchProgramasEmbalaje, GUARDAR_ESTADO_TABLA_PROGRAMAS_EMBALAJE } from '../../redux/slices/embalajeSlice';
 import FormularioRegistroProgramaEmbalaje from './Formularios/FormularioRegistroProgramaEmbalaje';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from '@reduxjs/toolkit';
@@ -59,9 +59,16 @@ import FormularioInformeOperariosResumido from './Formularios/Formulario PDF/For
 
 
 const TablaProgramaEmbalaje = () => {
+	// Obtener el estado guardado de Redux
+	const tabla_state = useAppSelector((state: RootState) => state.embalaje.tabla_programas_embalaje_state);
+
 	const navigate = useNavigate()
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [globalFilter, setGlobalFilter] = useState<string>('')
+	const [globalFilter, setGlobalFilter] = useState<string>(tabla_state.globalFilter)
+	const [pagination, setPagination] = useState({
+		pageIndex: tabla_state.pageIndex,
+		pageSize: tabla_state.pageSize,
+	});
 	const [informePro, setInformePro] = useState<boolean>(false)
 	const [informeKgOp, setInformeinformeKgOp] = useState<boolean>(false)
 	const [informeResOp, setInformeinformeResOp] = useState<boolean>(false)
@@ -266,18 +273,28 @@ const TablaProgramaEmbalaje = () => {
 		state: {
 			sorting,
 			globalFilter,
+			pagination,
 		},
 		onSortingChange: setSorting,
 		enableGlobalFilter: true,
 		onGlobalFilterChange: setGlobalFilter,
+		onPaginationChange: setPagination,
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
-		initialState: {
-			pagination: { pageSize: 5 },
-		},
+		// Evitar que la tabla resetee la paginación cuando cambian los datos
+		autoResetPageIndex: false,
 	})
+
+	// Guardar el estado de la tabla en Redux cuando cambie
+	useEffect(() => {
+		dispatch(GUARDAR_ESTADO_TABLA_PROGRAMAS_EMBALAJE({
+			pageIndex: pagination.pageIndex,
+			pageSize: pagination.pageSize,
+			globalFilter: globalFilter,
+		}));
+	}, [pagination.pageIndex, pagination.pageSize, globalFilter, dispatch]);
 
 	return (
 		<PageWrapper name='Lista Programas Embalaje'>
