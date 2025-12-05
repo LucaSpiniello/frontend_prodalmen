@@ -65,6 +65,12 @@ function ModalPPTReal({ctPPT, modalRegistrarPPT, setModalRegistrarPPT}: {ctPPT: 
     })
 
     const columnsPPT = useMemo(() => [
+        columnHelperPPT.accessor('id', {
+            cell: (info) => (
+                <div className="font-bold">{info.row.original.id}</div>
+            ),
+            header: 'Numero Pallet'
+        }),
         columnHelperPPT.accessor('codigo_pallet', {
             cell: (info) => (
                 <div className="font-bold">{info.row.original.codigo_pallet}</div>
@@ -165,12 +171,13 @@ function ModalPPTReal({ctPPT, modalRegistrarPPT, setModalRegistrarPPT}: {ctPPT: 
     })
 
     const columnas: TableColumn[] = [
-		{ id: 'codigo_pallet', className: 'w-2/12'},
-		{ id: 'calidad', className: 'w-1/12'},
-		{ id: 'variedad', className: 'w-1/12'},
+        { id: 'id', className: 'w-1/12'},
+		{ id: 'codigo_pallet', className: '2/12'},
+		{ id: 'calidad', className: 'w-2/12'},
+		{ id: 'variedad', className: 'w-2/12'},
 		{ id: 'calibre', className: 'w-1/12'},
 		{ id: 'total_cajas_ptt', className: 'w-2/12 text-center'},
-		{ id: 'peso_total_ptt', className: 'w-2/12'},
+		{ id: 'peso_total_ptt', className: 'w-1/12'},
 		{ id: 'acciones', className: 'w-auto'},
 	]
 
