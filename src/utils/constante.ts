@@ -152,11 +152,12 @@ export const TIPO_INFORME = [
 
 
 export const Years = [
-  {value: 1, label: '2024'},
-  {value: 2, label: '2023'},
-  {value: 3, label: '2022'},
-  {value: 4, label: '2021'},
-  {value: 5, label: '2020'},
+  {value: 1, label: '2026'},
+  {value: 2, label: '2025'},
+  {value: 3, label: '2024'},
+  {value: 4, label: '2023'},
+  {value: 5, label: '2022'},
+  {value: 6, label: '2021'},
 ]
 
 
