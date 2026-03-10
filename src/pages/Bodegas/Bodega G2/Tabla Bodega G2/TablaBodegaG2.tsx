@@ -63,8 +63,7 @@ const TablaBodegaG2: FC<IBodegaG1Props> = ({ data, refresco, setRefresco }) => {
 			"Calidad": original.calidad,
 			"Variedad": original.variedad,
 			"Calibre": original.calibre,
-			"Calle": original.calle,
-			"comercializador": original.comercializador,
+			"Calle": original.calle
 		}))
 
 		const wb = XLSX.utils.book_new()
@@ -128,15 +127,6 @@ const TablaBodegaG2: FC<IBodegaG1Props> = ({ data, refresco, setRefresco }) => {
 				// </Tooltip>
 			),
 			header: 'Resultante del Proceso',
-		}),
-		columnHelper.accessor('comercializador', {
-			cell: (info) => (
-				<div className='font-bold truncate'>
-					{`${info.row.original.comercializador}`}
-				</div>
-
-			),
-			header: 'Comercializador',
 		}),
 		columnHelper.accessor('calibrado', {
 			cell: (info) => (

@@ -118,14 +118,6 @@ const TablaBinBodegaSeleccion = ({refresh} : {refresh:boolean}) => {
         ),
         header: 'Programa',
       }),
-      columnHelper.accessor('comercializador', {
-        cell: (info) => (
-          <div className='font-bold text-center'>
-            {`${info.row.original.comercializador}`}
-          </div>
-        ),
-        header: 'Comercializ..',
-      }),
       columnHelper.accessor('variedad', {
         cell: (info) => (
           <div className='font-bold text-center'>

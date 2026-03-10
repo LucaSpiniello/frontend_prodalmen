@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { TCCPepaSerializer, TControlCalidad, TControlCalidadTarja, TFotosCC, TMuestraSerializer, TPepaMuestra, TRendimiento, TRendimientoMuestra } from "../../types/TypesControlCalidad.type";
 import { FetchOptions } from "../../types/fetchTypes.types";
 import { fetchWithToken, fetchWithTokenPostAction, fetchWithTokenPostWithBody } from "../../utils/peticiones.utils";
@@ -274,29 +274,6 @@ export const fetchRendimientoLotes = createAsyncThunk('control-calidad/fetch_ren
   }
 )
 
-export const fetchTodosRendimientoLotes = createAsyncThunk('control-calidad/fetch_rendimiento_lotes', 
-  async (payload: FetchOptions, ThunkAPI) => {
-    const { params, token, verificar_token } = payload
-    //@ts-ignore
-    const { variedad } = params
-
-  try {
-      const token_verificado = await verificar_token(token)
-      if (!token_verificado) throw new Error('Token no verificado')
-
-      const response = await fetchWithTokenPostAction(`api/control-calidad/recepcionmp/rendimiento_lotes/?variedad=${variedad}`, token_verificado)
-      if (response.ok){
-        const data = await response.json()
-        return data
-      } else if (response.status === 400) {
-        return ThunkAPI.rejectWithValue('No se hizo bien la peticion')
-      }
-    } catch (error) {
-      return ThunkAPI.rejectWithValue('No se hizo bien la peticion')
-    }
-  }
-)
-
 export const fetchAllCC = createAsyncThunk('control-calidad/get_all_info_proyecccion', 
   async (payload: any, ThunkAPI) => {
     const { params, token, verificar_token } = payload
@@ -454,54 +431,9 @@ export const fetchCalibracionTarjaReprocesoIndividual = createAsyncThunk('contro
   }
 )
 
-export const fetchControlesDeCalidadPaginados = createAsyncThunk('control-calidad/fetch_controles_paginados', 
-  async (payload: any, thunkAPI) => {
-    const { token, verificar_token, params } = payload
-    
-    // Ensure we have valid pagination parameters
-    if (!params || typeof params.desde !== 'number' || typeof params.hasta !== 'number') {
-      return thunkAPI.rejectWithValue('Parámetros de paginación inválidos')
-    }
-    
-    const { desde, hasta, comercializador } = params
-
-    try {
-      const token_verificado = await verificar_token(token)
-    
-      if (!token_verificado) throw new Error('Token no verificado')
-      console.log('Fetching paginated control data:', { desde, hasta, comercializador })
-      
-      let url = `api/control-calidad/recepcionmp/controles-paginados/?desde=${desde}&hasta=${hasta}`
-      if (comercializador) {
-        url += `&comercializador=${comercializador}`
-      }
-      
-      const response = await fetchWithToken(url, token_verificado)
-      if(response.ok){
-        const data = await response.json()
-        return data
-      } else if (response.status === 400){
-        return thunkAPI.rejectWithValue(`No se pudo hacer la petición`)
-      }
-    } catch (error) {
-      return thunkAPI.rejectWithValue(`No se pudo hacer la petición`)
-    }
-  }
-)
-
 
 const initialState = {
   controles_calidad: [] as TControlCalidad[],
-  controles_calidad_paginados: [] as TControlCalidad[],
-  pagination_metadata: {
-    total_count: 0,
-    desde: 0,
-    hasta: 9,
-    has_next: false,
-    has_previous: false
-  },
-  loading_pagination: false,
-  loading_controles_visto_bueno: false,
   control_calidad: null as TControlCalidad | null,
   controles_calidad_visto_bueno: [] as TControlCalidad[],
   fotos_cc: [] as TFotosCC[],
@@ -523,14 +455,7 @@ const initialState = {
   allcc: [],
 
   loading: false,
-  error: null as string | null | undefined,
-
-  // Estado de la tabla para persistencia
-  tabla_cc_state: {
-    pageIndex: 0,
-    pageSize: 5,
-    globalFilter: '',
-  },
+  error: null as string | null | undefined
 };
 
 
@@ -538,16 +463,6 @@ export const ControlCalidad = createSlice({
   name: 'control_calidad',
   initialState,
   reducers: {
-    GUARDAR_ESTADO_TABLA_CC: (state, action: PayloadAction<{ pageIndex: number; pageSize: number; globalFilter: string }>) => {
-      state.tabla_cc_state = action.payload;
-    },
-    RESETEAR_ESTADO_TABLA_CC: (state) => {
-      state.tabla_cc_state = {
-        pageIndex: 0,
-        pageSize: 5,
-        globalFilter: '',
-      };
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -593,17 +508,11 @@ export const ControlCalidad = createSlice({
       .addCase(fetchMuestrasCalibradasControlDeCalidadDetalle.rejected, (state, action) => {
         state.error = action.error.message;
       })
-      .addCase(fetchControlesDeCalidadVistoBueno.pending, (state) => {
-        state.loading_controles_visto_bueno = true;
-        state.error = null;
-      })
       .addCase(fetchControlesDeCalidadVistoBueno.fulfilled, (state, action) => {
         state.controles_calidad_visto_bueno = action.payload;
-        state.loading_controles_visto_bueno = false;
       })
       .addCase(fetchControlesDeCalidadVistoBueno.rejected, (state, action) => {
         state.error = action.error.message;
-        state.loading_controles_visto_bueno = false;
       })
       .addCase(fetchCalibracionTarjasSeleccionadas.fulfilled, (state, action) => {
         state.cc_calibracion_tarjaseleccionada = action.payload
@@ -617,50 +526,12 @@ export const ControlCalidad = createSlice({
       .addCase(fetchCalibracionTarjaReprocesoIndividual.fulfilled, (state, action) => {
         state.cc_calibracion_tarja_reproceso_individual = action.payload
       })
-      .addCase(fetchControlesDeCalidadPaginados.pending, (state) => {
-        console.log('fetchControlesDeCalidadPaginados.pending')
-        state.loading_pagination = true
-        state.error = null
-      })
-      .addCase(fetchControlesDeCalidadPaginados.fulfilled, (state, action) => {
-        console.log('fetchControlesDeCalidadPaginados.fulfilled payload:', action.payload)
-        state.loading_pagination = false
-        
-        // Backend returns: { resultados: TControlCalidad[], rango: { desde, hasta, total_controles, controles_en_rango } }
-        if (action.payload && action.payload.resultados && action.payload.rango) {
-          state.controles_calidad_paginados = action.payload.resultados
-          state.pagination_metadata = {
-            total_count: action.payload.rango.total_controles || 0,
-            desde: action.payload.rango.desde || 0,
-            hasta: action.payload.rango.hasta || 9,
-            has_next: (action.payload.rango.hasta + 1) < action.payload.rango.total_controles,
-            has_previous: action.payload.rango.desde > 0
-          }
-        } else if (Array.isArray(action.payload)) {
-          // Fallback if the API returns just the array
-          state.controles_calidad_paginados = action.payload
-          // Keep existing pagination metadata or set defaults
-        } else {
-          console.error('Unexpected payload format:', action.payload)
-          state.controles_calidad_paginados = []
-        }
-        
-        console.log('Updated state:', {
-          controles_calidad_paginados: state.controles_calidad_paginados.length,
-          pagination_metadata: state.pagination_metadata
-        })
-      })
-      .addCase(fetchControlesDeCalidadPaginados.rejected, (state, action) => {
-        console.log('fetchControlesDeCalidadPaginados.rejected:', action.payload)
-        state.loading_pagination = false
-        state.error = action.payload as string
-      })
       .addCase(fetchRendimientosLotesPorIds.fulfilled, (state, action) => {
         state.rendimientos_lotes_por_ids = action.payload
       })
       .addCase(fetchRendimientoLotes.fulfilled, (state, action) => {
         state.rendimientos_lotes = action.payload
-        if (state.rendimientos_lotes && action.payload ){
+        if (state.rendimientos_lotes ){
           const information = action.payload
           information.id = action.meta.arg.id
           state.todos_los_rendimientos.push(action.payload)
@@ -683,6 +554,6 @@ export const ControlCalidad = createSlice({
   }
 })
 
-export const { GUARDAR_ESTADO_TABLA_CC, RESETEAR_ESTADO_TABLA_CC } = ControlCalidad.actions
+export const { } = ControlCalidad.actions
 
 export default ControlCalidad.reducer;

@@ -546,14 +546,7 @@ const initialState = {
   pdf_detalle_entrada_programa: null as TPDFDetallEntradaPrograma | null,
   mensajeTerminoProduccion: null as TMensajeTerminoProduccion | null,
   mensajeCierreProduccion: null as TMensajeCierreProduccion | null,
-  pdfDocumentoSalida: null as PDFSalida | null,
-
-  // Estado de la tabla para persistencia
-  tabla_programas_state: {
-    pageIndex: 0,
-    pageSize: 5,
-    globalFilter: '',
-  },
+  pdfDocumentoSalida: null as PDFSalida | null
 };
 
 
@@ -654,33 +647,12 @@ export const ProduccionSlice = createSlice({
     },
     GUARDAR_MENSAJE_CIERRE: (state, action) => {
       state.mensajeCierreProduccion = action.payload
-    },
-    GUARDAR_ESTADO_TABLA_PROGRAMAS: (state, action: PayloadAction<{ pageIndex: number; pageSize: number; globalFilter: string }>) => {
-      state.tabla_programas_state = action.payload;
-    },
-    RESETEAR_ESTADO_TABLA_PROGRAMAS: (state) => {
-      state.tabla_programas_state = {
-        pageIndex: 0,
-        pageSize: 5,
-        globalFilter: '',
-      };
-    },
+    }
   },
   extraReducers: (builder) => {
     builder
-    .addCase(fetchProgramasProduccion.pending, (state) => {
-      console.log('fetchProgramasProduccion.pending')
-      state.loading = true
-    })
     .addCase(fetchProgramasProduccion.fulfilled, (state, action) => {
-      console.log('fetchProgramasProduccion.fulfilled:', action.payload)
       state.programas_produccion = action.payload
-      state.loading = false
-    })
-    .addCase(fetchProgramasProduccion.rejected, (state, action) => {
-      console.log('fetchProgramasProduccion.rejected:', action.error)
-      state.loading = false
-      state.error = action.error.message
     })
     .addCase(fetchProgramaProduccion.fulfilled, (state, action) => {
       state.programa = action.payload
@@ -813,9 +785,7 @@ export const {
 
 
     CARGAR_HORARIO,
-    ELIMINAR_HORARIO,
-    GUARDAR_ESTADO_TABLA_PROGRAMAS,
-    RESETEAR_ESTADO_TABLA_PROGRAMAS
+    ELIMINAR_HORARIO
   } = ProduccionSlice.actions
 
 export default ProduccionSlice.reducer

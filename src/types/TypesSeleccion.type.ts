@@ -27,7 +27,6 @@ export type TSeleccion = {
   numero_programa: number
   pepa_para_seleccion_length: number
   produccion: number 
-  comercializador?: string
 }
 
 
@@ -186,7 +185,6 @@ export type TBinBodega = {
   tipo_producto: string
   programa_produccion?: string
   productor?: string
-  comercializador?: string
 }
 
 
@@ -308,17 +306,15 @@ export type TPDFEntradaSeleccion = {
   mezcla: number
   color: number
   goma: number
-  pepa: number  
+  pepa: number
   kilos: number
   colectado: boolean
   programa_produccion?: string
-  fecha_inicio?: any
 }
 
 export type TPDFSalidaSeleccion = {
   bines: Bines[],
-  subproductos: Productos[],
-  fecha_final: any
+  subproductos: Productos[]
 }
 
 export type Bines = {

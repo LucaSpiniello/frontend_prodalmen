@@ -563,7 +563,7 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Basura</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.basura?.toFixed(2)}%</Text>
+                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.basura}%</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                             <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
@@ -580,7 +580,7 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Cascara</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.cascara?.toFixed(2)}%</Text>
+                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.cascara}%</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                         <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
@@ -597,7 +597,7 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Ciega</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.ciega?.toFixed(2)}%</Text>
+                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.ciega}%</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                         <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
@@ -614,7 +614,7 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Pelon</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.pelon?.toFixed(2)}%</Text>
+                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.pelon}%</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
@@ -631,7 +631,7 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Huerto</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.pepa_huerto?.toFixed(2)}%</Text>
+                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.pepa_huerto}%</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
@@ -647,7 +647,7 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>Pepa Bruta</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
-                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.pepa_bruta?.toFixed(2)}%</Text>
+                          <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderRight: '1px solid green', borderBottom: '1px solid green' }}>{controlCombinado.cc_promedio_porcentaje_muestras.pepa_bruta}%</Text>
                         </View>
                         <View style={styles.boxes_table_row}>
                           <Text style={{ paddingVertical: 6, fontSize: 7, textAlign: 'center', borderBottom: '1px solid green' }}>
@@ -924,11 +924,11 @@ const MyDocument: React.FC<{ controlCombinado: TRendimiento, variedad: string, p
 
                             { isPacificNut ?
                             <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
-                              <Text style={{ fontSize: 8 }}>{controlCombinado?.cc_calculo_final.kilos_brutos.toFixed(2)} kgs</Text>
+                              <Text style={{ fontSize: 8 }}>{controlCombinado?.cc_calculo_final.kilos_brutos} kgs</Text>
                             </View>
                             :
                             <View style={{ width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 5, position: 'relative', left: 35 }}>
-                              <Text style={{ fontSize: 8 }}>{controlCombinado?.cc_calculo_final.final_exp.toFixed(2)} kgs</Text>
+                              <Text style={{ fontSize: 8 }}>{controlCombinado?.cc_calculo_final.final_exp} kgs</Text>
                             </View>
                             } 
                       </View>

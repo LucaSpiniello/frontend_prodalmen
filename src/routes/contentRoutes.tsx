@@ -37,8 +37,6 @@ const ListaEnvases = lazy(() => import('../pages/Bodegas/Envases Materia Prima/T
 // const EnavasesMP = lazy(() => import('../pages/Recepcion MP/Guia Recepcion/'));
 
 
-
-
 // Control Calidad
 const ListaControlCalidad = lazy(() => import('../pages/Control de calidad/Control Calidad Lotes/Tablas/ListaControlCalidad.tsx'));
 const DetalleControlCalidad = lazy(() => import('../pages/Control de calidad/Control Calidad Lotes/DetalleControlCalidad.tsx'));

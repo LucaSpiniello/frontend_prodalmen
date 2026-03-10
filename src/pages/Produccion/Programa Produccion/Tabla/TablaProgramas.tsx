@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState } from 'react';
 import {
 	createColumnHelper,
 	getCoreRowModel,
@@ -37,7 +37,7 @@ import Badge from '../../../../components/ui/Badge';
 import ModalForm from '../../../../components/ModalForm.modal';
 import TableTemplate, { TableCardFooterTemplate, TableColumn } from '../../../../templates/common/TableParts.template';
 import Button from '../../../../components/ui/Button';
-import { actualizar_programa_produccion, registrar_programa_produccion, GUARDAR_ESTADO_TABLA_PROGRAMAS } from '../../../../redux/slices/produccionSlice';
+import { actualizar_programa_produccion, registrar_programa_produccion } from '../../../../redux/slices/produccionSlice';
 import { useAuth } from '../../../../context/authContext';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from '@reduxjs/toolkit';
@@ -48,23 +48,16 @@ interface IProduccionProps {
 }
 
 const TablaProgramas: FC<IProduccionProps> = ({ data }) => {
-	// Obtener el estado guardado de Redux
-	const tabla_state = useAppSelector((state: RootState) => state.programa_produccion.tabla_programas_state);
-
 	const navigate = useNavigate()
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [globalFilter, setGlobalFilter] = useState<string>(tabla_state.globalFilter)
-	const [pagination, setPagination] = useState({
-		pageIndex: tabla_state.pageIndex,
-		pageSize: tabla_state.pageSize,
-	});
+	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [informePro, setInformePro] = useState<boolean>(false)
 	const [informeKgOp, setInformeinformeKgOp] = useState<boolean>(false)
 	const [informeResOp, setInformeinformeResOp] = useState<boolean>(false)
 	const { pathname } = useLocation()
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
 	const { verificarToken } = useAuth()
-
+	
 	const token = useAppSelector((state: RootState) => state.auth.authTokens)
 	const perfil = useAppSelector((state: RootState) => state.auth.dataUser)
 	const userGroups = useAppSelector((state: RootState) => state.auth.grupos)
@@ -76,7 +69,7 @@ const columnHelper = createColumnHelper<TProduccion>();
 		columnHelper.accessor('numero_programa', {
 			cell: (info) => (
 				<div className='font-bold text-center'>
-					{`${info.row.original.id}`}
+					{`${info.row.original.numero_programa}`}
 				</div>
 			),
 			header: 'N° Programa',
@@ -88,14 +81,6 @@ const columnHelper = createColumnHelper<TProduccion>();
 				</div>
 			),
 			header: 'N° Envases',
-		}),
-		columnHelper.accessor('comercializador', {
-			cell: (info) => (
-				<div className='font-bold text-center'>
-					{`${info.row.original.comercializador}`}
-				</div>
-			),
-			header: 'Comercializador',
 		}),
 		columnHelper.display({
 			id: 'lotes_ingresados',
@@ -295,28 +280,18 @@ const columnHelper = createColumnHelper<TProduccion>();
 		state: {
 			sorting,
 			globalFilter,
-			pagination,
 		},
 		onSortingChange: setSorting,
 		enableGlobalFilter: true,
 		onGlobalFilterChange: setGlobalFilter,
-		onPaginationChange: setPagination,
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
-		// Evitar que la tabla resetee la paginación cuando cambian los datos
-		autoResetPageIndex: false,
+		initialState: {
+			pagination: { pageSize: 5 },
+		},
 	});
-
-	// Guardar el estado de la tabla en Redux cuando cambie
-	useEffect(() => {
-		dispatch(GUARDAR_ESTADO_TABLA_PROGRAMAS({
-			pageIndex: pagination.pageIndex,
-			pageSize: pagination.pageSize,
-			globalFilter: globalFilter,
-		}));
-	}, [pagination.pageIndex, pagination.pageSize, globalFilter, dispatch]);
 
 	return (
 		<PageWrapper name='Lista Programas'>

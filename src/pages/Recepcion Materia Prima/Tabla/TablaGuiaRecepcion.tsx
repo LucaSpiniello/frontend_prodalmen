@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useState, useEffect } from 'react';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 import {
 	createColumnHelper,
 	getCoreRowModel,
@@ -27,34 +27,24 @@ import Tooltip from '../../../components/ui/Tooltip';
 import { FaFilePdf } from 'react-icons/fa';
 import { TGuia } from '../../../types/TypesRecepcionMP.types';
 import { useAuth } from '../../../context/authContext';
-import { eliminarGuiaRecepcion, GUARDAR_ESTADO_TABLA_GUIAS } from '../../../redux/slices/recepcionmp';
+import { eliminarGuiaRecepcion } from '../../../redux/slices/recepcionmp';
 import { FetchOptions } from '../../../types/fetchTypes.types';
 import { ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import Dropdown, { DropdownItem, DropdownMenu, DropdownToggle } from '../../../components/ui/Dropdown';
 import { HiCheckCircle, HiQuestionMarkCircle, HiXCircle } from 'react-icons/hi';
-import { FaFileExcel } from "react-icons/fa6";
-import * as XLSX from 'xlsx'
+
 interface IGuiaProps {
 	data: TGuia[] | []
 	refresh: Dispatch<SetStateAction<boolean>>
 }
 
 const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
-	// Obtener el estado guardado de Redux
-	const tabla_state = useAppSelector((state: RootState) => state.recepcionmp.tabla_guias_state);
-
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [globalFilter, setGlobalFilter] = useState<string>(tabla_state.globalFilter)
-	const [pagination, setPagination] = useState({
-		pageIndex: tabla_state.pageIndex,
-		pageSize: tabla_state.pageSize,
-	});
-
+	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const hasGroup = (groups: any) => userGroup?.groups && groups.some((group: any) => group in userGroup.groups);
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   	const token = useAppSelector((state: RootState) => state.auth.authTokens)
-	const kilos_recepcion = useAppSelector((state: RootState) => state.recepcionmp.kilos_recepcion);
 	const { verificarToken } = useAuth()
 	const userGroup = useAppSelector((state: RootState) => state.auth.grupos)
 	const comercializador = useAppSelector((state: RootState) => state.auth.dataUser?.comercializador)
@@ -148,7 +138,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 							</Link>
 						)}
 
-						{/* { ((hasGroup(['registros-admin']) || hasGroup(['recepcion-mp'])) && comercializador == "Prodalmen" ) && (
+						{ ((hasGroup(['registros-admin']) || hasGroup(['recepcion-mp'])) && comercializador == "Prodalmen" ) && (
 							<Button
 								variant='solid'
 								color='red'
@@ -158,7 +148,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 								}>
 								<HeroXMark style={{ fontSize: 25 }} />
 							</Button>
-						)} */}
+						)}
 					</div>
 				);
 			},
@@ -166,57 +156,22 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 		}),
 	]
 
-	const exportToExcel = (data: any[]) => {
-			const filteredInfomation = data.map(({ original }) => ({
-				"N° Guia": original.id,
-				"Productor": original.nombre_productor,
-				"Camión": original.nombre_camion,
-				"Lotes": original.lotesrecepcionmp ? original.lotesrecepcionmp.map((element: any) => `${element.numero_lote}`).join(', ') : '',
-				"Variedad": original.lotesrecepcionmp ? original.lotesrecepcionmp.map((element: any) => element.variedad || '').filter((v: string) => v).join(', ') : '',
-				"Estado": original.estado_recepcion_label,
-				"Fecha Recepción": original.fecha_creacion.split("T")[0],
-				"N° Guia Productor": original.numero_guia_productor,
-				"comercializador": original.nombre_comercializador,
-				// Calculate kilos netos using kilos_neto_fruta which includes: kilos_brutos - kilos_tara - kilos_envases
-				"Kilos Netos": original.lotesrecepcionmp ? original.lotesrecepcionmp.reduce((acc: number, element: any) => {
-					return acc + (element.kilos_neto_fruta ?? 0);
-				}, 0) : 0,
-			}))
-			const wb = XLSX.utils.book_new()
-			const ws = XLSX.utils.json_to_sheet(filteredInfomation)
-			XLSX.utils.book_append_sheet(wb, ws, 'Guias Recepcion')
-			XLSX.writeFile(wb, 'guias_recepcion.xlsx')
-	
-		}
-
 	const table = useReactTable({
 		data,
 		columns,
 		state: {
 			sorting,
 			globalFilter,
-			pagination,
 		},
 		onSortingChange: setSorting,
 		enableGlobalFilter: true,
 		onGlobalFilterChange: setGlobalFilter,
-		onPaginationChange: setPagination,
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
-		// Evitar que la tabla resetee la paginación cuando cambian los datos
-		autoResetPageIndex: false,
+		initialState: { pagination: { pageSize: 5 } },
 	});
-
-	// Guardar el estado de la tabla en Redux cuando cambie
-	useEffect(() => {
-		dispatch(GUARDAR_ESTADO_TABLA_GUIAS({
-			pageIndex: pagination.pageIndex,
-			pageSize: pagination.pageSize,
-			globalFilter: globalFilter,
-		}));
-	}, [pagination.pageIndex, pagination.pageSize, globalFilter, dispatch]);
 
 	return (
 		<PageWrapper name='Lista Guia Recepcion Materia Prima'>
@@ -244,20 +199,7 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 							onChange={(e) => setGlobalFilter(e.target.value)}
 						/>
 					</FieldWrap>
-					
 				</SubheaderLeft>
-				<SubheaderRight className='w-full md:w-4/12'>
-				<div className='w-full border-black flex flex-col md:flex-row lg:flex-row gap-2'>
-                <div className='w-full lg:w-auto flex flex-col items-center rounded-md bg-emerald-700'>
-                  <span className='text-lg text-center font-semibold text-white'>{Math.round(kilos_recepcion?.total_kilos_prodalmen ?? 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} kgs</span>
-                  <label htmlFor="" className='font-semibold text-white text-center text-sm'>Total Recepcionados Prodalmen</label>
-                </div>
-				<div className='w-full lg:w-auto flex flex-col items-center rounded-md bg-emerald-700'>
-                  <span className='text-lg text-center font-semibold text-white'>{Math.round(kilos_recepcion?.total_kilos_pacificnut ?? 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} kgs</span>
-                  <label htmlFor="" className='font-semibold text-white text-center text-sm'>Total Recepcionados Pacific</label>
-                </div>
-				</div>
-				</SubheaderRight>
 				{ (hasGroup(['recepcion-mp']) && comercializador == "Prodalmen") && ( 
 					<SubheaderRight>
 						<Link to={`/rmp/registro-guia-recepcion/`} state={{ pathname: '/recepcionmp/' }}>
@@ -268,18 +210,6 @@ const TablaGuiaRecepcion: FC<IGuiaProps> = ({ data }) => {
 					</SubheaderRight>
 				)}
 			</Subheader>
-			<CardHeader>
-			<div className="w-full flex gap-5">
-				<Button
-					variant="solid"
-					onClick={() => exportToExcel(table.getFilteredRowModel().rows)}
-					className="bg-green-600 hover:bg-green-500 border border-green-600 hover:border-green-500 hover:scale-105"
-					>
-					<FaFileExcel style={{ fontSize: 20, color: 'white'}}/>
-					Exportar archivo CSV
-				</Button>
-			</div>
-		</CardHeader>
 			<Container breakpoint={null} className='w-full overflow-auto'>
 				<Card className='h-full w-full'>
 					<CardHeader>

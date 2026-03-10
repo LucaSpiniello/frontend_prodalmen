@@ -254,7 +254,7 @@ const PDFDocumentoSalida = () => {
             
               <View style={styles.header_date_info_box}>
                 <Text style={styles.header_date_info_text}>Fecha fin programa: </Text>
-                <Text style={styles.header_date_info_text}>{pdf_salida?.fecha_final} </Text>
+                <Text style={styles.header_date_info_text}>{format(state.seleccion?.fecha_modificacion!, { date: 'full', time: 'short' }, 'es' )} </Text>
               </View>
 
             </View>
@@ -366,14 +366,6 @@ const PDFDocumentoSalida = () => {
       
                   <View style={styles.header_info_box_superior}>
                    <Text style={{ fontSize: 9}}>{entrada?.calibre}</Text>
-                  </View>
-
-                  <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada?.calidad}</Text>
-                  </View>
-
-                  <View style={styles.header_info_box_superior}>
-                   <Text style={{ fontSize: 9}}>{entrada?.tipo}</Text>
                   </View>
 
                   <View style={styles.header_info_box_superior}>

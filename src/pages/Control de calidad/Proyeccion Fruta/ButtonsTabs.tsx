@@ -5,10 +5,9 @@ import { TTabsPro } from '../../../types/TabsDetalleProyeccion.types';
 interface IPeriodButtonsPartialProps {
 	activeTab: TTabsPro;
 	setActiveTab: Dispatch<SetStateAction<TTabsPro>>;
-	disabled?: boolean;
 }
 const ButtonsTabsProyeccion: FC<IPeriodButtonsPartialProps> = (props) => {
-	const { activeTab, setActiveTab, disabled = false } = props;
+	const { activeTab, setActiveTab } = props;
 
 	const defaultProps: IButtonProps = {
 		size: 'sm',
@@ -39,11 +38,8 @@ const ButtonsTabsProyeccion: FC<IPeriodButtonsPartialProps> = (props) => {
 					key={i.text}
 					// eslint-disable-next-line react/jsx-props-no-spreading
 					{...(activeTab.text === i.text ? { ...activeProps } : { ...defaultProps })}
-					isDisable={disabled}
 					onClick={() => {
-						if (!disabled) {
-							setActiveTab(i);
-						}
+						setActiveTab(i);
 					}}>
 					{i.text}
 				</Button>

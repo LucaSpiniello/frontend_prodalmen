@@ -92,8 +92,7 @@ const TablaBodegaG1: FC<IBodegaG1Props> = ({ data, refresco, setRefresco }) => {
 			"Calidad": original.calidad,
 			"Variedad": original.variedad,
 			"Calibre": original.calibre,
-			"Calle": original.calle,
-			"comercializador": original.comercializador,
+			"Calle": original.calle
 		}))
 
 		const wb = XLSX.utils.book_new()
@@ -124,15 +123,6 @@ const TablaBodegaG1: FC<IBodegaG1Props> = ({ data, refresco, setRefresco }) => {
 				
 			),
 			header: 'Resultante del Proceso',
-		}),
-		columnHelper.accessor('comercializador', {
-			cell: (info) => (
-				<div className='font-bold truncate'>
-					{`${info.row.original.comercializador}`}
-				</div>
-
-			),
-			header: 'Comercializador',
 		}),
 		columnHelper.accessor('calibrado', {
 			cell: (info) => (
@@ -209,7 +199,7 @@ const TablaBodegaG1: FC<IBodegaG1Props> = ({ data, refresco, setRefresco }) => {
 								<Label htmlFor="calle">Calle Bodega: </Label>
 								<div className="w-full">
 									<SelectReact
-										options={optionCalleBodega.slice(0,14)}
+										options={optionCalleBodega.slice(0,7)}
 										id='calle_bodega'
 										placeholder='Calle'
 										name='calle_bodega'
@@ -351,7 +341,7 @@ const TablaBodegaG1: FC<IBodegaG1Props> = ({ data, refresco, setRefresco }) => {
 								<div className="w-full flex-col">
                   <Label htmlFor="calle">Calle Bodega: </Label>
                   <SelectReact
-                    options={[{ value: '', label: 'Selecciona una calle' }, ...optionCalleBodega.slice(0,14)]}
+                    options={[{ value: '', label: 'Selecciona una calle' }, ...optionCalleBodega.slice(0,7)]}
                     id='calle_bodega'
                     placeholder='Calle Bodega'
                     name='calle_bodega'

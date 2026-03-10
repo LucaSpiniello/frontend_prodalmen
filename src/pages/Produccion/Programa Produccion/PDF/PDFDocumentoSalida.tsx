@@ -199,7 +199,7 @@ const PDFDocumentoSalida = () => {
                                 <Image source="/src/assets/prodalmen_foto.png" style={{ height: 100, width: 100}}/>
                             </View>
                             <Text style={{ width: 320, textAlign: 'center', fontSize: 14, position: 'relative', right: 300}}>
-                                Documento Salida al Programa de Producción N° {pdf?.produccion}
+                                Documento Salida al Programa de Producción N° {}
                             </Text>
                         </View>
 
@@ -229,23 +229,6 @@ const PDFDocumentoSalida = () => {
                                     {pdf?.numeros_lote.join(', ')}
                                 </Text>
                             </View>
-                            </View>
-                        </View>
-                    
-                        <View style={{
-                            width: '100%',
-                            border: '1px solid black',
-                            display: 'flex',
-                            flexDirection: 'row'
-                        }}>
-                            <View style={{
-                            width: '100%',
-                            padding: 5
-                            }}>
-                                <View style={styles.header_date_info_box}>
-                                    <Text style={styles.header_date_info_text}>Comercializador: </Text>
-                                    <Text style={styles.header_date_info_text}>{pdf?.comercializador}</Text>
-                                </View>
                             </View>
                         </View>
                     
@@ -343,7 +326,7 @@ const PDFDocumentoSalida = () => {
                                     </View>
                         
                                     <View style={styles.header_info_box_superior}>
-                                        <Text style={{ fontSize: 9}}>{cc.cc_info.get_calibre}</Text>
+                                        <Text style={{ fontSize: 9}}>{cc.cc_info.calibre}</Text>
                                     </View>
 
                                     <View style={styles.header_info_box_superior}>

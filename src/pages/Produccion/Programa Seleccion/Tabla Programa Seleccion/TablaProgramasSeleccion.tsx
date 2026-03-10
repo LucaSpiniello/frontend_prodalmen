@@ -39,7 +39,7 @@ import { useAuth } from '../../../../context/authContext';
 import { fetchWithToken, fetchWithTokenPost, fetchWithTokenPut } from '../../../../utils/peticiones.utils';
 import { TSeleccion } from '../../../../types/TypesSeleccion.type';
 import { format } from '@formkit/tempo';
-import { fetchProgramasDeSeleccion, fetchProgramasDeSeleccionPaginados, fetchRendimientoSeleccion, GUARDAR_ESTADO_TABLA_PROGRAMAS_SELECCION } from '../../../../redux/slices/seleccionSlice';
+import { fetchProgramasDeSeleccion, fetchRendimientoSeleccion } from '../../../../redux/slices/seleccionSlice';
 import FormularioInformeSeleccion from '../Formularios/Formulario PDF\'s/FormularioInformeSeleccion';
 import FormularioInformeKilosXOperario from '../Formularios/Formulario PDF\'s/FormularioInformeKilosXOperario';
 import FormularioInformeOperariosResumido from '../Formularios/Formulario PDF\'s/FormularioInformeOperarioResumido';
@@ -53,41 +53,15 @@ import { fetchProgramasProduccion } from '../../../../redux/slices/produccionSli
 
 interface IProduccionProps {
 	data: TSeleccion[] | []
-	paginationMetadata?: {
-		total_count: number
-		desde: number
-		hasta: number
-		has_next: boolean
-		has_previous: boolean
-	}
-	currentPage?: number
-	onPageChange?: (newPage: number) => void
-	pageSize?: number
-	loadingPagination?: boolean
 }
 
 
 
 
-const TablaProgramasSeleccion: FC<IProduccionProps> = ({
-	data,
-	paginationMetadata,
-	currentPage = 0,
-	onPageChange,
-	pageSize = 5,
-	loadingPagination = false
-}) => {
-	// Obtener el estado guardado de Redux
-	const tabla_state = useAppSelector((state: RootState) => state.seleccion.tabla_programas_seleccion_state);
-
+const TablaProgramasSeleccion: FC<IProduccionProps> = ({ data }) => {
 	const navigate = useNavigate()
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [globalFilter, setGlobalFilter] = useState<string>(tabla_state.globalFilter)
-	// Para paginación del servidor, pageIndex local siempre es 0 (los datos ya vienen paginados)
-	const [pagination, setPagination] = useState({
-		pageIndex: 0,
-		pageSize: tabla_state.pageSize,
-	});
+	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [informePro, setInformePro] = useState<boolean>(false)
 	const [informeKgOp, setInformeinformeKgOp] = useState<boolean>(false)
 	const [informeResOp, setInformeinformeResOp] = useState<boolean>(false)
@@ -118,12 +92,7 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 			if (response_estado.ok){
 				const data: TSeleccion = await response_estado.json()
 				toast.success(`El programa esta en ${data.estado_programa_label}`)
-				// Refresh current page data
-				dispatch(fetchProgramasDeSeleccionPaginados({ 
-					token, 
-					verificar_token: verificarToken,
-					params: { desde: currentPage * pageSize, hasta: (currentPage * pageSize) + pageSize - 1 }
-				}))
+				dispatch(fetchProgramasDeSeleccion({ token, verificar_token: verificarToken }))
 			}
 		} catch (error) {
 			toast.error('Error en la peticion')
@@ -149,6 +118,7 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 				toast.success(`El programa fue creado exitosamente`)
 				navigate(`/pro/seleccion/programa-seleccion/registro-programa/${data.id}`, { state: { pathname: '/programa-seleccion' }})
 			} else {
+				console.log("nop no lo logre")
 				setDisabled(false)
 			}
 		} catch (error) {
@@ -186,15 +156,6 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 				</div>
 			),
 			header: 'N° Produccion',
-		}),
-		columnHelper.accessor('comercializador', {
-			id: 'comercializador',
-			cell: (info) => (
-				<div className='font-bold '>
-					{`${info.row.original.comercializador}`}
-				</div>
-			),
-			header: 'Comercializador',
 		}),
 		columnHelper.display({
 			id: 'bins_sin_procesar',
@@ -235,6 +196,31 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 				)
 			},	
 			header: 'Envases en Proc.',
+		}),
+		columnHelper.display({
+			id:'rendimientos',
+			cell: (info) => {
+				const diferencia_rendimiento = info.row.original.diferencia_rendimiento
+
+				return (			
+					<div className='font-bold mx-auto'>
+							<Link to={`/pro/seleccion/programa-seleccion/proyeccion-rendimiento-cc/${info.row.original.id}/`} state={{ pathname: '/programa-seleccion' }}>
+								<Button variant='default' className={`w-full flex justify-between  border ${diferencia_rendimiento < 0 ? '!bg-red-600' : diferencia_rendimiento === 0 ? '!bg-[#7d99a3]' : '!bg-emerald-400'} `}>
+									{
+										diferencia_rendimiento < 0
+											? <HiOutlineTrendingDown style={{ fontSize: 28 }}/>
+											: diferencia_rendimiento === 0
+												? <TbEqual style={{ fontSize: 28, color: '!white' }}/>
+												: <HiOutlineTrendingUp style={{ fontSize: 28 }}/>
+									}
+									<span className='m-0 text-xl text-white'>{(info.row.original?.diferencia_rendimiento! ?? 0).toFixed(2)}</span>
+								</Button>
+							</Link>
+					</div>
+	
+				)
+			},
+			header: 'Rendimiento Programa',
 		}),
 		columnHelper.display({
 			id: 'acciones',
@@ -365,34 +351,18 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 		state: {
 			sorting,
 			globalFilter,
-			pagination,
 		},
 		onSortingChange: setSorting,
 		enableGlobalFilter: true,
 		onGlobalFilterChange: setGlobalFilter,
-		onPaginationChange: setPagination,
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
-		// Configuración para paginación del servidor
-		manualPagination: true,
-		pageCount: paginationMetadata ? Math.ceil(paginationMetadata.total_count / pageSize) : -1,
-		// Evitar que la tabla resetee la paginación cuando cambian los datos
-		autoResetPageIndex: false,
+		initialState: {
+			pagination: { pageSize: 5 },
+		},
 	})
-
-	// Para tablas con paginación del servidor, el estado se guarda en el componente padre (ListaProgramasSeleccion)
-	// Solo guardamos el filtro global cuando cambia
-	useEffect(() => {
-		if (globalFilter !== tabla_state.globalFilter) {
-			dispatch(GUARDAR_ESTADO_TABLA_PROGRAMAS_SELECCION({
-				pageIndex: tabla_state.pageIndex,
-				pageSize: tabla_state.pageSize,
-				globalFilter: globalFilter,
-			}));
-		}
-	}, [globalFilter, dispatch]);
 
 	const columnas: TableColumn[] = [
 		{id: 'numero_programa', className: 'w-32'},
@@ -403,8 +373,6 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 		{id: 'acciones', className: 'lg:w-96 '},
 		
 	]
-
-	
 
 	useEffect(() => {
 		if (programas_produccion.length === 0){
@@ -511,14 +479,7 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 								variant='outline'
 								className='border-transparent px-4'
 								rounded='rounded-full'>
-								{loadingPagination ? (
-									<div className="flex items-center gap-1">
-										<div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
-										Cargando...
-									</div>
-								) : (
-									`${paginationMetadata?.total_count || table.getFilteredRowModel().rows.length} registros`
-								)}
+								{table.getFilteredRowModel().rows.length} registros
 							</Badge>
 						</CardHeaderChild>
 
@@ -585,61 +546,9 @@ const TablaProgramasSeleccion: FC<IProduccionProps> = ({
 						</CardHeaderChild>
 					</CardHeader>
 					<CardBody className='overflow-x-auto'>
-						{loadingPagination ? (
-							<div className="flex items-center justify-center py-8">
-								<div className="flex items-center gap-2">
-									<div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-									<span className="text-gray-600">Cargando programas...</span>
-								</div>
-							</div>
-						) : (
-							<TableTemplate className='table-fixed max-md:min-w-[70rem]' table={table} columnas={columnas}/>
-						)}
+						<TableTemplate className='table-fixed max-md:min-w-[70rem]' table={table} columnas={columnas}/>
 					</CardBody>
-					{paginationMetadata && onPageChange && (
-						<div className="flex items-center justify-between px-6 py-3 border-t border-gray-200">
-							<div className="flex items-center gap-2">
-								<span className="text-sm text-gray-700">
-									Mostrando {paginationMetadata.desde + 1} a {Math.min(paginationMetadata.hasta + 1, paginationMetadata.total_count)} de {paginationMetadata.total_count} registros
-								</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<Button
-									variant="outline"
-									size="sm"
-									onClick={() => onPageChange(currentPage - 1)}
-									isDisable={!paginationMetadata.has_previous || loadingPagination}
-								>
-									{loadingPagination ? (
-										<div className="flex items-center gap-1">
-											<div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
-											Cargando...
-										</div>
-									) : (
-										'Anterior'
-									)}
-								</Button>
-								<span className="text-sm text-gray-700">
-									Página {currentPage + 1} de {Math.ceil(paginationMetadata.total_count / pageSize)}
-								</span>
-								<Button
-									variant="outline"
-									size="sm"
-									onClick={() => onPageChange(currentPage + 1)}
-									isDisable={!paginationMetadata.has_next || loadingPagination}
-								>
-									{loadingPagination ? (
-										<div className="flex items-center gap-1">
-											<div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
-											Cargando...
-										</div>
-									) : (
-										'Siguiente'
-									)}
-								</Button>
-							</div>
-						</div>
-					)}
+					<TableCardFooterTemplate table={table} />
 				</Card>
 			</Container>
 		</PageWrapper>

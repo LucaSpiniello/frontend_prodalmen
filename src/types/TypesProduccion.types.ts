@@ -55,7 +55,6 @@ export type TProduccion = {
   condicion_cierre: boolean
   condicion_termino: boolean
   hay_bins_en_g2? : boolean
-  comercializador?: string
 }
 
 export type   TLoteProduccion = {
@@ -229,8 +228,7 @@ export type PDFSalida = {
   kilos_resultantes: number
   cantidad_bines_resultantes: number
   numeros_lote: number[],
-  tarjas_resultantes: PDFSalidaTarjas[],
-  comercializador?: string
+  tarjas_resultantes: PDFSalidaTarjas[]
 }
 
 export type PDFSalidaTarjas = {
@@ -258,5 +256,4 @@ export type PDFSalidaTarjasCC = {
   punto_goma: number
   vana_deshidratada: number
   cc_registrado_por: string
-  get_calibre: string
 }

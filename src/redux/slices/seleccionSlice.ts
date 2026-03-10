@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { FetchOptions, PostOptions } from "../../types/fetchTypes.types";
 import { fetchWithToken, fetchWithTokenPost } from "../../utils/peticiones.utils";
 import { TBinBodega, TBinSubProducto, THistoricoBinSubProducto, TOperarioEnSeleccion, TOperarioSeleccion, TPDFEntradaSeleccion, TPDFSalidaSeleccion, TPepaParaSeleccion, TRendimientoSeleccion, TSeleccion, TSubproducto, TTarjaSeleccionada, TSubProductoMetrica } from "../../types/TypesSeleccion.type";
@@ -15,35 +15,6 @@ export const fetchProgramasDeSeleccion = createAsyncThunk('seleccion/fetch_selec
     
       if (!token_verificado) throw new Error('Token no verificado')
       const response = await fetchWithToken(`api/seleccion/`, token_verificado)
-      if(response.ok){
-        const data = await response.json()
-        return data
-      } else if (response.status === 400){
-        return thunkAPI.rejectWithValue(`No se pudo hacer la petición`)
-      }
-    } catch (error) {
-      return thunkAPI.rejectWithValue(`No se pudo hacer la petición`)
-    }
-  }
-)
-
-export const fetchProgramasDeSeleccionPaginados = createAsyncThunk('seleccion/fetch_seleccion_paginados', 
-  async (payload: FetchOptions, thunkAPI) => {
-    const { token, verificar_token, params } = payload
-    
-    // Ensure we have valid pagination parameters
-    if (!params || typeof params.desde !== 'number' || typeof params.hasta !== 'number') {
-      return thunkAPI.rejectWithValue('Parámetros de paginación inválidos')
-    }
-    
-    const { desde, hasta } = params
-
-    try {
-      const token_verificado = await verificar_token(token)
-    
-      if (!token_verificado) throw new Error('Token no verificado')
-      console.log('Fetching paginated data:', { desde, hasta })
-      const response = await fetchWithToken(`api/seleccion/programas-paginados/?desde=${desde}&hasta=${hasta}`, token_verificado)
       if(response.ok){
         const data = await response.json()
         return data
@@ -522,15 +493,6 @@ export const fetchMensajeCierreSeleccion = createAsyncThunk<TMensajeCierreProduc
 
 const initialState = {
   programas_seleccion: [] as TSeleccion[],
-  programas_seleccion_paginados: [] as TSeleccion[],
-  pagination_metadata: {
-    total_count: 0,
-    desde: 0,
-    hasta: 9,
-    has_next: false,
-    has_previous: false
-  },
-  loading_pagination: false,
   programa_seleccion_individual: null as TSeleccion | null,
   tarjas_seleccionadas: [] as TTarjaSeleccionada[],
   tarja_seleccionada_individual: null as TTarjaSeleccionada | null,
@@ -577,14 +539,7 @@ const initialState = {
   operarios_seleccion: [] as TOperarioEnSeleccion[],
   operario_seleccion_individual: [] as TOperarioSeleccion[],
   mensajeTerminoSeleccion: null as TMensajeTerminoProduccion | null,
-  mensajeCierreSeleccion: null as TMensajeCierreProduccion | null,
-
-  // Estado de la tabla para persistencia
-  tabla_programas_seleccion_state: {
-    pageIndex: 0,
-    pageSize: 5,
-    globalFilter: '',
-  }
+  mensajeCierreSeleccion: null as TMensajeCierreProduccion | null
 };
 
 export const SeleccionSlice = createSlice({
@@ -619,17 +574,6 @@ export const SeleccionSlice = createSlice({
     },
     VACIAR_AGRUPACION: state => {
       state.subproductos_para_agrupar = []
-    },
-
-    GUARDAR_ESTADO_TABLA_PROGRAMAS_SELECCION: (state, action: PayloadAction<{ pageIndex: number; pageSize: number; globalFilter: string }>) => {
-      state.tabla_programas_seleccion_state = action.payload;
-    },
-    RESETEAR_ESTADO_TABLA_PROGRAMAS_SELECCION: (state) => {
-      state.tabla_programas_seleccion_state = {
-        pageIndex: 0,
-        pageSize: 5,
-        globalFilter: '',
-      };
     }
 
   },
@@ -637,44 +581,6 @@ export const SeleccionSlice = createSlice({
     builder
       .addCase(fetchProgramasDeSeleccion.fulfilled, (state, action) => {
         state.programas_seleccion = action.payload
-      })
-      .addCase(fetchProgramasDeSeleccionPaginados.pending, (state) => {
-        console.log('fetchProgramasDeSeleccionPaginados.pending')
-        state.loading_pagination = true
-        state.error = null
-      })
-      .addCase(fetchProgramasDeSeleccionPaginados.fulfilled, (state, action) => {
-        console.log('fetchProgramasDeSeleccionPaginados.fulfilled payload:', action.payload)
-        state.loading_pagination = false
-        
-        // Backend returns: { resultados: TSeleccion[], rango: { desde, hasta, total_programas, programas_en_rango } }
-        if (action.payload && action.payload.resultados && action.payload.rango) {
-          state.programas_seleccion_paginados = action.payload.resultados
-          state.pagination_metadata = {
-            total_count: action.payload.rango.total_programas || 0,
-            desde: action.payload.rango.desde || 0,
-            hasta: action.payload.rango.hasta || 9,
-            has_next: (action.payload.rango.hasta + 1) < action.payload.rango.total_programas,
-            has_previous: action.payload.rango.desde > 0
-          }
-        } else if (Array.isArray(action.payload)) {
-          // Fallback if the API returns just the array
-          state.programas_seleccion_paginados = action.payload
-          // Keep existing pagination metadata or set defaults
-        } else {
-          console.error('Unexpected payload format:', action.payload)
-          state.programas_seleccion_paginados = []
-        }
-        
-        console.log('Updated state:', {
-          programas_seleccion_paginados: state.programas_seleccion_paginados.length,
-          pagination_metadata: state.pagination_metadata
-        })
-      })
-      .addCase(fetchProgramasDeSeleccionPaginados.rejected, (state, action) => {
-        console.log('fetchProgramasDeSeleccionPaginados.rejected:', action.payload)
-        state.loading_pagination = false
-        state.error = action.payload as string
       })
       .addCase(fetchProgramaSeleccion.fulfilled, (state, action) => {
         state.programa_seleccion_individual = action.payload
@@ -756,7 +662,7 @@ export const SeleccionSlice = createSlice({
   }
 });
 
-export const {
+export const { 
   GUARDAR_BIN_SELECCION,
   QUITAR_BIN_SELECCION,
   VACIAR_TABLA,
@@ -765,10 +671,7 @@ export const {
   QUITAR_SUBPRODUCTO_EN_AGRUPACION,
   QUITAR_SUBPRODUCTO_EN_LISTA,
   GUARDAR_SUBPRODUCTO_EN_LISTA,
-  VACIAR_AGRUPACION,
-
-  GUARDAR_ESTADO_TABLA_PROGRAMAS_SELECCION,
-  RESETEAR_ESTADO_TABLA_PROGRAMAS_SELECCION
+  VACIAR_AGRUPACION
 } = SeleccionSlice.actions
 
 export default SeleccionSlice.reducer

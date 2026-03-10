@@ -50,7 +50,6 @@ const FormularioInformeKilosXOperario: FC<IInformeProduccion> = ({ setOpen }) =>
       try {
         const token_verificado = await verificarToken(token!)
         if (!token_verificado) throw new Error('Token no verificado')
-          values.desde = dayjs(values.desde).hour(0).minute(0).second(0).millisecond(0).toDate();
         values.hasta = dayjs(values.hasta).hour(19).minute(59).second(0).millisecond(0).toDate();
         const res = await fetchWithTokenPost(`api/seleccion/pdf_kilos_por_operario/`,
           {

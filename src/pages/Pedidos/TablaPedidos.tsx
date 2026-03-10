@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import {FC, useEffect, useState } from 'react';
 import {
 	createColumnHelper,
 	getCoreRowModel,
@@ -27,7 +27,7 @@ import { HeroEye, HeroXMark } from '../../components/icon/heroicons';
 import { fetchWithTokenDelete } from '../../utils/peticiones.utils';
 import toast from 'react-hot-toast';
 import Input from '../../components/form/Input';
-import { DETALLE_PEDIDO, fetchPedidos, GUARDAR_ESTADO_TABLA_PEDIDOS } from '../../redux/slices/pedidoSlice';
+import { DETALLE_PEDIDO, fetchPedidos } from '../../redux/slices/pedidoSlice';
 import { PedidoTipo, TPedidos, getButtonColor } from '../../types/TypesPedidos.types';
 import { format } from '@formkit/tempo';
 import FormularioPedidoMercadoInterno from './Formularios/FormularioPedidoMercadoInterno';
@@ -41,23 +41,16 @@ import { FaFilePdf } from 'react-icons/fa6';
 
 
 const TablaPedidos = () => {
-	// Obtener el estado guardado de Redux
-	const tabla_state = useAppSelector((state: RootState) => state.pedidos.tabla_pedidos_state);
-
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [globalFilter, setGlobalFilter] = useState<string>(tabla_state.globalFilter)
-	const [pagination, setPagination] = useState({
-		pageIndex: tabla_state.pageIndex,
-		pageSize: tabla_state.pageSize,
-	});
+	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const [modalStatus, setModalStatus] = useState<boolean>(false)
-	const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
-	const comercializador = useAppSelector((state: RootState) => state.auth.dataUser?.comercializador)
-	const token = useAppSelector((state: RootState) => state.auth.authTokens)
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
+  const comercializador = useAppSelector((state: RootState) => state.auth.dataUser?.comercializador)
+  const token = useAppSelector((state: RootState) => state.auth.authTokens)
 	const { verificarToken } = useAuth()
 
 	const userGroup = useAppSelector((state: RootState) => state.auth.grupos)
-	const [checkboxSeleccionado, setCheckboxSeleccionado] = useState<{ [key: string]: boolean }>({});
+  const [checkboxSeleccionado, setCheckboxSeleccionado] = useState<{ [key: string]: boolean }>({});
 	const pedidos = useAppSelector((state: RootState) => state.pedidos.pedidos)
 	const contenttypes = useAppSelector((state: RootState) => state.core.contenttypes)
 
@@ -106,11 +99,6 @@ const TablaPedidos = () => {
 
 	const eliminarPedido = async (id: number) => {
 		const token_verificado = await verificarToken(token!)
-		// add a confirmation dialog before deleting
-		if (!window.confirm('¿Estás seguro de que deseas eliminar este pedido? Esta acción no se puede deshacer.')) {
-			return;
-		}
-		
 	
 		if (!token_verificado) throw new Error('Token no verificado')
 
@@ -123,6 +111,7 @@ const TablaPedidos = () => {
 			toast.error('No ha logrado eliminar')
 		}
 	}
+
 
 	const columnHelper = createColumnHelper<TPedidos>();
 
@@ -233,8 +222,30 @@ const TablaPedidos = () => {
 								<HeroEye style={{ fontSize: 25 }}/>
 							</Button>
 						</Link>
+					{/* {
+						hasGroup(['registros-admin', ''])
+								? (
+									<Button
+										title='Eliminar'
+										variant = 'solid'
+										color = 'red'
+										colorIntensity = '600'
+										className='hover:scale-105'
+										onClick={() => {
+											if (['pedidoexportacion', 'pedidomercadointerno'].includes(info.row.original.tipo_guia!)){
+												eliminarPedido(info.row.original.id_pedido)
+											} else {
+												eliminarPedido(info.row.original.id_guia!)
+											}
+										}}
+										>
+											<HeroXMark style={{ fontSize: 25 }} />
+									</Button>
+								)
+							: null
+					} */}
 
-						{
+					{
 							['Pedido Completado', 'Pedido Entregado y Finalizado', 'Completado', 'Completado','Aprobada', 'Completada y entregada'].includes(info.row.original.estado_pedido) 
 								? (
 									<Link to={Object.keys(checkboxSeleccionado)[0] === 'pedidomercadointerno' ?
@@ -254,30 +265,6 @@ const TablaPedidos = () => {
 								: null
 						}
 						<Button variant='solid' color="fuchsia" onClick={() => {navigate(`/ventas/pedidos/detalle/${info.row.original.id}`)}}><HeroEye fontSize={25}/></Button>
-
-											{
-						hasGroup(['registros-admin', ''])
-								? (
-									<Button
-										title='Eliminar'
-										variant = 'solid'
-										color = 'red'
-										colorIntensity = '600'
-										className='hover:scale-105'
-
-										onClick={() => {
-											if (['pedidoexportacion', 'pedidomercadointerno'].includes(info.row.original.tipo_guia!)){
-												eliminarPedido(info.row.original.id_pedido)
-											} else {
-												eliminarPedido(info.row.original.id_guia!)
-											}
-										}}
-										>
-											<HeroXMark style={{ fontSize: 25 }} />
-									</Button>
-								)
-							: null
-					} 
 					</div>
 				);
 			},
@@ -294,28 +281,18 @@ const TablaPedidos = () => {
 		state: {
 			sorting,
 			globalFilter,
-			pagination,
 		},
 		onSortingChange: setSorting,
 		enableGlobalFilter: true,
 		onGlobalFilterChange: setGlobalFilter,
-		onPaginationChange: setPagination,
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
-		// Evitar que la tabla resetee la paginación cuando cambian los datos
-		autoResetPageIndex: false,
+		initialState: {
+			pagination: { pageSize: 8 },
+		},
 	});
-
-	// Guardar el estado de la tabla en Redux cuando cambie
-	useEffect(() => {
-		dispatch(GUARDAR_ESTADO_TABLA_PEDIDOS({
-			pageIndex: pagination.pageIndex,
-			pageSize: pagination.pageSize,
-			globalFilter: globalFilter,
-		}));
-	}, [pagination.pageIndex, pagination.pageSize, globalFilter, dispatch]);
 
 	return (
 		<PageWrapper name='Lista Pedidos'>

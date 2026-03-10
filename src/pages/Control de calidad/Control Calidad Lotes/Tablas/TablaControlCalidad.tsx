@@ -1,4 +1,4 @@
-import { FC, useState, Dispatch, SetStateAction, useEffect } from 'react';
+import { FC, useState, Dispatch, SetStateAction } from 'react';
 import {
 	createColumnHelper,
 	getCoreRowModel,
@@ -46,7 +46,6 @@ import { ThunkDispatch } from "@reduxjs/toolkit"
 import { useDispatch } from "react-redux"
 import { DuoDoubleCheck } from '../../../../components/icon/duotone';
 import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal';
-import { fetchControlesDeCalidadPaginados, GUARDAR_ESTADO_TABLA_CC } from '../../../../redux/slices/controlcalidadSlice';
 
 
 const columnHelper = createColumnHelper<TControlCalidad>();
@@ -54,42 +53,17 @@ const columnHelper = createColumnHelper<TControlCalidad>();
 
 interface IControlProps {
 	data: TControlCalidad[] | []
-	paginationMetadata?: {
-		total_count: number
-		desde: number
-		hasta: number
-		has_next: boolean
-		has_previous: boolean
-	}
-	currentPage?: number
-	onPageChange?: (newPage: number) => void
-	pageSize?: number
-	loadingPagination?: boolean
 }
 
-const TablaControlCalidad: FC<IControlProps> = ({
-	data,
-	paginationMetadata,
-	currentPage = 0,
-	onPageChange,
-	pageSize = 10,
-	loadingPagination = false
-}) => {
-	// Obtener el estado guardado de Redux
-	const tabla_state = useAppSelector((state: RootState) => state.control_calidad.tabla_cc_state);
-
+const TablaControlCalidad: FC<IControlProps> = ({ data }) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [globalFilter, setGlobalFilter] = useState<string>(tabla_state.globalFilter)
-	// Para paginación del servidor, pageIndex local siempre es 0 (los datos ya vienen paginados)
-	const [pagination, setPagination] = useState({
-		pageIndex: 0,
-		pageSize: tabla_state.pageSize,
-	});
-
+	const [globalFilter, setGlobalFilter] = useState<string>('')
 	const token = useAppSelector((state: RootState) => state.auth.authTokens)
 	const userGroup = useAppSelector((state: RootState) => state.auth.grupos)
 
 	const hasGroup = (groups: any) => userGroup?.groups && groups.some((group: any) => group in userGroup.groups);
+
+
 
 	const { verificarToken } = useAuth()
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>()
@@ -106,10 +80,7 @@ const TablaControlCalidad: FC<IControlProps> = ({
 		const response = await fetchWithTokenDelete(`api/control-calidad/recepcionmp/${id}/`, token_verificado)
 		if (response.ok) {
 			toast.success(`El control de calidad N° ${id} fue eliminado exitosamente`)
-			// Refresh the data after deletion by calling onPageChange to reload current page
-			if (onPageChange) {
-				onPageChange(currentPage)
-			}
+			dispatch
 		} else if (response.status === 400) {
 			toast.error(`El control de calidad N° ${id} no pudo ser eliminado`)
 		}
@@ -235,36 +206,23 @@ const TablaControlCalidad: FC<IControlProps> = ({
 	];
 
 	const table = useReactTable({
-		data: data ? data : [],
+		data,
 		columns,
 		state: {
 			sorting,
 			globalFilter,
-			pagination,
 		},
 		onSortingChange: setSorting,
 		enableGlobalFilter: true,
 		onGlobalFilterChange: setGlobalFilter,
-		onPaginationChange: setPagination,
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
-		// Evitar que la tabla resetee la paginación cuando cambian los datos
-		autoResetPageIndex: false,
+		initialState: {
+			pagination: { pageSize: 7 },
+		},
 	})
-
-	// Para tablas con paginación del servidor, el estado se guarda en el componente padre (ListaControlCalidad)
-	// Solo guardamos el filtro global cuando cambia
-	useEffect(() => {
-		if (globalFilter !== tabla_state.globalFilter) {
-			dispatch(GUARDAR_ESTADO_TABLA_CC({
-				pageIndex: tabla_state.pageIndex,
-				pageSize: tabla_state.pageSize,
-				globalFilter: globalFilter,
-			}));
-		}
-	}, [globalFilter, dispatch]);
 
 
 	const columnas: TableColumn[] = [
@@ -311,61 +269,16 @@ const TablaControlCalidad: FC<IControlProps> = ({
 								variant='outline'
 								className='border-transparent px-4'
 								rounded='rounded-full'>
-								{loadingPagination ? (
-									<div className="flex items-center gap-1">
-										<div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
-										Cargando...
-									</div>
-								) : (
-									`${paginationMetadata?.total_count || table.getFilteredRowModel().rows.length} registros`
-								)}
+								{table.getFilteredRowModel().rows.length} registros
 							</Badge>
 						</CardHeaderChild>
 						<CardHeaderChild>
 						</CardHeaderChild>
 					</CardHeader>
-					<CardBody className='overflow-x-auto'>
-						{loadingPagination ? (
-							<div className="flex items-center justify-center py-8">
-								<div className="flex items-center gap-2">
-									<div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-									<span className="text-gray-600">Cargando controles...</span>
-								</div>
-							</div>
-						) : (
-							<TableTemplate className='table-fixed max-md:min-w-[70rem]' table={table} columnas={columnas}/>
-						)}
+					<CardBody className='overflow-auto'>
+						<TableTemplate className='table-fixed max-md:min-w-[70rem]' table={table} columnas={columnas}/>
 					</CardBody>
-					{paginationMetadata && onPageChange && (
-						<div className="flex items-center justify-between px-6 py-3 border-t border-gray-200">
-							<div className="flex items-center gap-2">
-								<span className="text-sm text-gray-700">
-									Mostrando {paginationMetadata.desde + 1} a {Math.min(paginationMetadata.hasta + 1, paginationMetadata.total_count)} de {paginationMetadata.total_count} registros
-								</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<Button
-									variant="outline"
-									size="sm"
-									onClick={() => onPageChange(currentPage - 1)}
-									isDisable={!paginationMetadata.has_previous}
-								>
-									Anterior
-								</Button>
-								<span className="text-sm text-gray-700">
-									Página {currentPage + 1} de {Math.ceil(paginationMetadata.total_count / pageSize)}
-								</span>
-								<Button
-									variant="outline"
-									size="sm"
-									onClick={() => onPageChange(currentPage + 1)}
-									isDisable={!paginationMetadata.has_next}
-								>
-									Siguiente
-								</Button>
-							</div>
-						</div>
-					)}
+					<TableCardFooterTemplate table={table} />
 				</Card>
 			</Container>
 		</PageWrapper>
